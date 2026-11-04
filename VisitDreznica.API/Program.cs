@@ -1,23 +1,36 @@
+using DotNetEnv;
+using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
+using VisitDreznica.API.Configuration;
+using VisitDreznica.Services.Database;
+
+// Učitava .env u environment varijable. U Dockeru .env fajla nema,
+// pa vrijednosti dolaze iz docker-compose (NoClobber ih ne pregazi).
+Env.NoClobber().TraversePath().Load();
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddDbContext<VisitDreznicaDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetSqlConnectionString()));
 
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<VisitDreznicaDbContext>();
+    await dbContext.Database.MigrateAsync();
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
-app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();
