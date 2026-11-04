@@ -5,6 +5,9 @@ using VisitDreznica.API.Configuration;
 using VisitDreznica.Services.Database;
 using VisitDreznica.Services.Database.Seed;
 using VisitDreznica.Services.Security;
+using Mapster;
+using VisitDreznica.API.ErrorHandling;
+using VisitDreznica.Services.Locations;
 
 // Učitava .env u environment varijable. U Dockeru .env fajla nema,
 // pa vrijednosti dolaze iz docker-compose (NoClobber ih ne pregazi).
@@ -17,11 +20,18 @@ builder.Services.AddDbContext<VisitDreznicaDbContext>(options =>
 
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<DbSeeder>();
+builder.Services.AddMapster();
+builder.Services.AddScoped<ICountryService, CountryService>();
+builder.Services.AddScoped<ICityService, CityService>();
+
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+app.UseExceptionHandler();
 
 await using (var scope = app.Services.CreateAsyncScope())
 {

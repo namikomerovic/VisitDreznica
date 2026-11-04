@@ -4,7 +4,7 @@ using System.Text;
 
 namespace VisitDreznica.Services.Database.Entities
 {
-    public class City
+    public class City : IEntity
     {
         public int Id { get; set; }
         public string Name { get; set; } = string.Empty;

@@ -1,6 +1,6 @@
 ﻿namespace VisitDreznica.Services.Database.Entities;
 
-public class User
+public class User : IEntity
 {
     public int Id { get; set; }
     public string FirstName { get; set; } = string.Empty;
