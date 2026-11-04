@@ -2,11 +2,13 @@
 using VisitDreznica.Model.Responses;
 using VisitDreznica.Model.SearchObjects;
 using VisitDreznica.Services.Base;
+using Microsoft.AspNetCore.Authorization;
 
 namespace VisitDreznica.API.Controllers.Base;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize]
 public abstract class BaseReadController<TResponse, TSearch> : ControllerBase
     where TResponse : class
     where TSearch : BaseSearchObject

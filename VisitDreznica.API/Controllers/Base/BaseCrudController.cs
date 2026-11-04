@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using VisitDreznica.Model.SearchObjects;
 using VisitDreznica.Services.Base;
+using Microsoft.AspNetCore.Authorization;
+using VisitDreznica.Model.Constants;
 
 namespace VisitDreznica.API.Controllers.Base;
 
@@ -16,12 +18,15 @@ public abstract class BaseCrudController<TResponse, TSearch, TInsert, TUpdate> :
     }
 
     [HttpPost]
+    [Authorize(Roles = AppRoles.Admin)]
     public virtual Task<TResponse> Insert([FromBody] TInsert request) => _service.InsertAsync(request);
 
     [HttpPut("{id:int}")]
+    [Authorize(Roles = AppRoles.Admin)]
     public virtual Task<TResponse> Update(int id, [FromBody] TUpdate request) => _service.UpdateAsync(id, request);
 
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = AppRoles.Admin)]
     public virtual async Task<IActionResult> Delete(int id)
     {
         await _service.DeleteAsync(id);

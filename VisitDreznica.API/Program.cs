@@ -1,13 +1,20 @@
+using System.Security.Claims;
+using System.Text;
 using DotNetEnv;
+using Mapster;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using VisitDreznica.API.Configuration;
+using VisitDreznica.API.ErrorHandling;
+using VisitDreznica.API.Security;
+using VisitDreznica.Model.Constants;
+using VisitDreznica.Services.Auth;
 using VisitDreznica.Services.Database;
 using VisitDreznica.Services.Database.Seed;
-using VisitDreznica.Services.Security;
-using Mapster;
-using VisitDreznica.API.ErrorHandling;
 using VisitDreznica.Services.Locations;
+using VisitDreznica.Services.Security;
 
 // Učitava .env u environment varijable. U Dockeru .env fajla nema,
 // pa vrijednosti dolaze iz docker-compose (NoClobber ih ne pregazi).
@@ -15,22 +22,69 @@ Env.NoClobber().TraversePath().Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
+// ---------- Konfiguracija ----------
+var jwtSettings = builder.Configuration.GetJwtSettings();
+builder.Services.AddSingleton(jwtSettings);
+
+// ---------- Baza ----------
 builder.Services.AddDbContext<VisitDreznicaDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetSqlConnectionString()));
-
-builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<DbSeeder>();
+
+// ---------- Sigurnost ----------
+builder.Services.AddMemoryCache();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUser, HttpCurrentUser>();
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+builder.Services.AddScoped<ISessionService, SessionService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.MapInboundClaims = false;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = jwtSettings.Issuer,
+            ValidateAudience = true,
+            ValidAudience = jwtSettings.Audience,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret)),
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.FromSeconds(30),
+            NameClaimType = ClaimTypes.Name,
+            RoleClaimType = ClaimTypes.Role
+        };
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = async context =>
+            {
+                var sessionService = context.HttpContext.RequestServices.GetRequiredService<ISessionService>();
+                var sessionIdValue = context.Principal?.FindFirstValue(AppClaims.SessionId);
+
+                if (!Guid.TryParse(sessionIdValue, out var sessionId) || !await sessionService.IsActiveAsync(sessionId))
+                {
+                    context.Fail("Sesija nije aktivna.");
+                }
+            }
+        };
+    });
+builder.Services.AddAuthorization();
+
+// ---------- Aplikacijski servisi ----------
 builder.Services.AddMapster();
 builder.Services.AddScoped<ICountryService, CountryService>();
 builder.Services.AddScoped<ICityService, CityService>();
 
+// ---------- API ----------
+builder.Services.AddControllers();
+builder.Services.AddOpenApi();
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
-builder.Services.AddControllers();
-builder.Services.AddOpenApi();
-
 var app = builder.Build();
+
 app.UseExceptionHandler();
 
 await using (var scope = app.Services.CreateAsyncScope())
@@ -48,6 +102,7 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

@@ -1,4 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
+using System.Text;
+using VisitDreznica.Services.Security;
 
 namespace VisitDreznica.API.Configuration;
 
@@ -21,5 +23,23 @@ public static class ConfigurationExtensions
         };
 
         return connection.ConnectionString;
+    }
+
+    public static JwtSettings GetJwtSettings(this IConfiguration configuration)
+    {
+        var secret = configuration.GetRequired("JWT_SECRET");
+
+        if (Encoding.UTF8.GetByteCount(secret) < 32)
+        {
+            throw new InvalidOperationException("JWT_SECRET mora imati najmanje 32 znaka.");
+        }
+
+        return new JwtSettings
+        {
+            Secret = secret,
+            Issuer = configuration.GetRequired("JWT_ISSUER"),
+            Audience = configuration.GetRequired("JWT_AUDIENCE"),
+            ExpiryMinutes = int.Parse(configuration.GetRequired("JWT_EXPIRY_MINUTES"))
+        };
     }
 }

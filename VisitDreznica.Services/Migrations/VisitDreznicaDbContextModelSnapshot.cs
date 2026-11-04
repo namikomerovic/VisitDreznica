@@ -183,6 +183,31 @@ namespace VisitDreznica.Services.Migrations
                     b.ToTable("UserRoles");
                 });
 
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.UserSession", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("RevokedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserSessions");
+                });
+
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.City", b =>
                 {
                     b.HasOne("VisitDreznica.Services.Database.Entities.Country", "Country")
@@ -220,6 +245,17 @@ namespace VisitDreznica.Services.Migrations
                         .IsRequired();
 
                     b.Navigation("Role");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.UserSession", b =>
+                {
+                    b.HasOne("VisitDreznica.Services.Database.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

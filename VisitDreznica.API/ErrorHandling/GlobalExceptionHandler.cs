@@ -12,6 +12,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger, IPro
         {
             NotFoundException => (StatusCodes.Status404NotFound, exception.Message),
             BusinessException => (StatusCodes.Status400BadRequest, exception.Message),
+            UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, exception.Message),
             _ => (StatusCodes.Status500InternalServerError, "Došlo je do greške na serveru. Pokušajte ponovo kasnije.")
         };
 
