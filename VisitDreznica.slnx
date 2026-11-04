@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="VisitDreznica.API/VisitDreznica.API.csproj" />
+  <Project Path="VisitDreznica.Model/VisitDreznica.Model.csproj" />
+  <Project Path="VisitDreznica.Services/VisitDreznica.Services.csproj" />
+  <Project Path="VisitDreznica.Worker/VisitDreznica.Worker.csproj" />
+</Solution>
