@@ -20,7 +20,7 @@ public class VisitDreznicaDbContext(DbContextOptions<VisitDreznicaDbContext> opt
     public DbSet<Room> Rooms => Set<Room>();
     public DbSet<RoomImage> RoomImages => Set<RoomImage>();
     public DbSet<RoomAmenity> RoomAmenities => Set<RoomAmenity>();
-
+    public DbSet<Equipment> Equipment => Set<Equipment>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(VisitDreznicaDbContext).Assembly);

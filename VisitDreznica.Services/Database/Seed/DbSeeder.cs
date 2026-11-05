@@ -14,6 +14,47 @@ public class DbSeeder(VisitDreznicaDbContext dbContext, IPasswordHasher password
         await SeedUsersAndLocationsAsync();
         await SeedLookupsAsync();
         await SeedRoomsAsync();
+        await SeedEquipmentAsync();
+    }
+
+    private async Task SeedEquipmentAsync()
+    {
+        if (await dbContext.Equipment.AnyAsync())
+        {
+            return;
+        }
+
+        var kayakType = await dbContext.EquipmentTypes.FirstAsync(x => x.Name == "Kajak");
+
+        dbContext.Equipment.AddRange(
+            new Equipment
+            {
+                Name = "Kajak jednosjed",
+                Description = "Stabilan kajak za jednu osobu, uz prsluk i veslo.",
+                EquipmentType = kayakType,
+                Capacity = 1,
+                TotalQuantity = 8,
+                FirstHourPrice = 15m,
+                AdditionalHourPrice = 10m,
+                FullDayPrice = 50m,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            },
+            new Equipment
+            {
+                Name = "Kajak dvosjed",
+                Description = "Kajak za dvije osobe, idealan za parove i porodice. Uključeni prsluci i vesla.",
+                EquipmentType = kayakType,
+                Capacity = 2,
+                TotalQuantity = 6,
+                FirstHourPrice = 20m,
+                AdditionalHourPrice = 15m,
+                FullDayPrice = 70m,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            });
+
+        await dbContext.SaveChangesAsync();
     }
     private async Task SeedRoomsAsync()
     {
