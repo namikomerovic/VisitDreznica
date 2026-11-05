@@ -23,6 +23,8 @@ public class VisitDreznicaDbContext(DbContextOptions<VisitDreznicaDbContext> opt
     public DbSet<Equipment> Equipment => Set<Equipment>();
     public DbSet<Activity> Activities => Set<Activity>();
     public DbSet<ActivitySlot> ActivitySlots => Set<ActivitySlot>();
+    public DbSet<Place> Places => Set<Place>();
+    public DbSet<PlaceImage> PlaceImages => Set<PlaceImage>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -13,5 +13,5 @@ public class RoomResponse
     public bool IsActive { get; set; }
     public int? CoverImageId { get; set; }
     public List<LookupResponse> Amenities { get; set; } = [];
-    public List<RoomImageResponse> Images { get; set; } = [];
+    public List<GalleryImageResponse> Images { get; set; } = [];
 }

@@ -1,6 +1,6 @@
 ﻿namespace VisitDreznica.Model.Responses;
 
-public class RoomImageResponse
+public class GalleryImageResponse
 {
     public int Id { get; set; }
     public bool IsCover { get; set; }

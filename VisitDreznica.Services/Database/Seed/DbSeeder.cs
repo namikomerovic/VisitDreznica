@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using VisitDreznica.Model.Constants;
 using VisitDreznica.Services.Database.Entities;
+using VisitDreznica.Services.Places;
 using VisitDreznica.Services.Security;
 
 namespace VisitDreznica.Services.Database.Seed;
@@ -16,7 +17,45 @@ public class DbSeeder(VisitDreznicaDbContext dbContext, IPasswordHasher password
         await SeedRoomsAsync();
         await SeedEquipmentAsync();
         await SeedActivitiesAsync();
+        await SeedPlacesAsync();
     }
+    private async Task SeedPlacesAsync()
+    {
+        if (await dbContext.Places.AnyAsync())
+        {
+            return;
+        }
+
+        var types = await dbContext.PlaceTypes.ToDictionaryAsync(x => x.Name);
+
+        dbContext.Places.AddRange(
+            CreatePlace("Plaža na ušću Drežanke", types["Plaža"], 43.5329m, 17.7021m, "Donja Drežnica",
+                "Šljunkovita plaža na mjestu gdje se Drežanka ulijeva u Neretvu. Plitka i hladna voda, hlad ispod stabala."),
+            CreatePlace("Plaža Grabovica", types["Plaža"], 43.5876m, 17.7306m, "Grabovica",
+                "Mirna plaža na obali Neretve, pogodna za kupanje i odmor nakon vožnje kajakom."),
+            CreatePlace("Vrelo Drežanke", types["Priroda"], 43.5590m, 17.6175m, "Gornja Drežnica",
+                "Izvor rijeke Drežanke u srcu kanjona, okružen netaknutom prirodom."),
+            CreatePlace("Željeznički most u Drežnici", types["Znamenitost"], 43.5341m, 17.7034m, "Donja Drežnica",
+                "Kameni željeznički most s lukovima, jedan od zaštitnih znakova Drežnice."),
+            CreatePlace("Srušeni most na Neretvi", types["Znamenitost"], 43.6596m, 17.7587m, "Jablanica",
+                "Ostaci mosta iz Bitke na Neretvi 1943. godine, uz muzej posvećen ovom događaju."));
+
+        await dbContext.SaveChangesAsync();
+    }
+
+    private static Place CreatePlace(string name, PlaceType type, decimal latitude, decimal longitude, string address, string description) =>
+        new()
+        {
+            Name = name,
+            PlaceType = type,
+            Latitude = latitude,
+            Longitude = longitude,
+            Address = address,
+            Description = description,
+            DistanceKm = GeoDistance.FromAccommodationKm(latitude, longitude),
+            IsActive = true,
+            CreatedAt = DateTime.UtcNow
+        };
     private async Task SeedActivitiesAsync()
     {
         if (await dbContext.Activities.AnyAsync())
@@ -105,7 +144,6 @@ public class DbSeeder(VisitDreznicaDbContext dbContext, IPasswordHasher password
         dbContext.Activities.AddRange(rafting, hiking, fishing, history);
         await dbContext.SaveChangesAsync();
     }
-
     private static void AddSlot(Activity activity, DateTime startUtc, int capacity, Guide guide, DateTime createdAt)
     {
         activity.Slots.Add(new ActivitySlot

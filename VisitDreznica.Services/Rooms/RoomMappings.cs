@@ -14,7 +14,7 @@ public class RoomMappings : IRegister
             .Map(dest => dest.Images,
                 src => src.Images
                     .OrderBy(i => i.DisplayOrder)
-                    .Select(i => new RoomImageResponse { Id = i.Id, IsCover = i.IsCover, DisplayOrder = i.DisplayOrder })
+                    .Select(i => new GalleryImageResponse { Id = i.Id, IsCover = i.IsCover, DisplayOrder = i.DisplayOrder })
                     .ToList())
             .Map(dest => dest.Amenities,
                 src => src.RoomAmenities

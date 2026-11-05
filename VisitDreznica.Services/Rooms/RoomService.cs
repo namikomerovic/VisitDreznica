@@ -8,7 +8,6 @@ using VisitDreznica.Model.SearchObjects;
 using VisitDreznica.Services.Base;
 using VisitDreznica.Services.Database;
 using VisitDreznica.Services.Database.Entities;
-using VisitDreznica.Services.Images;
 using VisitDreznica.Services.Security;
 
 namespace VisitDreznica.Services.Rooms;
@@ -88,81 +87,6 @@ public class RoomService(VisitDreznicaDbContext dbContext, IMapper mapper, ICurr
         }
     }
 
-    public async Task<RoomImageResponse> AddImageAsync(int roomId, Stream content, long length, string declaredContentType)
-    {
-        if (!await DbContext.Rooms.AnyAsync(x => x.Id == roomId))
-        {
-            throw new NotFoundException("Traženi zapis (soba) ne postoji.");
-        }
-
-        var file = await ImageValidator.ReadAndValidateAsync(content, length, declaredContentType);
-        var maxOrder = await DbContext.RoomImages.Where(x => x.RoomId == roomId).MaxAsync(x => (int?)x.DisplayOrder);
-
-        var image = new RoomImage
-        {
-            RoomId = roomId,
-            Data = file.Data,
-            ContentType = file.ContentType,
-            IsCover = maxOrder is null,
-            DisplayOrder = (maxOrder ?? 0) + 1,
-            CreatedAt = DateTime.UtcNow
-        };
-
-        DbContext.RoomImages.Add(image);
-        await DbContext.SaveChangesAsync();
-
-        return new RoomImageResponse { Id = image.Id, IsCover = image.IsCover, DisplayOrder = image.DisplayOrder };
-    }
-
-    public async Task<FileContent> GetImageAsync(int imageId)
-    {
-        return await DbContext.RoomImages
-                   .Where(x => x.Id == imageId)
-                   .Select(x => new FileContent { Data = x.Data, ContentType = x.ContentType })
-                   .FirstOrDefaultAsync()
-               ?? throw new NotFoundException("Tražena slika ne postoji.");
-    }
-
-    public async Task SetCoverImageAsync(int imageId)
-    {
-        var roomId = await GetRoomIdOfImageAsync(imageId);
-
-        await DbContext.RoomImages
-            .Where(x => x.RoomId == roomId)
-            .ExecuteUpdateAsync(setters => setters.SetProperty(x => x.IsCover, x => x.Id == imageId));
-    }
-
-    public async Task DeleteImageAsync(int imageId)
-    {
-        var image = await DbContext.RoomImages
-                        .Where(x => x.Id == imageId)
-                        .Select(x => new { x.RoomId, x.IsCover })
-                        .FirstOrDefaultAsync()
-                    ?? throw new NotFoundException("Tražena slika ne postoji.");
-
-        await using var transaction = await DbContext.Database.BeginTransactionAsync();
-
-        await DbContext.RoomImages.Where(x => x.Id == imageId).ExecuteDeleteAsync();
-
-        if (image.IsCover)
-        {
-            var nextCoverId = await DbContext.RoomImages
-                .Where(x => x.RoomId == image.RoomId)
-                .OrderBy(x => x.DisplayOrder)
-                .Select(x => (int?)x.Id)
-                .FirstOrDefaultAsync();
-
-            if (nextCoverId.HasValue)
-            {
-                await DbContext.RoomImages
-                    .Where(x => x.Id == nextCoverId.Value)
-                    .ExecuteUpdateAsync(setters => setters.SetProperty(x => x.IsCover, true));
-            }
-        }
-
-        await transaction.CommitAsync();
-    }
-
     private async Task ValidateAsync(RoomUpsertRequest request, int? excludeId)
     {
         var trimmedName = request.Name.Trim();
@@ -186,7 +110,4 @@ public class RoomService(VisitDreznicaDbContext dbContext, IMapper mapper, ICurr
         }
     }
 
-    private async Task<int> GetRoomIdOfImageAsync(int imageId) =>
-        await DbContext.RoomImages.Where(x => x.Id == imageId).Select(x => (int?)x.RoomId).FirstOrDefaultAsync()
-        ?? throw new NotFoundException("Tražena slika ne postoji.");
 }

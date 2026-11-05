@@ -332,6 +332,98 @@ namespace VisitDreznica.Services.Migrations
                     b.ToTable("Guides");
                 });
 
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Place", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<decimal>("DistanceKm")
+                        .HasPrecision(6, 2)
+                        .HasColumnType("decimal(6,2)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal>("Latitude")
+                        .HasPrecision(9, 6)
+                        .HasColumnType("decimal(9,6)");
+
+                    b.Property<decimal>("Longitude")
+                        .HasPrecision(9, 6)
+                        .HasColumnType("decimal(9,6)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<int>("PlaceTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.HasIndex("PlaceTypeId");
+
+                    b.ToTable("Places");
+                });
+
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.PlaceImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte[]>("Data")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsCover")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("int")
+                        .HasColumnName("PlaceId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.ToTable("PlaceImages");
+                });
+
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.PlaceType", b =>
                 {
                     b.Property<int>("Id")
@@ -472,12 +564,13 @@ namespace VisitDreznica.Services.Migrations
                     b.Property<bool>("IsCover")
                         .HasColumnType("bit");
 
-                    b.Property<int>("RoomId")
-                        .HasColumnType("int");
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("int")
+                        .HasColumnName("RoomId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RoomId");
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("RoomImages");
                 });
@@ -671,6 +764,28 @@ namespace VisitDreznica.Services.Migrations
                     b.Navigation("EquipmentType");
                 });
 
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Place", b =>
+                {
+                    b.HasOne("VisitDreznica.Services.Database.Entities.PlaceType", "PlaceType")
+                        .WithMany()
+                        .HasForeignKey("PlaceTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("PlaceType");
+                });
+
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.PlaceImage", b =>
+                {
+                    b.HasOne("VisitDreznica.Services.Database.Entities.Place", "Place")
+                        .WithMany("Images")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Place");
+                });
+
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Room", b =>
                 {
                     b.HasOne("VisitDreznica.Services.Database.Entities.RoomType", "RoomType")
@@ -705,7 +820,7 @@ namespace VisitDreznica.Services.Migrations
                 {
                     b.HasOne("VisitDreznica.Services.Database.Entities.Room", "Room")
                         .WithMany("Images")
-                        .HasForeignKey("RoomId")
+                        .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -761,6 +876,11 @@ namespace VisitDreznica.Services.Migrations
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Country", b =>
                 {
                     b.Navigation("Cities");
+                });
+
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Place", b =>
+                {
+                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Role", b =>

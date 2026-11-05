@@ -1,25 +1,26 @@
-using System.Security.Claims;
-using System.Text;
 using DotNetEnv;
 using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using System.Security.Claims;
+using System.Text;
 using VisitDreznica.API.Configuration;
 using VisitDreznica.API.ErrorHandling;
 using VisitDreznica.API.Security;
 using VisitDreznica.Model.Constants;
+using VisitDreznica.Services.Activities;
 using VisitDreznica.Services.Auth;
 using VisitDreznica.Services.Database;
 using VisitDreznica.Services.Database.Seed;
-using VisitDreznica.Services.Locations;
-using VisitDreznica.Services.Security;
-using VisitDreznica.Services.Lookups;
-using VisitDreznica.Services.Rooms;
 using VisitDreznica.Services.Equipments;
 using VisitDreznica.Services.Images;
-using VisitDreznica.Services.Activities;
+using VisitDreznica.Services.Locations;
+using VisitDreznica.Services.Lookups;
+using VisitDreznica.Services.Places;
+using VisitDreznica.Services.Rooms;
+using VisitDreznica.Services.Security;
 
 // Učitava .env u environment varijable. U Dockeru .env fajla nema,
 // pa vrijednosti dolaze iz docker-compose (NoClobber ih ne pregazi).
@@ -50,6 +51,8 @@ builder.Services.AddScoped<IEquipmentService, EquipmentService>();
 builder.Services.AddScoped(typeof(IEntityImageService<>), typeof(EntityImageService<>));
 builder.Services.AddScoped<IActivityService, ActivityService>();
 builder.Services.AddScoped<IActivitySlotService, ActivitySlotService>();
+builder.Services.AddScoped<IPlaceService, PlaceService>();
+builder.Services.AddScoped(typeof(IGalleryImageService<,>), typeof(GalleryImageService<,>));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
