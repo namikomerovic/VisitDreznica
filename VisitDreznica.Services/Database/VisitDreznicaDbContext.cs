@@ -17,6 +17,9 @@ public class VisitDreznicaDbContext(DbContextOptions<VisitDreznicaDbContext> opt
     public DbSet<ActivityCategory> ActivityCategories => Set<ActivityCategory>();
     public DbSet<PlaceType> PlaceTypes => Set<PlaceType>();
     public DbSet<Guide> Guides => Set<Guide>();
+    public DbSet<Room> Rooms => Set<Room>();
+    public DbSet<RoomImage> RoomImages => Set<RoomImage>();
+    public DbSet<RoomAmenity> RoomAmenities => Set<RoomAmenity>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

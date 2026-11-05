@@ -19,6 +19,8 @@ public abstract class BaseCrudService<TEntity, TResponse, TSearch, TInsert, TUpd
         await BeforeInsertAsync(request);
 
         var entity = Mapper.Map<TEntity>(request!);
+        await AfterMapInsertAsync(entity, request);
+
         DbContext.Set<TEntity>().Add(entity);
         await DbContext.SaveChangesAsync();
 
@@ -31,6 +33,8 @@ public abstract class BaseCrudService<TEntity, TResponse, TSearch, TInsert, TUpd
         await BeforeUpdateAsync(entity, request);
 
         Mapper.Map(request, entity);
+        await AfterMapUpdateAsync(entity, request);
+
         await DbContext.SaveChangesAsync();
 
         return await GetByIdAsync(id);
@@ -60,4 +64,6 @@ public abstract class BaseCrudService<TEntity, TResponse, TSearch, TInsert, TUpd
     protected virtual Task BeforeInsertAsync(TInsert request) => Task.CompletedTask;
     protected virtual Task BeforeUpdateAsync(TEntity entity, TUpdate request) => Task.CompletedTask;
     protected virtual Task BeforeDeleteAsync(TEntity entity) => Task.CompletedTask;
+    protected virtual Task AfterMapInsertAsync(TEntity entity, TInsert request) => Task.CompletedTask;
+    protected virtual Task AfterMapUpdateAsync(TEntity entity, TUpdate request) => Task.CompletedTask;
 }

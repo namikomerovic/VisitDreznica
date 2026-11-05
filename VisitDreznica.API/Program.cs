@@ -16,6 +16,7 @@ using VisitDreznica.Services.Database.Seed;
 using VisitDreznica.Services.Locations;
 using VisitDreznica.Services.Security;
 using VisitDreznica.Services.Lookups;
+using VisitDreznica.Services.Rooms;
 
 // Učitava .env u environment varijable. U Dockeru .env fajla nema,
 // pa vrijednosti dolaze iz docker-compose (NoClobber ih ne pregazi).
@@ -41,6 +42,7 @@ builder.Services.AddScoped<ISessionService, SessionService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped(typeof(ILookupService<>), typeof(LookupService<>));
 builder.Services.AddScoped<IGuideService, GuideService>();
+builder.Services.AddScoped<IRoomService, RoomService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -76,6 +78,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 // ---------- Aplikacijski servisi ----------
+TypeAdapterConfig.GlobalSettings.Scan(typeof(RoomService).Assembly);
 builder.Services.AddMapster();
 builder.Services.AddScoped<ICountryService, CountryService>();
 builder.Services.AddScoped<ICityService, CityService>();

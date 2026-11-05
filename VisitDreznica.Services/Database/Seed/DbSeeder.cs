@@ -13,8 +13,60 @@ public class DbSeeder(VisitDreznicaDbContext dbContext, IPasswordHasher password
     {
         await SeedUsersAndLocationsAsync();
         await SeedLookupsAsync();
+        await SeedRoomsAsync();
+    }
+    private async Task SeedRoomsAsync()
+    {
+        if (await dbContext.Rooms.AnyAsync())
+        {
+            return;
+        }
+
+        var types = await dbContext.RoomTypes.ToDictionaryAsync(x => x.Name);
+        var amenities = await dbContext.Amenities.ToDictionaryAsync(x => x.Name);
+
+        dbContext.Rooms.AddRange(
+            CreateRoom("Deluxe dvokrevetna soba s balkonom", types["Dvokrevetna"], 2, 19, 90m,
+                "Prostrana soba s balkonom i pogledom na Neretvu i željeznički most.", amenities,
+                "Balkon", "Klima uređaj", "Vlastito kupatilo", "Pogled na rijeku", "TV", "Kuhalo za vodu", "Besplatan Wi-Fi"),
+            CreateRoom("Dvokrevetna soba s pogledom na jezero", types["Dvokrevetna"], 2, 15, 80m,
+                "Mirna soba s pogledom na jezero, idealna za parove.", amenities,
+                "Klima uređaj", "Pogled na rijeku", "TV", "Besplatan Wi-Fi"),
+            CreateRoom("Trokrevetna soba s pogledom na planinu", types["Trokrevetna"], 3, 13, 85m,
+                "Udobna soba za tri osobe s pogledom na okolne planine.", amenities,
+                "Klima uređaj", "Vlastito kupatilo", "TV", "Besplatan Wi-Fi"),
+            CreateRoom("Četverokrevetna soba s balkonom", types["Porodična"], 4, 30, 140m,
+                "Najveća soba u smještaju, s balkonom, pogodna za porodice.", amenities,
+                "Balkon", "Klima uređaj", "Vlastito kupatilo", "Pogled na rijeku", "TV", "Kuhalo za vodu", "Besplatan Wi-Fi"),
+            CreateRoom("Jednokrevetna soba", types["Jednokrevetna"], 1, 11, 50m,
+                "Kompaktna soba za jednu osobu.", amenities,
+                "Klima uređaj", "Besplatan Wi-Fi"));
+
+        await dbContext.SaveChangesAsync();
     }
 
+    private static Room CreateRoom(string name, RoomType type, int capacity, int area, decimal price,
+        string description, Dictionary<string, Amenity> amenities, params string[] amenityNames)
+    {
+        var room = new Room
+        {
+            Name = name,
+            RoomType = type,
+            Capacity = capacity,
+            AreaSquareMeters = area,
+            PricePerNight = price,
+            Description = description,
+            IsActive = true,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        foreach (var amenityName in amenityNames)
+        {
+            room.RoomAmenities.Add(new RoomAmenity { Amenity = amenities[amenityName] });
+        }
+
+        return room;
+    }
     private async Task SeedUsersAndLocationsAsync()
     {
         if (await dbContext.Roles.AnyAsync())
