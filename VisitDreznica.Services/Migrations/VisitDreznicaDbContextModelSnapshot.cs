@@ -670,6 +670,15 @@ namespace VisitDreznica.Services.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("ImageContentType")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("ProfileImageContentType");
+
+                    b.Property<byte[]>("ImageData")
+                        .HasColumnType("varbinary(max)")
+                        .HasColumnName("ProfileImage");
+
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -689,13 +698,6 @@ namespace VisitDreznica.Services.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
-
-                    b.Property<byte[]>("ProfileImage")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("ProfileImageContentType")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");

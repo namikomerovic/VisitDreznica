@@ -1,6 +1,6 @@
 ﻿namespace VisitDreznica.Services.Database.Entities;
 
-public class User : IEntity
+public class User : IHasImage
 {
     public int Id { get; set; }
     public string FirstName { get; set; } = string.Empty;
@@ -12,8 +12,8 @@ public class User : IEntity
     public string PasswordHash { get; set; } = string.Empty;
     public string PasswordSalt { get; set; } = string.Empty;
 
-    public byte[]? ProfileImage { get; set; }
-    public string? ProfileImageContentType { get; set; }
+public byte[]? ImageData { get; set; }
+public string? ImageContentType { get; set; }
 
     public bool IsActive { get; set; } = true;
     public DateTime CreatedAt { get; set; }

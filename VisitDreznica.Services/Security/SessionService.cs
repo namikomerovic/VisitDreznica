@@ -33,5 +33,20 @@ public class SessionService(VisitDreznicaDbContext dbContext, IMemoryCache cache
         cache.Remove(CacheKey(sessionId));
     }
 
+    public async Task RevokeAllForUserAsync(int userId, Guid? exceptSessionId = null)
+{
+    var now = DateTime.UtcNow;
+
+    var sessions = await dbContext.UserSessions
+        .Where(x => x.UserId == userId && x.RevokedAt == null && x.Id != exceptSessionId)
+        .ToListAsync();
+
+    foreach (var session in sessions)
+    {
+        session.RevokedAt = now;
+        cache.Remove(CacheKey(session.Id));
+    }
+}
+
     private static string CacheKey(Guid sessionId) => $"session:{sessionId}";
 }

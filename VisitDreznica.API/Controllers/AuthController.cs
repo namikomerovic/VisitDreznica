@@ -3,13 +3,16 @@ using Microsoft.AspNetCore.Mvc;
 using VisitDreznica.Model.Requests;
 using VisitDreznica.Model.Responses;
 using VisitDreznica.Services.Auth;
+using VisitDreznica.Services.Locations;
+using VisitDreznica.Model.SearchObjects;
+using VisitDreznica.Services.Locations;
 
 namespace VisitDreznica.API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
 [Authorize]
-public class AuthController(IAuthService authService) : ControllerBase
+public class AuthController(IAuthService authService, ICityService cityService) : ControllerBase
 {
     [AllowAnonymous]
     [HttpPost("login")]
@@ -25,4 +28,9 @@ public class AuthController(IAuthService authService) : ControllerBase
         await authService.LogoutAsync();
         return NoContent();
     }
+
+    [AllowAnonymous]
+[HttpGet("cities")]
+public Task<PageResult<CityResponse>> GetCitiesForRegistration([FromQuery] CitySearchObject search) =>
+    cityService.GetPagedAsync(search);
 }
