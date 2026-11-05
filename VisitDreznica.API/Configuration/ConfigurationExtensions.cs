@@ -4,6 +4,7 @@ using VisitDreznica.Services.Security;
 using System.Globalization;
 using VisitDreznica.Services.Reservations;
 using VisitDreznica.Services.Payments;
+using VisitDreznica.Model.Messaging;
 
 namespace VisitDreznica.API.Configuration;
 
@@ -59,5 +60,14 @@ public static class ConfigurationExtensions
         PublishableKey = configuration.GetRequired("STRIPE_PUBLISHABLE_KEY"),
         Currency = configuration.GetRequired("STRIPE_CURRENCY").ToLowerInvariant(),
         UnpaidReservationExpiryMinutes = int.Parse(configuration.GetRequired("UNPAID_RESERVATION_EXPIRY_MINUTES"))
+    };
+
+    public static RabbitMqSettings GetRabbitMqSettings(this IConfiguration configuration) =>
+    new()
+    {
+        Host = configuration.GetRequired("RABBITMQ_HOST"),
+        Port = int.Parse(configuration.GetRequired("RABBITMQ_PORT")),
+        User = configuration.GetRequired("RABBITMQ_USER"),
+        Password = configuration.GetRequired("RABBITMQ_PASSWORD")
     };
 }

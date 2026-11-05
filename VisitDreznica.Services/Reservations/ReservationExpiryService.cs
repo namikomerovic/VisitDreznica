@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using VisitDreznica.Model.Enums;
 using VisitDreznica.Services.Database;
+using VisitDreznica.Services.Messaging;
 using VisitDreznica.Services.Payments;
 using VisitDreznica.Services.Reservations.StateMachine;
 
@@ -10,6 +11,7 @@ namespace VisitDreznica.Services.Reservations;
 public class ReservationExpiryService(
     VisitDreznicaDbContext dbContext,
     IReservationPaymentService reservationPaymentService,
+    IReservationEmailService reservationEmailService,
     PaymentSettings settings,
     ILogger<ReservationExpiryService> logger) : IReservationExpiryService
 {
@@ -56,10 +58,12 @@ public class ReservationExpiryService(
                 reservation.UpdatedAt = now;
                 ReservationHistory.Record(reservation, fromStatus, reservation.Status, null, reason, now);
 
-                await reservationPaymentService.ReverseAsync(id, reason);
+                                await reservationPaymentService.ReverseAsync(id, reason);
                 await dbContext.SaveChangesAsync(cancellationToken);
 
                 expiredCount++;
+
+                await reservationEmailService.NotifyStatusChangedAsync(id);
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {

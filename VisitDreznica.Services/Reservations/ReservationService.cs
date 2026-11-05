@@ -9,6 +9,7 @@ using VisitDreznica.Model.SearchObjects;
 using VisitDreznica.Services.Base;
 using VisitDreznica.Services.Database;
 using VisitDreznica.Services.Database.Entities;
+using VisitDreznica.Services.Messaging;
 using VisitDreznica.Services.Payments;
 using VisitDreznica.Services.Reservations.StateMachine;
 using VisitDreznica.Services.Security;
@@ -19,7 +20,8 @@ public class ReservationService(
     VisitDreznicaDbContext dbContext,
     IMapper mapper,
     ICurrentUser currentUser,
-    IReservationPaymentService reservationPaymentService)
+    IReservationPaymentService reservationPaymentService,
+    IReservationEmailService reservationEmailService)
     : BaseReadService<Reservation, ReservationResponse, ReservationSearchObject>(dbContext, mapper),
       IReservationService
 {
@@ -162,6 +164,8 @@ public class ReservationService(
         }
 
         await DbContext.SaveChangesAsync();
+
+        await reservationEmailService.NotifyStatusChangedAsync(reservation.Id);
 
         return await GetByIdAsync(id);
     }

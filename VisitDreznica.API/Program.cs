@@ -27,6 +27,7 @@ using VisitDreznica.Services.Reservations;
 using Stripe;
 using VisitDreznica.Services.Payments;
 using VisitDreznica.API.BackgroundServices;
+using VisitDreznica.Services.Messaging;
 
 // Učitava .env u environment varijable. U Dockeru .env fajla nema,
 // pa vrijednosti dolaze iz docker-compose (NoClobber ih ne pregazi).
@@ -78,6 +79,9 @@ builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IReservationPaymentService, ReservationPaymentService>();
 builder.Services.AddScoped<IReservationExpiryService, ReservationExpiryService>();
 builder.Services.AddHostedService<ReservationExpiryWorker>();
+builder.Services.AddSingleton(builder.Configuration.GetRabbitMqSettings());
+builder.Services.AddSingleton<IEmailQueue, RabbitMqEmailQueue>();
+builder.Services.AddScoped<IReservationEmailService, ReservationEmailService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
