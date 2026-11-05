@@ -26,6 +26,11 @@ public class VisitDreznicaDbContext(DbContextOptions<VisitDreznicaDbContext> opt
     public DbSet<Place> Places => Set<Place>();
     public DbSet<PlaceImage> PlaceImages => Set<PlaceImage>();
     public DbSet<News> News => Set<News>();
+    public DbSet<Reservation> Reservations => Set<Reservation>();
+    public DbSet<RoomReservation> RoomReservations => Set<RoomReservation>();
+    public DbSet<EquipmentReservation> EquipmentReservations => Set<EquipmentReservation>();
+    public DbSet<ActivityReservation> ActivityReservations => Set<ActivityReservation>();
+    public DbSet<ReservationStatusHistory> ReservationStatusHistory => Set<ReservationStatusHistory>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

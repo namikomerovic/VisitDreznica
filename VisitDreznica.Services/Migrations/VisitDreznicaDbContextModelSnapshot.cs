@@ -495,6 +495,89 @@ namespace VisitDreznica.Services.Migrations
                     b.ToTable("PlaceTypes");
                 });
 
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Reservation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StartTime");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reservations", (string)null);
+
+                    b.UseTptMappingStrategy();
+                });
+
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.ReservationStatusHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ChangedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int?>("FromStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReservationId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ToStatus")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChangedByUserId");
+
+                    b.HasIndex("ReservationId");
+
+                    b.ToTable("ReservationStatusHistory", (string)null);
+                });
+
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -760,6 +843,51 @@ namespace VisitDreznica.Services.Migrations
                     b.ToTable("UserSessions");
                 });
 
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.ActivityReservation", b =>
+                {
+                    b.HasBaseType("VisitDreznica.Services.Database.Entities.Reservation");
+
+                    b.Property<int>("ActivitySlotId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ParticipantCount")
+                        .HasColumnType("int");
+
+                    b.HasIndex("ActivitySlotId");
+
+                    b.ToTable("ActivityReservations", (string)null);
+                });
+
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.EquipmentReservation", b =>
+                {
+                    b.HasBaseType("VisitDreznica.Services.Database.Entities.Reservation");
+
+                    b.Property<int>("EquipmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasIndex("EquipmentId");
+
+                    b.ToTable("EquipmentReservations", (string)null);
+                });
+
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.RoomReservation", b =>
+                {
+                    b.HasBaseType("VisitDreznica.Services.Database.Entities.Reservation");
+
+                    b.Property<int>("GuestCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("RoomId");
+
+                    b.ToTable("RoomReservations", (string)null);
+                });
+
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Activity", b =>
                 {
                     b.HasOne("VisitDreznica.Services.Database.Entities.ActivityCategory", "ActivityCategory")
@@ -845,6 +973,36 @@ namespace VisitDreznica.Services.Migrations
                     b.Navigation("Place");
                 });
 
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Reservation", b =>
+                {
+                    b.HasOne("VisitDreznica.Services.Database.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.ReservationStatusHistory", b =>
+                {
+                    b.HasOne("VisitDreznica.Services.Database.Entities.User", "ChangedByUser")
+                        .WithMany()
+                        .HasForeignKey("ChangedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("VisitDreznica.Services.Database.Entities.Reservation", "Reservation")
+                        .WithMany("StatusHistory")
+                        .HasForeignKey("ReservationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ChangedByUser");
+
+                    b.Navigation("Reservation");
+                });
+
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Room", b =>
                 {
                     b.HasOne("VisitDreznica.Services.Database.Entities.RoomType", "RoomType")
@@ -927,6 +1085,57 @@ namespace VisitDreznica.Services.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.ActivityReservation", b =>
+                {
+                    b.HasOne("VisitDreznica.Services.Database.Entities.ActivitySlot", "ActivitySlot")
+                        .WithMany()
+                        .HasForeignKey("ActivitySlotId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("VisitDreznica.Services.Database.Entities.Reservation", null)
+                        .WithOne()
+                        .HasForeignKey("VisitDreznica.Services.Database.Entities.ActivityReservation", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ActivitySlot");
+                });
+
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.EquipmentReservation", b =>
+                {
+                    b.HasOne("VisitDreznica.Services.Database.Entities.Equipment", "Equipment")
+                        .WithMany()
+                        .HasForeignKey("EquipmentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("VisitDreznica.Services.Database.Entities.Reservation", null)
+                        .WithOne()
+                        .HasForeignKey("VisitDreznica.Services.Database.Entities.EquipmentReservation", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Equipment");
+                });
+
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.RoomReservation", b =>
+                {
+                    b.HasOne("VisitDreznica.Services.Database.Entities.Reservation", null)
+                        .WithOne()
+                        .HasForeignKey("VisitDreznica.Services.Database.Entities.RoomReservation", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VisitDreznica.Services.Database.Entities.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+                });
+
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Activity", b =>
                 {
                     b.Navigation("Slots");
@@ -940,6 +1149,11 @@ namespace VisitDreznica.Services.Migrations
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Place", b =>
                 {
                     b.Navigation("Images");
+                });
+
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Reservation", b =>
+                {
+                    b.Navigation("StatusHistory");
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Role", b =>

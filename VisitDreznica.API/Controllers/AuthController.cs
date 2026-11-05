@@ -5,7 +5,6 @@ using VisitDreznica.Model.Responses;
 using VisitDreznica.Services.Auth;
 using VisitDreznica.Services.Locations;
 using VisitDreznica.Model.SearchObjects;
-using VisitDreznica.Services.Locations;
 
 namespace VisitDreznica.API.Controllers;
 
@@ -30,7 +29,7 @@ public class AuthController(IAuthService authService, ICityService cityService) 
     }
 
     [AllowAnonymous]
-[HttpGet("cities")]
-public Task<PageResult<CityResponse>> GetCitiesForRegistration([FromQuery] CitySearchObject search) =>
-    cityService.GetPagedAsync(search);
+    [HttpGet("cities")]
+    public Task<PageResult<CityResponse>> GetCitiesForRegistration([FromQuery] CitySearchObject search) =>
+        cityService.GetPagedAsync(search);
 }
