@@ -1,6 +1,8 @@
 ﻿using Microsoft.Data.SqlClient;
 using System.Text;
 using VisitDreznica.Services.Security;
+using System.Globalization;
+using VisitDreznica.Services.Reservations;
 
 namespace VisitDreznica.API.Configuration;
 
@@ -42,4 +44,10 @@ public static class ConfigurationExtensions
             ExpiryMinutes = int.Parse(configuration.GetRequired("JWT_EXPIRY_MINUTES"))
         };
     }
+
+    public static ReservationSettings GetReservationSettings(this IConfiguration configuration) =>
+    new()
+    {
+        TouristTaxPerPersonNight = decimal.Parse(configuration.GetRequired("TOURIST_TAX_PER_PERSON_NIGHT"), CultureInfo.InvariantCulture)
+    };
 }

@@ -23,6 +23,7 @@ using VisitDreznica.Services.Places;
 using VisitDreznica.Services.Rooms;
 using VisitDreznica.Services.Security;
 using VisitDreznica.Services.Users;
+using VisitDreznica.Services.Reservations;
 
 // Učitava .env u environment varijable. U Dockeru .env fajla nema,
 // pa vrijednosti dolaze iz docker-compose (NoClobber ih ne pregazi).
@@ -33,6 +34,7 @@ var builder = WebApplication.CreateBuilder(args);
 // ---------- Konfiguracija ----------
 var jwtSettings = builder.Configuration.GetJwtSettings();
 builder.Services.AddSingleton(jwtSettings);
+builder.Services.AddSingleton(builder.Configuration.GetReservationSettings());
 
 // ---------- Baza ----------
 builder.Services.AddDbContext<VisitDreznicaDbContext>(options =>
@@ -57,6 +59,8 @@ builder.Services.AddScoped<IPlaceService, PlaceService>();
 builder.Services.AddScoped(typeof(IGalleryImageService<,>), typeof(GalleryImageService<,>));
 builder.Services.AddScoped<INewsService, NewsService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IReservationService, ReservationService>();
+builder.Services.AddScoped<IRoomReservationService, RoomReservationService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
