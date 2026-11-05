@@ -2,6 +2,8 @@ using System.Linq.Expressions;
 using VisitDreznica.Model.Enums;
 using VisitDreznica.Model.Responses;
 using VisitDreznica.Services.Database.Entities;
+using Microsoft.EntityFrameworkCore;
+using VisitDreznica.Services.Database;
 
 namespace VisitDreznica.Services.Reservations;
 
@@ -36,4 +38,11 @@ public static class ReservationProjections
         ActivitySlotId = r is ActivityReservation ? (int?)((ActivityReservation)r).ActivitySlotId : null,
         ParticipantCount = r is ActivityReservation ? (int?)((ActivityReservation)r).ParticipantCount : null
     };
+
+    public static Task<ReservationResponse> GetResponseAsync(this VisitDreznicaDbContext dbContext, int reservationId) =>
+    dbContext.Reservations
+        .AsNoTracking()
+        .Where(x => x.Id == reservationId)
+        .Select(ToResponse)
+        .FirstAsync();
 }

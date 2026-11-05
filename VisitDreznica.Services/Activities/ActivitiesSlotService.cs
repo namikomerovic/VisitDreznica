@@ -9,6 +9,7 @@ using VisitDreznica.Services.Base;
 using VisitDreznica.Services.Database;
 using VisitDreznica.Services.Database.Entities;
 using VisitDreznica.Services.Security;
+using VisitDreznica.Services.Reservations;
 
 namespace VisitDreznica.Services.Activities;
 
@@ -59,17 +60,40 @@ public class ActivitySlotService(VisitDreznicaDbContext dbContext, IMapper mappe
     protected override IQueryable<ActivitySlot> ApplyOrdering(IQueryable<ActivitySlot> query, ActivitySlotSearchObject search) =>
         query.OrderBy(x => x.StartTime);
 
-    protected override Task BeforeUpdateAsync(ActivitySlot entity, ActivitySlotUpdateRequest request)
+   protected override async Task BeforeUpdateAsync(ActivitySlot entity, ActivitySlotUpdateRequest request)
+{
+    if (entity.StartTime <= DateTime.UtcNow)
     {
-        if (entity.StartTime <= DateTime.UtcNow)
-        {
-            throw new BusinessException("Termin koji je već počeo ili završio ne može se mijenjati.");
-        }
-
-        return Task.CompletedTask;
+        throw new BusinessException("Termin koji je već počeo ili završio ne može se mijenjati.");
     }
 
-    protected override async Task AfterMapInsertAsync(ActivitySlot entity, ActivitySlotInsertRequest request)
+    var bookedCount = await DbContext.ActivityReservations
+        .Where(x => x.ActivitySlotId == entity.Id && ReservationRules.ActiveStatuses.Contains(x.Status))
+        .SumAsync(x => x.ParticipantCount);
+
+    if (bookedCount == 0)
+    {
+        return;
+    }
+
+    if (request.StartTime.ToUniversalTime() != entity.StartTime)
+    {
+        throw new BusinessException("Termin koji ima rezervacije nije moguće pomjeriti.");
+    }
+
+    if (request.Capacity < bookedCount)
+    {
+        throw new BusinessException($"Kapacitet ne može biti manji od broja već rezervisanih mjesta ({bookedCount}).");
+    }
+}
+
+protected override async Task BeforeDeleteAsync(ActivitySlot entity)
+{
+    if (await DbContext.ActivityReservations.AnyAsync(x => x.ActivitySlotId == entity.Id))
+    {
+        throw new BusinessException("Termin koji ima rezervacije nije moguće obrisati.");
+    }
+}    protected override async Task AfterMapInsertAsync(ActivitySlot entity, ActivitySlotInsertRequest request)
     {
         entity.CreatedAt = DateTime.UtcNow;
         await PrepareAndValidateAsync(entity);

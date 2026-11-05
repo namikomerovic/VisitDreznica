@@ -19,8 +19,6 @@ public class RoomReservationService(
     private static readonly TimeOnly CheckInTimeUtc = new(12, 0);
     private static readonly TimeOnly CheckOutTimeUtc = new(8, 0);
 
-    private static readonly ReservationStatus[] ActiveStatuses = [ReservationStatus.Pending, ReservationStatus.Confirmed];
-
     public async Task<RoomReservationQuoteResponse> QuoteAsync(RoomReservationRequest request)
     {
         var (_, quote) = await ValidateAndCalculateAsync(request);
@@ -53,11 +51,8 @@ public class RoomReservationService(
         await dbContext.SaveChangesAsync();
         await transaction.CommitAsync();
 
-        return await dbContext.Reservations
-            .AsNoTracking()
-            .Where(x => x.Id == reservation.Id)
-            .Select(ReservationProjections.ToResponse)
-            .FirstAsync();
+
+        return await dbContext.GetResponseAsync(reservation.Id);
     }
 
     public async Task<List<DateRangeResponse>> GetOccupiedPeriodsAsync(int roomId, DateOnly from, DateOnly to)
@@ -68,7 +63,7 @@ public class RoomReservationService(
         var periods = await dbContext.RoomReservations
             .AsNoTracking()
             .Where(x => x.RoomId == roomId &&
-                        ActiveStatuses.Contains(x.Status) &&
+                       ReservationRules.ActiveStatuses.Contains(x.Status) &&
                         x.StartTime < toTime &&
                         fromTime < x.EndTime)
             .OrderBy(x => x.StartTime)
@@ -120,7 +115,7 @@ public class RoomReservationService(
 
         var isOccupied = await dbContext.RoomReservations.AnyAsync(x =>
             x.RoomId == room.Id &&
-            ActiveStatuses.Contains(x.Status) &&
+            ReservationRules.ActiveStatuses.Contains(x.Status) &&
             x.StartTime < endTime &&
             startTime < x.EndTime);
 

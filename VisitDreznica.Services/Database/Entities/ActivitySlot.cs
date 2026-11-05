@@ -13,4 +13,6 @@ public class ActivitySlot : IEntity
 
     public int GuideId { get; set; }
     public Guide Guide { get; set; } = null!;
+
+    public ICollection<ActivityReservation> Reservations { get; set; } = new List<ActivityReservation>();
 }

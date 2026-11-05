@@ -79,7 +79,7 @@ namespace VisitDreznica.Services.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Activities");
+                    b.ToTable("Activities", (string)null);
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.ActivityCategory", b =>
@@ -104,7 +104,7 @@ namespace VisitDreznica.Services.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("ActivityCategories");
+                    b.ToTable("ActivityCategories", (string)null);
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.ActivitySlot", b =>
@@ -139,7 +139,7 @@ namespace VisitDreznica.Services.Migrations
 
                     b.HasIndex("GuideId", "StartTime");
 
-                    b.ToTable("ActivitySlots");
+                    b.ToTable("ActivitySlots", (string)null);
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Amenity", b =>
@@ -164,7 +164,7 @@ namespace VisitDreznica.Services.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Amenities");
+                    b.ToTable("Amenities", (string)null);
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.City", b =>
@@ -192,7 +192,7 @@ namespace VisitDreznica.Services.Migrations
                     b.HasIndex("CountryId", "Name")
                         .IsUnique();
 
-                    b.ToTable("Cities");
+                    b.ToTable("Cities", (string)null);
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Country", b =>
@@ -213,7 +213,7 @@ namespace VisitDreznica.Services.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Countries");
+                    b.ToTable("Countries", (string)null);
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Equipment", b =>
@@ -277,7 +277,7 @@ namespace VisitDreznica.Services.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Equipment");
+                    b.ToTable("Equipment", (string)null);
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.EquipmentType", b =>
@@ -302,7 +302,7 @@ namespace VisitDreznica.Services.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("EquipmentTypes");
+                    b.ToTable("EquipmentTypes", (string)null);
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Guide", b =>
@@ -329,7 +329,7 @@ namespace VisitDreznica.Services.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Guides");
+                    b.ToTable("Guides", (string)null);
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.News", b =>
@@ -375,7 +375,7 @@ namespace VisitDreznica.Services.Migrations
 
                     b.HasIndex("PublishedAt");
 
-                    b.ToTable("News");
+                    b.ToTable("News", (string)null);
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Place", b =>
@@ -430,7 +430,7 @@ namespace VisitDreznica.Services.Migrations
 
                     b.HasIndex("PlaceTypeId");
 
-                    b.ToTable("Places");
+                    b.ToTable("Places", (string)null);
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.PlaceImage", b =>
@@ -467,7 +467,7 @@ namespace VisitDreznica.Services.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("PlaceImages");
+                    b.ToTable("PlaceImages", (string)null);
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.PlaceType", b =>
@@ -492,7 +492,7 @@ namespace VisitDreznica.Services.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("PlaceTypes");
+                    b.ToTable("PlaceTypes", (string)null);
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Reservation", b =>
@@ -600,7 +600,7 @@ namespace VisitDreznica.Services.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Room", b =>
@@ -649,7 +649,7 @@ namespace VisitDreznica.Services.Migrations
 
                     b.HasIndex("RoomTypeId");
 
-                    b.ToTable("Rooms");
+                    b.ToTable("Rooms", (string)null);
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.RoomAmenity", b =>
@@ -664,7 +664,7 @@ namespace VisitDreznica.Services.Migrations
 
                     b.HasIndex("AmenityId");
 
-                    b.ToTable("RoomAmenities");
+                    b.ToTable("RoomAmenities", (string)null);
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.RoomImage", b =>
@@ -701,7 +701,7 @@ namespace VisitDreznica.Services.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("RoomImages");
+                    b.ToTable("RoomImages", (string)null);
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.RoomType", b =>
@@ -726,7 +726,7 @@ namespace VisitDreznica.Services.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("RoomTypes");
+                    b.ToTable("RoomTypes", (string)null);
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.User", b =>
@@ -800,7 +800,7 @@ namespace VisitDreznica.Services.Migrations
                     b.HasIndex("Username")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.UserRole", b =>
@@ -815,7 +815,7 @@ namespace VisitDreznica.Services.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("UserRoles");
+                    b.ToTable("UserRoles", (string)null);
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.UserSession", b =>
@@ -840,7 +840,7 @@ namespace VisitDreznica.Services.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserSessions");
+                    b.ToTable("UserSessions", (string)null);
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.ActivityReservation", b =>

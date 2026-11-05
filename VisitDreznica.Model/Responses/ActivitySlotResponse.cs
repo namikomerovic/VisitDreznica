@@ -10,4 +10,6 @@ public class ActivitySlotResponse
     public int Capacity { get; set; }
     public int GuideId { get; set; }
     public string GuideFullName { get; set; } = string.Empty;
+    public int BookedCount { get; set; }
+    public int AvailableSpots { get; set; }
 }

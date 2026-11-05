@@ -11,7 +11,7 @@ public class ActivityReservationConfiguration : IEntityTypeConfiguration<Activit
         builder.ToTable("ActivityReservations");
 
         builder.HasOne(x => x.ActivitySlot)
-            .WithMany()
+            .WithMany(x => x.Reservations)
             .HasForeignKey(x => x.ActivitySlotId)
             .OnDelete(DeleteBehavior.Restrict);
 

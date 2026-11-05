@@ -61,6 +61,8 @@ builder.Services.AddScoped<INewsService, NewsService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<IRoomReservationService, RoomReservationService>();
+builder.Services.AddScoped<IEquipmentReservationService, EquipmentReservationService>();
+builder.Services.AddScoped<IActivityReservationService, ActivityReservationService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
