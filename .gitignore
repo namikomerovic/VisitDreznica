@@ -483,3 +483,4 @@ $RECYCLE.BIN/
 
 # Tajne - nikad u git
 .env
+.env.txt
