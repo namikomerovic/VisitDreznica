@@ -11,6 +11,12 @@ public class VisitDreznicaDbContext(DbContextOptions<VisitDreznicaDbContext> opt
     public DbSet<User> Users => Set<User>();
     public DbSet<UserRole> UserRoles => Set<UserRole>();
     public DbSet<UserSession> UserSessions => Set<UserSession>();
+    public DbSet<RoomType> RoomTypes => Set<RoomType>();
+    public DbSet<Amenity> Amenities => Set<Amenity>();
+    public DbSet<EquipmentType> EquipmentTypes => Set<EquipmentType>();
+    public DbSet<ActivityCategory> ActivityCategories => Set<ActivityCategory>();
+    public DbSet<PlaceType> PlaceTypes => Set<PlaceType>();
+    public DbSet<Guide> Guides => Set<Guide>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

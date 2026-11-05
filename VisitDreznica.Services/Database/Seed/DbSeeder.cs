@@ -11,16 +11,20 @@ public class DbSeeder(VisitDreznicaDbContext dbContext, IPasswordHasher password
 
     public async Task SeedAsync()
     {
+        await SeedUsersAndLocationsAsync();
+        await SeedLookupsAsync();
+    }
+
+    private async Task SeedUsersAndLocationsAsync()
+    {
         if (await dbContext.Roles.AnyAsync())
         {
             return;
         }
 
-        // ---------- Uloge ----------
         var adminRole = new Role { Name = AppRoles.Admin, Description = "Administrator smještaja" };
         var guestRole = new Role { Name = AppRoles.Guest, Description = "Gost" };
 
-        // ---------- Gradovi ----------
         var mostar = new City { Name = "Mostar", PostalCode = "88000" };
         var jablanica = new City { Name = "Jablanica", PostalCode = "88420" };
         var konjic = new City { Name = "Konjic", PostalCode = "88400" };
@@ -36,7 +40,6 @@ public class DbSeeder(VisitDreznicaDbContext dbContext, IPasswordHasher password
         var bec = new City { Name = "Beč", PostalCode = "1010" };
         var minhen = new City { Name = "Minhen", PostalCode = "80331" };
 
-        // ---------- Države ----------
         var countries = new List<Country>
         {
             new() { Name = "Bosna i Hercegovina", Cities = { mostar, jablanica, konjic, sarajevo, zenica, tuzla, banjaLuka } },
@@ -48,7 +51,6 @@ public class DbSeeder(VisitDreznicaDbContext dbContext, IPasswordHasher password
             new() { Name = "Njemačka", Cities = { minhen } }
         };
 
-        // ---------- Korisnici ----------
         var users = new List<User>
         {
             CreateUser("Amra", "Jelić", "desktop", "desktop@visitdreznica.ba", "061 100 200", jablanica, adminRole),
@@ -62,6 +64,51 @@ public class DbSeeder(VisitDreznicaDbContext dbContext, IPasswordHasher password
         dbContext.Roles.AddRange(adminRole, guestRole);
         dbContext.Countries.AddRange(countries);
         dbContext.Users.AddRange(users);
+
+        await dbContext.SaveChangesAsync();
+    }
+
+    private async Task SeedLookupsAsync()
+    {
+        if (await dbContext.RoomTypes.AnyAsync())
+        {
+            return;
+        }
+
+        dbContext.RoomTypes.AddRange(
+            new RoomType { Name = "Jednokrevetna", Description = "Soba za jednu osobu" },
+            new RoomType { Name = "Dvokrevetna", Description = "Bračni ili dva odvojena kreveta" },
+            new RoomType { Name = "Trokrevetna", Description = "Soba za tri osobe" },
+            new RoomType { Name = "Porodična", Description = "Soba za četiri i više osoba" });
+
+        dbContext.Amenities.AddRange(
+            new Amenity { Name = "Balkon" },
+            new Amenity { Name = "Klima uređaj" },
+            new Amenity { Name = "Vlastito kupatilo" },
+            new Amenity { Name = "Pogled na rijeku" },
+            new Amenity { Name = "TV" },
+            new Amenity { Name = "Kuhalo za vodu" },
+            new Amenity { Name = "Besplatan Wi-Fi" });
+
+        dbContext.EquipmentTypes.AddRange(
+            new EquipmentType { Name = "Kajak", Description = "Kajaci za jednu ili dvije osobe" },
+            new EquipmentType { Name = "Kanu", Description = "Otvoreni kanu za mirnije vode" },
+            new EquipmentType { Name = "SUP daska", Description = "Daska za veslanje stojeći" });
+
+        dbContext.ActivityCategories.AddRange(
+            new ActivityCategory { Name = "Na vodi", Description = "Splavarenje i vožnje rijekom" },
+            new ActivityCategory { Name = "Planinarenje", Description = "Pješačke ture kanjonima i planinama" },
+            new ActivityCategory { Name = "Ribolov", Description = "Ribolov uz vodiča" },
+            new ActivityCategory { Name = "Kultura", Description = "Historijske i kulturne ture" });
+
+        dbContext.PlaceTypes.AddRange(
+            new PlaceType { Name = "Plaža", Description = "Plaže na rijekama" },
+            new PlaceType { Name = "Priroda", Description = "Izvori, vidikovci i prirodne ljepote" },
+            new PlaceType { Name = "Znamenitost", Description = "Historijske znamenitosti" });
+
+        dbContext.Guides.AddRange(
+            new Guide { FirstName = "Kenan", LastName = "Hadžić", PhoneNumber = "061 555 111" },
+            new Guide { FirstName = "Adnan", LastName = "Ćorić", PhoneNumber = "062 555 222" });
 
         await dbContext.SaveChangesAsync();
     }
