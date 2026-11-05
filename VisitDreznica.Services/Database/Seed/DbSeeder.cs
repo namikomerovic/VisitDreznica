@@ -15,8 +15,108 @@ public class DbSeeder(VisitDreznicaDbContext dbContext, IPasswordHasher password
         await SeedLookupsAsync();
         await SeedRoomsAsync();
         await SeedEquipmentAsync();
+        await SeedActivitiesAsync();
+    }
+    private async Task SeedActivitiesAsync()
+    {
+        if (await dbContext.Activities.AnyAsync())
+        {
+            return;
+        }
+
+        var categories = await dbContext.ActivityCategories.ToDictionaryAsync(x => x.Name);
+        var kenan = await dbContext.Guides.FirstAsync(x => x.FirstName == "Kenan");
+        var adnan = await dbContext.Guides.FirstAsync(x => x.FirstName == "Adnan");
+        var now = DateTime.UtcNow;
+
+        var rafting = new Activity
+        {
+            Name = "Vožnja splavom kanjonom Neretve",
+            Description = "Organizovana vožnja splavom sa skiperom. Uključeni prsluci, kacige i pauza na plaži.",
+            ActivityCategory = categories["Na vodi"],
+            DurationMinutes = 180,
+            MaxParticipants = 10,
+            PricePerPerson = 60m,
+            MeetingPoint = "Plaža ispred smještaja",
+            CreatedAt = now
+        };
+
+        var hiking = new Activity
+        {
+            Name = "Pješačka tura kanjonom Drežanke",
+            Description = "Tura kroz kanjon rijeke Drežanke do vrela, uz stručnog vodiča.",
+            ActivityCategory = categories["Planinarenje"],
+            DurationMinutes = 300,
+            MaxParticipants = 12,
+            PricePerPerson = 35m,
+            MeetingPoint = "Recepcija smještaja",
+            CreatedAt = now
+        };
+
+        var fishing = new Activity
+        {
+            Name = "Ribolov na Neretvi s vodičem",
+            Description = "Jutarnji ribolov na najboljim mjestima uz Neretvu. Oprema uključena.",
+            ActivityCategory = categories["Ribolov"],
+            DurationMinutes = 240,
+            MaxParticipants = 4,
+            PricePerPerson = 50m,
+            MeetingPoint = "Recepcija smještaja",
+            CreatedAt = now
+        };
+
+        var history = new Activity
+        {
+            Name = "Historijska tura do Jablanice",
+            Description = "Obilazak Srušenog mosta na Neretvi i muzeja Bitke na Neretvi.",
+            ActivityCategory = categories["Kultura"],
+            DurationMinutes = 240,
+            MaxParticipants = 15,
+            PricePerPerson = 30m,
+            MeetingPoint = "Parking smještaja",
+            CreatedAt = now
+        };
+
+        var today = now.Date;
+
+        for (var day = 1; day <= 14; day++)
+        {
+            var date = today.AddDays(day);
+
+            AddSlot(rafting, date.AddHours(8), 10, kenan, now);
+            AddSlot(rafting, date.AddHours(13), 10, kenan, now);
+
+            if (day % 2 == 0)
+            {
+                AddSlot(hiking, date.AddHours(6).AddMinutes(30), 12, adnan, now);
+            }
+
+            if (day % 3 == 0)
+            {
+                AddSlot(fishing, date.AddHours(4), 4, adnan, now);
+            }
+
+            if (date.DayOfWeek == DayOfWeek.Wednesday)
+            {
+                AddSlot(history, date.AddHours(9), 15, adnan, now);
+            }
+        }
+
+        dbContext.Activities.AddRange(rafting, hiking, fishing, history);
+        await dbContext.SaveChangesAsync();
     }
 
+    private static void AddSlot(Activity activity, DateTime startUtc, int capacity, Guide guide, DateTime createdAt)
+    {
+        activity.Slots.Add(new ActivitySlot
+        {
+            StartTime = DateTime.SpecifyKind(startUtc, DateTimeKind.Utc),
+            EndTime = DateTime.SpecifyKind(startUtc.AddMinutes(activity.DurationMinutes), DateTimeKind.Utc),
+            Capacity = capacity,
+            Guide = guide,
+            CreatedAt = createdAt
+        });
+    }
     private async Task SeedEquipmentAsync()
     {
         if (await dbContext.Equipment.AnyAsync())

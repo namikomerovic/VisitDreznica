@@ -22,6 +22,66 @@ namespace VisitDreznica.Services.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Activity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ActivityCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<int>("DurationMinutes")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageContentType")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<byte[]>("ImageData")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MaxParticipants")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MeetingPoint")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<decimal>("PricePerPerson")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActivityCategoryId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("Activities");
+                });
+
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.ActivityCategory", b =>
                 {
                     b.Property<int>("Id")
@@ -45,6 +105,41 @@ namespace VisitDreznica.Services.Migrations
                         .IsUnique();
 
                     b.ToTable("ActivityCategories");
+                });
+
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.ActivitySlot", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ActivityId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Capacity")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("GuideId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActivityId", "StartTime");
+
+                    b.HasIndex("GuideId", "StartTime");
+
+                    b.ToTable("ActivitySlots");
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Amenity", b =>
@@ -524,6 +619,36 @@ namespace VisitDreznica.Services.Migrations
                     b.ToTable("UserSessions");
                 });
 
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Activity", b =>
+                {
+                    b.HasOne("VisitDreznica.Services.Database.Entities.ActivityCategory", "ActivityCategory")
+                        .WithMany()
+                        .HasForeignKey("ActivityCategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ActivityCategory");
+                });
+
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.ActivitySlot", b =>
+                {
+                    b.HasOne("VisitDreznica.Services.Database.Entities.Activity", "Activity")
+                        .WithMany("Slots")
+                        .HasForeignKey("ActivityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VisitDreznica.Services.Database.Entities.Guide", "Guide")
+                        .WithMany()
+                        .HasForeignKey("GuideId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Activity");
+
+                    b.Navigation("Guide");
+                });
+
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.City", b =>
                 {
                     b.HasOne("VisitDreznica.Services.Database.Entities.Country", "Country")
@@ -626,6 +751,11 @@ namespace VisitDreznica.Services.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Activity", b =>
+                {
+                    b.Navigation("Slots");
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Country", b =>

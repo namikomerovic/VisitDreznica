@@ -21,8 +21,17 @@ public class VisitDreznicaDbContext(DbContextOptions<VisitDreznicaDbContext> opt
     public DbSet<RoomImage> RoomImages => Set<RoomImage>();
     public DbSet<RoomAmenity> RoomAmenities => Set<RoomAmenity>();
     public DbSet<Equipment> Equipment => Set<Equipment>();
+    public DbSet<Activity> Activities => Set<Activity>();
+    public DbSet<ActivitySlot> ActivitySlots => Set<ActivitySlot>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(VisitDreznicaDbContext).Assembly);
+    }
+
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        configurationBuilder.Properties<DateTime>().HaveConversion<UtcDateTimeConverter>();
+        configurationBuilder.Properties<DateTime?>().HaveConversion<NullableUtcDateTimeConverter>();
     }
 }
