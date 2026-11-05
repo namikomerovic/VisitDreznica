@@ -18,6 +18,7 @@ using VisitDreznica.Services.Equipments;
 using VisitDreznica.Services.Images;
 using VisitDreznica.Services.Locations;
 using VisitDreznica.Services.Lookups;
+using VisitDreznica.Services.NewsItems;
 using VisitDreznica.Services.Places;
 using VisitDreznica.Services.Rooms;
 using VisitDreznica.Services.Security;
@@ -53,6 +54,7 @@ builder.Services.AddScoped<IActivityService, ActivityService>();
 builder.Services.AddScoped<IActivitySlotService, ActivitySlotService>();
 builder.Services.AddScoped<IPlaceService, PlaceService>();
 builder.Services.AddScoped(typeof(IGalleryImageService<,>), typeof(GalleryImageService<,>));
+builder.Services.AddScoped<INewsService, NewsService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

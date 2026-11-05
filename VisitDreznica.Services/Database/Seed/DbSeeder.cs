@@ -18,7 +18,54 @@ public class DbSeeder(VisitDreznicaDbContext dbContext, IPasswordHasher password
         await SeedEquipmentAsync();
         await SeedActivitiesAsync();
         await SeedPlacesAsync();
+        await SeedNewsAsync();
     }
+    private async Task SeedNewsAsync()
+{
+    if (await dbContext.News.AnyAsync())
+    {
+        return;
+    }
+
+    var admin = await dbContext.Users.FirstAsync(x => x.Username == "desktop");
+    var now = DateTime.UtcNow;
+
+    dbContext.News.AddRange(
+        new News
+        {
+            Title = "Počinje sezona splavarenja",
+            Content = "Od ove sedmice vožnje splavom kanjonom Neretve organizujemo svaki dan u 10:00 i 15:00. Rezervišite termin na vrijeme jer su mjesta ograničena.",
+            PublishedAt = now.AddDays(-2),
+            CreatedAt = now,
+            CreatedByUser = admin
+        },
+        new News
+        {
+            Title = "Uređena plaža na ušću Drežanke",
+            Content = "Na plaži na ušću Drežanke postavljeni su novi suncobrani i klupe. Plaža je udaljena samo nekoliko minuta hoda od smještaja.",
+            PublishedAt = now.AddDays(-10),
+            CreatedAt = now,
+            CreatedByUser = admin
+        },
+        new News
+        {
+            Title = "Novi kajaci dvosjedi",
+            Content = "Ponudu smo proširili novim kajacima za dvije osobe. Idealni su za parove i porodice, a najam je moguć na sat ili cijeli dan.",
+            PublishedAt = now.AddDays(-25),
+            CreatedAt = now,
+            CreatedByUser = admin
+        },
+        new News
+        {
+            Title = "Obilježavanje Bitke na Neretvi",
+            Content = "Za goste organizujemo prevoz do Jablanice i obilazak Srušenog mosta i muzeja Bitke na Neretvi.",
+            PublishedAt = now.AddDays(5),
+            CreatedAt = now,
+            CreatedByUser = admin
+        });
+
+    await dbContext.SaveChangesAsync();
+}
     private async Task SeedPlacesAsync()
     {
         if (await dbContext.Places.AnyAsync())

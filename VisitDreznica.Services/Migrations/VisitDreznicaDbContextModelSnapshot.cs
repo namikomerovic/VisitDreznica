@@ -332,6 +332,52 @@ namespace VisitDreznica.Services.Migrations
                     b.ToTable("Guides");
                 });
 
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.News", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CreatedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImageContentType")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<byte[]>("ImageData")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<DateTime>("PublishedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("PublishedAt");
+
+                    b.ToTable("News");
+                });
+
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Place", b =>
                 {
                     b.Property<int>("Id")
@@ -762,6 +808,17 @@ namespace VisitDreznica.Services.Migrations
                         .IsRequired();
 
                     b.Navigation("EquipmentType");
+                });
+
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.News", b =>
+                {
+                    b.HasOne("VisitDreznica.Services.Database.Entities.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByUser");
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Place", b =>

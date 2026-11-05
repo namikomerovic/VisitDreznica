@@ -25,6 +25,7 @@ public class VisitDreznicaDbContext(DbContextOptions<VisitDreznicaDbContext> opt
     public DbSet<ActivitySlot> ActivitySlots => Set<ActivitySlot>();
     public DbSet<Place> Places => Set<Place>();
     public DbSet<PlaceImage> PlaceImages => Set<PlaceImage>();
+    public DbSet<News> News => Set<News>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
