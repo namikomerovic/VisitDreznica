@@ -24,6 +24,8 @@ using VisitDreznica.Services.Rooms;
 using VisitDreznica.Services.Security;
 using VisitDreznica.Services.Users;
 using VisitDreznica.Services.Reservations;
+using Stripe;
+using VisitDreznica.Services.Payments;
 
 // Učitava .env u environment varijable. U Dockeru .env fajla nema,
 // pa vrijednosti dolaze iz docker-compose (NoClobber ih ne pregazi).
@@ -35,6 +37,14 @@ var builder = WebApplication.CreateBuilder(args);
 var jwtSettings = builder.Configuration.GetJwtSettings();
 builder.Services.AddSingleton(jwtSettings);
 builder.Services.AddSingleton(builder.Configuration.GetReservationSettings());
+var paymentSettings = builder.Configuration.GetPaymentSettings();
+builder.Services.AddSingleton(paymentSettings);
+builder.Services.AddHttpClient("Stripe");
+builder.Services.AddSingleton<IStripeClient>(serviceProvider =>
+{
+    var httpClient = serviceProvider.GetRequiredService<IHttpClientFactory>().CreateClient("Stripe");
+    return new StripeClient(paymentSettings.SecretKey, httpClient: new SystemNetHttpClient(httpClient));
+});
 
 // ---------- Baza ----------
 builder.Services.AddDbContext<VisitDreznicaDbContext>(options =>
@@ -63,6 +73,7 @@ builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<IRoomReservationService, RoomReservationService>();
 builder.Services.AddScoped<IEquipmentReservationService, EquipmentReservationService>();
 builder.Services.AddScoped<IActivityReservationService, ActivityReservationService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

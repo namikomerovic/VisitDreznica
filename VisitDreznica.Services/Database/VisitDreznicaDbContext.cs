@@ -31,7 +31,8 @@ public class VisitDreznicaDbContext(DbContextOptions<VisitDreznicaDbContext> opt
     public DbSet<EquipmentReservation> EquipmentReservations => Set<EquipmentReservation>();
     public DbSet<ActivityReservation> ActivityReservations => Set<ActivityReservation>();
     public DbSet<ReservationStatusHistory> ReservationStatusHistory => Set<ReservationStatusHistory>();
-
+    public DbSet<Payment> Payments => Set<Payment>();
+    public DbSet<Refund> Refunds => Set<Refund>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(VisitDreznicaDbContext).Assembly);

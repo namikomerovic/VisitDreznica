@@ -98,7 +98,7 @@ public class ReservationService(VisitDreznicaDbContext dbContext, IMapper mapper
                 FromStatus = x.FromStatus,
                 ToStatus = x.ToStatus,
                 ChangedAt = x.ChangedAt,
-                ChangedByFullName = x.ChangedByUser.FirstName + " " + x.ChangedByUser.LastName,
+                ChangedByFullName = x.ChangedByUser != null ? x.ChangedByUser.FirstName + " " + x.ChangedByUser.LastName : "Sistem",
                 Comment = x.Comment
             })
             .ToListAsync();
@@ -137,8 +137,10 @@ private async Task<ReservationResponse> ChangeStatusAsync(
     var trimmedComment = string.IsNullOrWhiteSpace(comment) ? null : comment.Trim();
     var fromStatus = reservation.Status;
 
+    var isPaid = await DbContext.Payments.AnyAsync(x => x.ReservationId == id && x.Status == PaymentStatus.Succeeded);
+
     var state = ReservationStateMachine.For(fromStatus);
-    transition(state, reservation, new TransitionContext(isAdmin, trimmedComment, now));
+    transition(state, reservation, new TransitionContext(isAdmin, trimmedComment, now, isPaid));
 
     reservation.UpdatedAt = now;
     ReservationHistory.Record(reservation, fromStatus, reservation.Status, currentUser.UserId, trimmedComment, now);

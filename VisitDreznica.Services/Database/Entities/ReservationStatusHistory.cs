@@ -13,6 +13,6 @@ public class ReservationStatusHistory : IEntity
     public int ReservationId { get; set; }
     public Reservation Reservation { get; set; } = null!;
 
-    public int ChangedByUserId { get; set; }
-    public User ChangedByUser { get; set; } = null!;
+    public int? ChangedByUserId { get; set; }
+    public User? ChangedByUser { get; set; } = null!;
 }

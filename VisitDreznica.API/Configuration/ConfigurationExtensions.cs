@@ -3,6 +3,7 @@ using System.Text;
 using VisitDreznica.Services.Security;
 using System.Globalization;
 using VisitDreznica.Services.Reservations;
+using VisitDreznica.Services.Payments;
 
 namespace VisitDreznica.API.Configuration;
 
@@ -49,5 +50,13 @@ public static class ConfigurationExtensions
     new()
     {
         TouristTaxPerPersonNight = decimal.Parse(configuration.GetRequired("TOURIST_TAX_PER_PERSON_NIGHT"), CultureInfo.InvariantCulture)
+    };
+
+    public static PaymentSettings GetPaymentSettings(this IConfiguration configuration) =>
+    new()
+    {
+        SecretKey = configuration.GetRequired("STRIPE_SECRET_KEY"),
+        PublishableKey = configuration.GetRequired("STRIPE_PUBLISHABLE_KEY"),
+        Currency = configuration.GetRequired("STRIPE_CURRENCY").ToLowerInvariant()
     };
 }

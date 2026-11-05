@@ -19,6 +19,7 @@ public static class ReservationProjections
         StartTime = r.StartTime,
         EndTime = r.EndTime,
         TotalPrice = r.TotalPrice,
+        IsPaid = r.Payments.Any(p => p.Status == PaymentStatus.Succeeded),
         Note = r.Note,
         CreatedAt = r.CreatedAt,
         UserId = r.UserId,

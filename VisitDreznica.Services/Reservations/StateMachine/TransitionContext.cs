@@ -1,3 +1,3 @@
 namespace VisitDreznica.Services.Reservations.StateMachine;
 
-public sealed record TransitionContext(bool IsAdmin, string? Reason, DateTime Now);
+public sealed record TransitionContext(bool IsAdmin, string? Reason, DateTime Now, bool IsPaid);

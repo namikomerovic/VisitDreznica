@@ -10,6 +10,7 @@ public class ReservationResponse
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
     public decimal TotalPrice { get; set; }
+    public bool IsPaid { get; set; }
     public string? Note { get; set; }
     public DateTime CreatedAt { get; set; }
 

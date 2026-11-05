@@ -9,11 +9,17 @@ public sealed class PendingState : ReservationState
     public override ReservationStatus Status => ReservationStatus.Pending;
     public override string DisplayName => "Na čekanju";
 
-    public override void Confirm(Reservation reservation, TransitionContext context)
+public override void Confirm(Reservation reservation, TransitionContext context)
+{
+    RequireAdmin(context);
+
+    if (!context.IsPaid)
     {
-        RequireAdmin(context);
-        reservation.Status = ReservationStatus.Confirmed;
+        throw new BusinessException("Rezervacija još nije plaćena i ne može se potvrditi.");
     }
+
+    reservation.Status = ReservationStatus.Confirmed;
+}
 
     public override void Reject(Reservation reservation, TransitionContext context)
     {

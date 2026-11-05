@@ -17,4 +17,5 @@ public abstract class Reservation : IEntity
     public User User { get; set; } = null!;
 
     public ICollection<ReservationStatusHistory> StatusHistory { get; set; } = new List<ReservationStatusHistory>();
+    public ICollection<Payment> Payments { get; set; } = new List<Payment>();
 }
