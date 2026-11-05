@@ -16,12 +16,10 @@ public class PaymentService(
     VisitDreznicaDbContext dbContext,
     ICurrentUser currentUser,
     IStripeClient stripeClient,
+    IReservationPaymentService reservationPaymentService,
     PaymentSettings settings,
     ILogger<PaymentService> logger) : IPaymentService
 {
-    private const string StripeSucceeded = "succeeded";
-    private static readonly string[] StripeOpenStatuses = ["requires_payment_method", "requires_confirmation", "requires_action"];
-
     public async Task<PaymentIntentResponse> CreateIntentAsync(PaymentIntentRequest request)
     {
         var userId = currentUser.UserId;
@@ -41,6 +39,12 @@ public class PaymentService(
             throw new BusinessException("Rezervacija je već plaćena.");
         }
 
+        if (reservation.Status == ReservationStatus.Pending &&
+            reservation.CreatedAt.AddMinutes(settings.UnpaidReservationExpiryMinutes) <= DateTime.UtcNow)
+        {
+            throw new BusinessException("Vrijeme za plaćanje ove rezervacije je isteklo. Napravite novu rezervaciju.");
+        }
+
         var intentService = new PaymentIntentService(stripeClient);
         var openPayment = reservation.Payments.FirstOrDefault(x => x.Status == PaymentStatus.Pending);
 
@@ -48,14 +52,14 @@ public class PaymentService(
         {
             var existingIntent = await intentService.GetAsync(openPayment.StripePaymentIntentId);
 
-            if (existingIntent.Status == StripeSucceeded)
+            if (existingIntent.Status == StripeHelper.Succeeded)
             {
                 MarkSucceeded(openPayment, existingIntent);
                 await dbContext.SaveChangesAsync();
                 throw new BusinessException("Rezervacija je već plaćena.");
             }
 
-            if (StripeOpenStatuses.Contains(existingIntent.Status))
+            if (StripeHelper.OpenStatuses.Contains(existingIntent.Status))
             {
                 return ToIntentResponse(openPayment, existingIntent.ClientSecret);
             }
@@ -65,7 +69,7 @@ public class PaymentService(
 
         var intent = await intentService.CreateAsync(new PaymentIntentCreateOptions
         {
-            Amount = ToMinorUnits(reservation.TotalPrice),
+            Amount = StripeHelper.ToMinorUnits(reservation.TotalPrice),
             Currency = settings.Currency,
             AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions { Enabled = true },
             Metadata = new Dictionary<string, string>
@@ -96,30 +100,40 @@ public class PaymentService(
         var userId = currentUser.UserId;
 
         var payment = await dbContext.Payments
+                          .Include(x => x.Reservation)
                           .FirstOrDefaultAsync(x => x.StripePaymentIntentId == request.PaymentIntentId &&
                                                     x.Reservation.UserId == userId)
                       ?? throw new NotFoundException("Traženo plaćanje ne postoji.");
 
-        if (payment.Status == PaymentStatus.Succeeded)
+        if (payment.Status is PaymentStatus.Succeeded or PaymentStatus.Refunded)
         {
             return ToResponse(payment);
         }
 
         var intent = await new PaymentIntentService(stripeClient).GetAsync(payment.StripePaymentIntentId);
 
-        if (intent.Status != StripeSucceeded)
+        if (intent.Status != StripeHelper.Succeeded)
         {
             throw new BusinessException("Plaćanje nije završeno. Pokušajte ponovo.");
         }
 
-        if (intent.AmountReceived != ToMinorUnits(payment.Amount))
+        if (intent.AmountReceived != StripeHelper.ToMinorUnits(payment.Amount))
         {
             logger.LogError("Iznos uplate {Received} ne odgovara očekivanom {Expected} za plaćanje {PaymentId}",
-                intent.AmountReceived, ToMinorUnits(payment.Amount), payment.Id);
+                intent.AmountReceived, StripeHelper.ToMinorUnits(payment.Amount), payment.Id);
             throw new BusinessException("Iznos uplate ne odgovara iznosu rezervacije. Obratite se administratoru.");
         }
 
         MarkSucceeded(payment, intent);
+
+        if (!ReservationRules.ActiveStatuses.Contains(payment.Reservation.Status))
+        {
+            logger.LogWarning("Uplata {PaymentId} stigla za neaktivnu rezervaciju {ReservationId}; novac se vraća",
+                payment.Id, payment.ReservationId);
+            await reservationPaymentService.ReverseAsync(payment.ReservationId,
+                "Uplata je stigla nakon što je rezervacija otkazana.");
+        }
+
         await dbContext.SaveChangesAsync();
 
         return ToResponse(payment);
@@ -128,7 +142,7 @@ public class PaymentService(
     private static void MarkSucceeded(Payment payment, PaymentIntent intent)
     {
         payment.Status = PaymentStatus.Succeeded;
-        payment.Amount = FromMinorUnits(intent.AmountReceived);
+        payment.Amount = StripeHelper.FromMinorUnits(intent.AmountReceived);
         payment.PaidAt = DateTime.UtcNow;
     }
 
@@ -152,8 +166,4 @@ public class PaymentService(
         CreatedAt = payment.CreatedAt,
         PaidAt = payment.PaidAt
     };
-
-    private static long ToMinorUnits(decimal amount) => (long)Math.Round(amount * 100, MidpointRounding.AwayFromZero);
-
-    private static decimal FromMinorUnits(long amount) => amount / 100m;
 }

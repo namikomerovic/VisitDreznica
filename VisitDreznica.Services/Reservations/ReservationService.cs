@@ -3,18 +3,23 @@ using Microsoft.EntityFrameworkCore;
 using VisitDreznica.Model.Constants;
 using VisitDreznica.Model.Enums;
 using VisitDreznica.Model.Exceptions;
+using VisitDreznica.Model.Requests;
 using VisitDreznica.Model.Responses;
 using VisitDreznica.Model.SearchObjects;
 using VisitDreznica.Services.Base;
 using VisitDreznica.Services.Database;
 using VisitDreznica.Services.Database.Entities;
-using VisitDreznica.Services.Security;
-using VisitDreznica.Model.Requests;
+using VisitDreznica.Services.Payments;
 using VisitDreznica.Services.Reservations.StateMachine;
+using VisitDreznica.Services.Security;
 
 namespace VisitDreznica.Services.Reservations;
 
-public class ReservationService(VisitDreznicaDbContext dbContext, IMapper mapper, ICurrentUser currentUser)
+public class ReservationService(
+    VisitDreznicaDbContext dbContext,
+    IMapper mapper,
+    ICurrentUser currentUser,
+    IReservationPaymentService reservationPaymentService)
     : BaseReadService<Reservation, ReservationResponse, ReservationSearchObject>(dbContext, mapper),
       IReservationService
 {
@@ -98,7 +103,9 @@ public class ReservationService(VisitDreznicaDbContext dbContext, IMapper mapper
                 FromStatus = x.FromStatus,
                 ToStatus = x.ToStatus,
                 ChangedAt = x.ChangedAt,
-                ChangedByFullName = x.ChangedByUser != null ? x.ChangedByUser.FirstName + " " + x.ChangedByUser.LastName : "Sistem",
+                ChangedByFullName = x.ChangedByUser != null
+                    ? x.ChangedByUser.FirstName + " " + x.ChangedByUser.LastName
+                    : "Sistem",
                 Comment = x.Comment
             })
             .ToListAsync();
@@ -107,46 +114,55 @@ public class ReservationService(VisitDreznicaDbContext dbContext, IMapper mapper
     }
 
     public Task<ReservationResponse> ConfirmAsync(int id, ReservationStatusChangeRequest request) =>
-    ChangeStatusAsync(id, request.Comment, (state, reservation, context) => state.Confirm(reservation, context));
+        ChangeStatusAsync(id, request.Comment, (state, reservation, context) => state.Confirm(reservation, context));
 
-public Task<ReservationResponse> RejectAsync(int id, ReservationStatusChangeRequest request) =>
-    ChangeStatusAsync(id, request.Comment, (state, reservation, context) => state.Reject(reservation, context));
+    public Task<ReservationResponse> RejectAsync(int id, ReservationStatusChangeRequest request) =>
+        ChangeStatusAsync(id, request.Comment, (state, reservation, context) => state.Reject(reservation, context));
 
-public Task<ReservationResponse> CancelAsync(int id, ReservationStatusChangeRequest request) =>
-    ChangeStatusAsync(id, request.Comment, (state, reservation, context) => state.Cancel(reservation, context));
+    public Task<ReservationResponse> CancelAsync(int id, ReservationStatusChangeRequest request) =>
+        ChangeStatusAsync(id, request.Comment, (state, reservation, context) => state.Cancel(reservation, context));
 
-public Task<ReservationResponse> CompleteAsync(int id, ReservationStatusChangeRequest request) =>
-    ChangeStatusAsync(id, request.Comment, (state, reservation, context) => state.Complete(reservation, context));
+    public Task<ReservationResponse> CompleteAsync(int id, ReservationStatusChangeRequest request) =>
+        ChangeStatusAsync(id, request.Comment, (state, reservation, context) => state.Complete(reservation, context));
 
-private async Task<ReservationResponse> ChangeStatusAsync(
-    int id,
-    string? comment,
-    Action<ReservationState, Reservation, TransitionContext> transition)
-{
-    var reservation = await DbContext.Reservations.FirstOrDefaultAsync(x => x.Id == id)
-                      ?? throw new NotFoundException("Tražena rezervacija ne postoji.");
-
-    var isAdmin = currentUser.IsInRole(AppRoles.Admin);
-
-    if (!isAdmin && reservation.UserId != currentUser.UserId)
+    private async Task<ReservationResponse> ChangeStatusAsync(
+        int id,
+        string? comment,
+        Action<ReservationState, Reservation, TransitionContext> transition)
     {
-        throw new NotFoundException("Tražena rezervacija ne postoji.");
+        var reservation = await DbContext.Reservations.FirstOrDefaultAsync(x => x.Id == id)
+                          ?? throw new NotFoundException("Tražena rezervacija ne postoji.");
+
+        var isAdmin = currentUser.IsInRole(AppRoles.Admin);
+
+        if (!isAdmin && reservation.UserId != currentUser.UserId)
+        {
+            throw new NotFoundException("Tražena rezervacija ne postoji.");
+        }
+
+        var now = DateTime.UtcNow;
+        var trimmedComment = string.IsNullOrWhiteSpace(comment) ? null : comment.Trim();
+        var fromStatus = reservation.Status;
+
+        var isPaid = await DbContext.Payments.AnyAsync(x => x.ReservationId == id && x.Status == PaymentStatus.Succeeded);
+
+        var state = ReservationStateMachine.For(fromStatus);
+        transition(state, reservation, new TransitionContext(isAdmin, trimmedComment, now, isPaid));
+
+        reservation.UpdatedAt = now;
+        ReservationHistory.Record(reservation, fromStatus, reservation.Status, currentUser.UserId, trimmedComment, now);
+
+        if (reservation.Status is ReservationStatus.Cancelled or ReservationStatus.Rejected)
+        {
+            var reason = trimmedComment ?? (reservation.Status == ReservationStatus.Rejected
+                ? "Rezervacija je odbijena."
+                : "Rezervacija je otkazana.");
+
+            await reservationPaymentService.ReverseAsync(reservation.Id, reason);
+        }
+
+        await DbContext.SaveChangesAsync();
+
+        return await GetByIdAsync(id);
     }
-
-    var now = DateTime.UtcNow;
-    var trimmedComment = string.IsNullOrWhiteSpace(comment) ? null : comment.Trim();
-    var fromStatus = reservation.Status;
-
-    var isPaid = await DbContext.Payments.AnyAsync(x => x.ReservationId == id && x.Status == PaymentStatus.Succeeded);
-
-    var state = ReservationStateMachine.For(fromStatus);
-    transition(state, reservation, new TransitionContext(isAdmin, trimmedComment, now, isPaid));
-
-    reservation.UpdatedAt = now;
-    ReservationHistory.Record(reservation, fromStatus, reservation.Status, currentUser.UserId, trimmedComment, now);
-
-    await DbContext.SaveChangesAsync();
-
-    return await GetByIdAsync(id);
-}
 }

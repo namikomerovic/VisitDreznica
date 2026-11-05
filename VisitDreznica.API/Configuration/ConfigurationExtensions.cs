@@ -57,6 +57,7 @@ public static class ConfigurationExtensions
     {
         SecretKey = configuration.GetRequired("STRIPE_SECRET_KEY"),
         PublishableKey = configuration.GetRequired("STRIPE_PUBLISHABLE_KEY"),
-        Currency = configuration.GetRequired("STRIPE_CURRENCY").ToLowerInvariant()
+        Currency = configuration.GetRequired("STRIPE_CURRENCY").ToLowerInvariant(),
+        UnpaidReservationExpiryMinutes = int.Parse(configuration.GetRequired("UNPAID_RESERVATION_EXPIRY_MINUTES"))
     };
 }
