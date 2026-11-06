@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
+import '../screens/reservations/reservations_screen.dart';
 import '../widgets/notifications_panel.dart';
 import '../screens/dashboard/dashboard_screen.dart';
 import '../widgets/under_construction.dart';
@@ -26,7 +27,7 @@ final _sections = <_Section>[
     'Rezervacije',
     Icons.event_note_outlined,
     Icons.event_note,
-    (_) => const UnderConstruction(title: 'Rezervacije'),
+    (_) => const ReservationsScreen(),
   ),
   _Section(
     'Sobe',

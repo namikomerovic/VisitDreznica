@@ -14,6 +14,8 @@ abstract final class Formatters {
 
   static String dateTime(DateTime value) => DateFormat('dd.MM.yyyy. HH:mm', 'bs').format(value.toLocal());
 
+  static String time(DateTime value) => DateFormat('HH:mm', 'bs').format(value.toLocal());
+
     static String relative(DateTime value) {
     final difference = DateTime.now().difference(value.toLocal());
 

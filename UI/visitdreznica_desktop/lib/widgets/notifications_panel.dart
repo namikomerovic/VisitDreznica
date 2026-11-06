@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
+import '../screens/reservations/reservation_details_dialog.dart';
+
 Future<void> showNotificationsPanel(BuildContext context) async {
-  await showDialog<void>(
+  final reservationId = await showDialog<int>(
     context: context,
     barrierColor: Colors.black12,
     builder: (_) => const Dialog(
@@ -13,8 +15,11 @@ Future<void> showNotificationsPanel(BuildContext context) async {
     ),
   );
 
-  if (context.mounted) {
-    await context.read<NotificationProvider>().refresh();
+  if (!context.mounted) return;
+  await context.read<NotificationProvider>().refresh();
+
+  if (reservationId != null && context.mounted) {
+    await showReservationDetailsDialog(context, reservationId);
   }
 }
 
@@ -60,7 +65,11 @@ class _NotificationsPanelState extends State<NotificationsPanel> {
     setState(() => _loading = true);
 
     try {
-      final result = await _service.getPage(page: _page + 1, pageSize: _pageSize, onlyUnread: _onlyUnread);
+      final result = await _service.getPage(
+        page: _page + 1,
+        pageSize: _pageSize,
+        onlyUnread: _onlyUnread,
+      );
 
       if (!mounted) return;
 
@@ -83,47 +92,56 @@ class _NotificationsPanelState extends State<NotificationsPanel> {
       if (mounted) await context.read<NotificationProvider>().refresh();
     } on ApiException catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(e.message)));
       }
     }
   }
 
-  Future<void> _open(AppNotification item) => _run(() async {
-        if (item.isRead) return;
-
+  Future<void> _open(AppNotification item) async {
+    if (!item.isRead) {
+      await _run(() async {
         await _service.markAsRead(item.id);
 
         if (!mounted) return;
         setState(() {
           final index = _items.indexWhere((x) => x.id == item.id);
           if (index >= 0) {
-            _onlyUnread ? _items.removeAt(index) : _items[index] = item.markedAsRead();
+            _onlyUnread
+                ? _items.removeAt(index)
+                : _items[index] = item.markedAsRead();
           }
         });
       });
+    }
+
+    if (item.reservationId != null && mounted) {
+      Navigator.pop(context, item.reservationId);
+    }
+  }
 
   Future<void> _markAll() => _run(() async {
-        await _service.markAllAsRead();
+    await _service.markAllAsRead();
 
-        if (!mounted) return;
-        setState(() {
-          if (_onlyUnread) {
-            _items.clear();
-            _hasMore = false;
-          } else {
-            for (var i = 0; i < _items.length; i++) {
-              _items[i] = _items[i].markedAsRead();
-            }
-          }
-        });
-      });
+    if (!mounted) return;
+    setState(() {
+      if (_onlyUnread) {
+        _items.clear();
+        _hasMore = false;
+      } else {
+        for (var i = 0; i < _items.length; i++) {
+          _items[i] = _items[i].markedAsRead();
+        }
+      }
+    });
+  });
 
   Future<void> _delete(AppNotification item) => _run(() async {
-        await _service.delete(item.id);
+    await _service.delete(item.id);
 
-        if (!mounted) return;
-        setState(() => _items.removeWhere((x) => x.id == item.id));
-      });
+    if (!mounted) return;
+    setState(() => _items.removeWhere((x) => x.id == item.id));
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -175,7 +193,10 @@ class _NotificationsPanelState extends State<NotificationsPanel> {
           children: [
             Text(_error!, textAlign: TextAlign.center),
             const SizedBox(height: 12),
-            OutlinedButton(onPressed: _reload, child: const Text('Pokušaj ponovo')),
+            OutlinedButton(
+              onPressed: _reload,
+              child: const Text('Pokušaj ponovo'),
+            ),
           ],
         ),
       );
@@ -190,9 +211,17 @@ class _NotificationsPanelState extends State<NotificationsPanel> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.notifications_none, size: 48, color: theme.colorScheme.outline),
+            Icon(
+              Icons.notifications_none,
+              size: 48,
+              color: theme.colorScheme.outline,
+            ),
             const SizedBox(height: 8),
-            Text(_onlyUnread ? 'Nema nepročitanih obavijesti.' : 'Nema obavijesti.'),
+            Text(
+              _onlyUnread
+                  ? 'Nema nepročitanih obavijesti.'
+                  : 'Nema obavijesti.',
+            ),
           ],
         ),
       );
@@ -208,7 +237,10 @@ class _NotificationsPanelState extends State<NotificationsPanel> {
             child: Center(
               child: _loading
                   ? const CircularProgressIndicator()
-                  : OutlinedButton(onPressed: _loadMore, child: const Text('Učitaj još')),
+                  : OutlinedButton(
+                      onPressed: _loadMore,
+                      child: const Text('Učitaj još'),
+                    ),
             ),
           );
         }
@@ -224,17 +256,21 @@ class _NotificationsPanelState extends State<NotificationsPanel> {
 }
 
 class _NotificationTile extends StatelessWidget {
-  const _NotificationTile({required this.item, required this.onTap, required this.onDelete});
+  const _NotificationTile({
+    required this.item,
+    required this.onTap,
+    required this.onDelete,
+  });
 
   final AppNotification item;
   final VoidCallback onTap;
   final VoidCallback onDelete;
 
   static IconData _iconFor(NotificationType type) => switch (type) {
-        NotificationType.payment => Icons.payments_outlined,
-        NotificationType.reservation => Icons.event_note_outlined,
-        NotificationType.system => Icons.info_outline,
-      };
+    NotificationType.payment => Icons.payments_outlined,
+    NotificationType.reservation => Icons.event_note_outlined,
+    NotificationType.system => Icons.info_outline,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -242,7 +278,9 @@ class _NotificationTile extends StatelessWidget {
     final scheme = theme.colorScheme;
 
     return Material(
-      color: item.isRead ? Colors.transparent : scheme.primaryContainer.withValues(alpha: 0.35),
+      color: item.isRead
+          ? Colors.transparent
+          : scheme.primaryContainer.withValues(alpha: 0.35),
       child: InkWell(
         onTap: onTap,
         child: Padding(
@@ -259,7 +297,9 @@ class _NotificationTile extends StatelessWidget {
                     Text(
                       item.title,
                       style: theme.textTheme.bodyLarge?.copyWith(
-                        fontWeight: item.isRead ? FontWeight.normal : FontWeight.w600,
+                        fontWeight: item.isRead
+                            ? FontWeight.normal
+                            : FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -267,7 +307,9 @@ class _NotificationTile extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       Formatters.relative(item.createdAt),
-                      style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: scheme.onSurfaceVariant,
+                      ),
                     ),
                   ],
                 ),
@@ -275,7 +317,10 @@ class _NotificationTile extends StatelessWidget {
               if (!item.isRead)
                 Padding(
                   padding: const EdgeInsets.only(top: 6, left: 4),
-                  child: CircleAvatar(radius: 4, backgroundColor: scheme.primary),
+                  child: CircleAvatar(
+                    radius: 4,
+                    backgroundColor: scheme.primary,
+                  ),
                 ),
               IconButton(
                 tooltip: 'Obriši',

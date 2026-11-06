@@ -14,3 +14,5 @@ export 'src/widgets/app_logo.dart';
 export 'src/models/notification.dart';
 export 'src/models/page_result.dart';
 export 'src/services/notification_service.dart';
+export 'src/models/reservation.dart';
+export 'src/services/reservation_service.dart';
