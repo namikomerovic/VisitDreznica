@@ -30,5 +30,40 @@ services:
       timeout: 5s
       retries: 10
 
+  api:
+    build:
+      context: .
+      dockerfile: VisitDreznica.API/Dockerfile
+    container_name: visitdreznica-api
+    env_file: .env
+    environment:
+      DB_HOST: sqlserver
+      DB_PORT: "1433"
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: "5672"
+      ASPNETCORE_ENVIRONMENT: Development
+    ports:
+      - "5291:8080"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+
+  worker:
+    build:
+      context: .
+      dockerfile: VisitDreznica.Worker/Dockerfile
+    container_name: visitdreznica-worker
+    env_file: .env
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: "5672"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    restart: unless-stopped
+
 volumes:
   sqldata:
