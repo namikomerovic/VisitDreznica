@@ -20,3 +20,5 @@ export 'src/models/lookup.dart';
 export 'src/models/room.dart';
 export 'src/services/lookup_service.dart';
 export 'src/services/room_service.dart';
+export 'src/models/equipment.dart';
+export 'src/services/equipment_service.dart';

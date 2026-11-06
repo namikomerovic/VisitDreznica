@@ -7,6 +7,7 @@ import '../widgets/notifications_panel.dart';
 import '../screens/dashboard/dashboard_screen.dart';
 import '../widgets/under_construction.dart';
 import '../screens/rooms/rooms_screen.dart';
+import '../screens/equipment/equipment_screen.dart';
 
 class _Section {
   const _Section(this.label, this.icon, this.selectedIcon, this.builder);
@@ -35,7 +36,7 @@ final _sections = <_Section>[
     'Oprema',
     Icons.kayaking_outlined,
     Icons.kayaking,
-    (_) => const UnderConstruction(title: 'Oprema'),
+    (_) => const EquipmentScreen(),
   ),
   _Section(
     'Aktivnosti',

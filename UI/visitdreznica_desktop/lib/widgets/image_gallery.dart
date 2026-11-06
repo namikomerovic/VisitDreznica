@@ -1,6 +1,5 @@
 import 'dart:typed_data';
-
-import 'package:file_picker/file_picker.dart';
+import 'image_picking.dart';
 import 'package:flutter/material.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
@@ -46,29 +45,13 @@ class _ImageGalleryState extends State<ImageGallery> {
   }
 
   Future<void> _pickAndUpload() async {
-    final file = await FilePicker.pickFile(
-      type: FileType.custom,
-      allowedExtensions: ['jpg', 'jpeg', 'png'],
-    );
+    final image = await pickImage(context);
 
-    if (file == null || !mounted) {
+    if (image == null || !mounted) {
       return;
     }
 
-    final bytes = await file.readAsBytes();
-
-    if (!mounted) {
-      return;
-    }
-
-    if (bytes.length > ImageGallery.maxSizeBytes) {
-      showMessage(context, 'Slika može imati najviše 5 MB.', isError: true);
-      return;
-    }
-
-    final contentType = file.name.toLowerCase().endsWith('.png') ? 'image/png' : 'image/jpeg';
-
-    await _run(() => widget.onUpload(bytes, file.name, contentType), 'Slika je dodana.');
+    await _run(() => widget.onUpload(image.bytes, image.fileName, image.contentType), 'Slika je dodana.');
   }
   Future<void> _delete(GalleryImage image) async {
     final confirmed = await showConfirmDialog(

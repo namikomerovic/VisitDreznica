@@ -9,8 +9,10 @@ import 'api_exception.dart';
 
 class ApiClient {
   ApiClient({required String baseUrl, http.Client? httpClient})
-      : _baseUrl = baseUrl.endsWith('/') ? baseUrl.substring(0, baseUrl.length - 1) : baseUrl,
-        _http = httpClient ?? http.Client();
+    : _baseUrl = baseUrl.endsWith('/')
+          ? baseUrl.substring(0, baseUrl.length - 1)
+          : baseUrl,
+      _http = httpClient ?? http.Client();
 
   static const _timeout = Duration(seconds: 30);
 
@@ -26,22 +28,30 @@ class ApiClient {
 
   bool get hasToken => _token != null;
 
-  Map<String, String> get authHeaders => _token == null ? const {} : {'Authorization': 'Bearer $_token'};
+  Map<String, String> get authHeaders =>
+      _token == null ? const {} : {'Authorization': 'Bearer $_token'};
 
-  String url(String path) => _uri(path, null).toString();
+  String url(String path, {Map<String, dynamic>? query}) =>
+      _uri(path, query).toString();
 
   Future<dynamic> get(String path, {Map<String, dynamic>? query}) =>
       _sendJson('GET', path, query: query);
 
-  Future<dynamic> post(String path, {Object? body, Map<String, dynamic>? query}) =>
-      _sendJson('POST', path, body: body ?? const {}, query: query);
+  Future<dynamic> post(
+    String path, {
+    Object? body,
+    Map<String, dynamic>? query,
+  }) => _sendJson('POST', path, body: body ?? const {}, query: query);
 
-  Future<dynamic> put(String path, {Object? body}) => _sendJson('PUT', path, body: body ?? const {});
+  Future<dynamic> put(String path, {Object? body}) =>
+      _sendJson('PUT', path, body: body ?? const {});
 
-  Future<dynamic> delete(String path, {Map<String, dynamic>? query}) => _sendJson('DELETE', path, query: query);
+  Future<dynamic> delete(String path, {Map<String, dynamic>? query}) =>
+      _sendJson('DELETE', path, query: query);
 
   Future<Uint8List> getBytes(String path, {Map<String, dynamic>? query}) async {
-    final request = http.Request('GET', _uri(path, query))..headers.addAll(_headers());
+    final request = http.Request('GET', _uri(path, query))
+      ..headers.addAll(_headers());
     final response = await _dispatch(request);
     _ensureSuccess(response);
     return response.bodyBytes;
@@ -53,21 +63,60 @@ class ApiClient {
     required Uint8List bytes,
     required String fileName,
     required String contentType,
+  }) => _sendFile(
+    'POST',
+    path,
+    field: field,
+    bytes: bytes,
+    fileName: fileName,
+    contentType: contentType,
+  );
+
+  Future<dynamic> putFile(
+    String path, {
+    required String field,
+    required Uint8List bytes,
+    required String fileName,
+    required String contentType,
+  }) => _sendFile(
+    'PUT',
+    path,
+    field: field,
+    bytes: bytes,
+    fileName: fileName,
+    contentType: contentType,
+  );
+
+  Future<dynamic> _sendFile(
+    String method,
+    String path, {
+    required String field,
+    required Uint8List bytes,
+    required String fileName,
+    required String contentType,
   }) async {
-    final request = http.MultipartRequest('POST', _uri(path, null))
+    final request = http.MultipartRequest(method, _uri(path, null))
       ..headers.addAll(_headers())
-      ..files.add(http.MultipartFile.fromBytes(
-        field,
-        bytes,
-        filename: fileName,
-        contentType: MediaType.parse(contentType),
-      ));
+      ..files.add(
+        http.MultipartFile.fromBytes(
+          field,
+          bytes,
+          filename: fileName,
+          contentType: MediaType.parse(contentType),
+        ),
+      );
 
     return _decode(await _dispatch(request));
   }
 
-  Future<dynamic> _sendJson(String method, String path, {Object? body, Map<String, dynamic>? query}) async {
-    final request = http.Request(method, _uri(path, query))..headers.addAll(_headers());
+  Future<dynamic> _sendJson(
+    String method,
+    String path, {
+    Object? body,
+    Map<String, dynamic>? query,
+  }) async {
+    final request = http.Request(method, _uri(path, query))
+      ..headers.addAll(_headers());
 
     if (body != null) {
       request.headers['Content-Type'] = 'application/json; charset=utf-8';
@@ -77,7 +126,10 @@ class ApiClient {
     return _decode(await _dispatch(request));
   }
 
-  Map<String, String> _headers() => {'Accept': 'application/json', ...authHeaders};
+  Map<String, String> _headers() => {
+    'Accept': 'application/json',
+    ...authHeaders,
+  };
 
   Future<http.Response> _dispatch(http.BaseRequest request) async {
     try {
@@ -86,7 +138,9 @@ class ApiClient {
     } on TimeoutException {
       throw ApiException('Server ne odgovara. Pokušajte ponovo.');
     } on http.ClientException {
-      throw ApiException('Nije moguće povezati se sa serverom. Provjerite da li je API pokrenut.');
+      throw ApiException(
+        'Nije moguće povezati se sa serverom. Provjerite da li je API pokrenut.',
+      );
     }
   }
 
@@ -106,10 +160,13 @@ class ApiClient {
 
     query?.forEach((key, value) {
       if (value == null) return;
-      parameters[key] = value is Iterable ? value.map((x) => x.toString()).toList() : value.toString();
+      parameters[key] = value is Iterable
+          ? value.map((x) => x.toString()).toList()
+          : value.toString();
     });
 
-    return Uri.parse('$_baseUrl/$cleanPath').replace(queryParameters: parameters.isEmpty ? null : parameters);
+    return Uri.parse('$_baseUrl/$cleanPath')
+        .replace(queryParameters: parameters.isEmpty ? null : parameters);
   }
 
   void _ensureSuccess(http.Response response) {
@@ -125,7 +182,10 @@ class ApiClient {
       if (_token != null) {
         onUnauthorized?.call();
       }
-      throw ApiException(problem.message ?? 'Sesija je istekla. Prijavite se ponovo.', statusCode: status);
+      throw ApiException(
+        problem.message ?? 'Sesija je istekla. Prijavite se ponovo.',
+        statusCode: status,
+      );
     }
 
     final fallback = switch (status) {
@@ -134,13 +194,19 @@ class ApiClient {
       404 => 'Traženi podatak ne postoji.',
       409 => 'Podatak je u međuvremenu izmijenjen. Osvježite prikaz.',
       413 => 'Fajl je prevelik.',
-      _ => 'Došlo je do greške na serveru. Pokušajte ponovo.'
+      _ => 'Došlo je do greške na serveru. Pokušajte ponovo.',
     };
 
-    throw ApiException(problem.message ?? fallback, statusCode: status, fieldErrors: problem.fieldErrors);
+    throw ApiException(
+      problem.message ?? fallback,
+      statusCode: status,
+      fieldErrors: problem.fieldErrors,
+    );
   }
 
-  ({String? message, Map<String, List<String>> fieldErrors}) _readProblem(http.Response response) {
+  ({String? message, Map<String, List<String>> fieldErrors}) _readProblem(
+    http.Response response,
+  ) {
     try {
       final json = jsonDecode(utf8.decode(response.bodyBytes));
 
