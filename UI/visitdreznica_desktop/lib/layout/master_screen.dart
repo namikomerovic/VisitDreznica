@@ -8,6 +8,7 @@ import '../screens/dashboard/dashboard_screen.dart';
 import '../widgets/under_construction.dart';
 import '../screens/rooms/rooms_screen.dart';
 import '../screens/equipment/equipment_screen.dart';
+import '../screens/activities/activities_screen.dart';
 
 class _Section {
   const _Section(this.label, this.icon, this.selectedIcon, this.builder);
@@ -42,7 +43,7 @@ final _sections = <_Section>[
     'Aktivnosti',
     Icons.hiking_outlined,
     Icons.hiking,
-    (_) => const UnderConstruction(title: 'Aktivnosti'),
+    (_) => const ActivitiesScreen(),
   ),
   _Section(
     'Mjesta',

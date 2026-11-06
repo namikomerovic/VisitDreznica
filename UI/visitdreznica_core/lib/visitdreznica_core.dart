@@ -22,3 +22,6 @@ export 'src/services/lookup_service.dart';
 export 'src/services/room_service.dart';
 export 'src/models/equipment.dart';
 export 'src/services/equipment_service.dart';
+export 'src/models/activity.dart';
+export 'src/services/activity_service.dart';
+export 'src/services/guide_service.dart';
