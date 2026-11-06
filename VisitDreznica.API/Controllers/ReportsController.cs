@@ -10,7 +10,7 @@ namespace VisitDreznica.API.Controllers;
 [ApiController]
 [Route("[controller]")]
 [Authorize(Roles = AppRoles.Admin)]
-public class ReportsController(IReportService reportService) : ControllerBase
+public class ReportsController(IReportService reportService, IReportPdfService reportPdfService) : ControllerBase
 {
     [HttpGet("dashboard")]
     public Task<DashboardResponse> Dashboard() => reportService.GetDashboardAsync();
@@ -26,4 +26,17 @@ public class ReportsController(IReportService reportService) : ControllerBase
     [HttpGet("activities")]
     public Task<ActivityReportResponse> Activities([FromQuery] ReportPeriodRequest period) =>
         reportService.GetActivitiesAsync(period);
+  [HttpGet("financial/pdf")]
+    public async Task<IActionResult> FinancialPdf([FromQuery] ReportPeriodRequest period) =>
+        Pdf(await reportPdfService.FinancialAsync(period));
+
+    [HttpGet("occupancy/pdf")]
+    public async Task<IActionResult> OccupancyPdf([FromQuery] ReportPeriodRequest period) =>
+        Pdf(await reportPdfService.OccupancyAsync(period));
+
+    [HttpGet("activities/pdf")]
+    public async Task<IActionResult> ActivitiesPdf([FromQuery] ReportPeriodRequest period) =>
+        Pdf(await reportPdfService.ActivitiesAsync(period));
+
+    private FileContentResult Pdf(ReportFile file) => File(file.Content, "application/pdf", file.FileName);
 }

@@ -36,6 +36,8 @@ using VisitDreznica.Services.Reports;
 // pa vrijednosti dolaze iz docker-compose (NoClobber ih ne pregazi).
 Env.NoClobber().TraversePath().Load();
 
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // ---------- Konfiguracija ----------
@@ -95,6 +97,7 @@ builder.Services.AddHostedService<RecommenderTrainingWorker>();
 builder.Services.AddScoped<INotificationPublisher, NotificationPublisher>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IReportPdfService, ReportPdfService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
