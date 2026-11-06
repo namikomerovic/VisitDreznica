@@ -195,6 +195,50 @@ namespace VisitDreznica.Services.Migrations
                     b.ToTable("Cities");
                 });
 
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.ContentView", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("ActivityId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EquipmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PlaceId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RoomId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ViewedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActivityId");
+
+                    b.HasIndex("EquipmentId");
+
+                    b.HasIndex("PlaceId");
+
+                    b.HasIndex("RoomId");
+
+                    b.HasIndex("UserId", "ViewedAt");
+
+                    b.ToTable("ContentViews", t =>
+                        {
+                            t.HasCheckConstraint("CK_ContentView_SingleTarget", "(CASE WHEN [RoomId] IS NULL THEN 0 ELSE 1 END + CASE WHEN [EquipmentId] IS NULL THEN 0 ELSE 1 END + CASE WHEN [ActivityId] IS NULL THEN 0 ELSE 1 END + CASE WHEN [PlaceId] IS NULL THEN 0 ELSE 1 END) = 1");
+                        });
+                });
+
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Country", b =>
                 {
                     b.Property<int>("Id")
@@ -303,6 +347,64 @@ namespace VisitDreznica.Services.Migrations
                         .IsUnique();
 
                     b.ToTable("EquipmentTypes");
+                });
+
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Favorite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("ActivityId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("EquipmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PlaceId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RoomId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActivityId");
+
+                    b.HasIndex("EquipmentId");
+
+                    b.HasIndex("PlaceId");
+
+                    b.HasIndex("RoomId");
+
+                    b.HasIndex("UserId", "ActivityId")
+                        .IsUnique()
+                        .HasFilter("[ActivityId] IS NOT NULL");
+
+                    b.HasIndex("UserId", "EquipmentId")
+                        .IsUnique()
+                        .HasFilter("[EquipmentId] IS NOT NULL");
+
+                    b.HasIndex("UserId", "PlaceId")
+                        .IsUnique()
+                        .HasFilter("[PlaceId] IS NOT NULL");
+
+                    b.HasIndex("UserId", "RoomId")
+                        .IsUnique()
+                        .HasFilter("[RoomId] IS NOT NULL");
+
+                    b.ToTable("Favorites", t =>
+                        {
+                            t.HasCheckConstraint("CK_Favorite_SingleTarget", "(CASE WHEN [RoomId] IS NULL THEN 0 ELSE 1 END + CASE WHEN [EquipmentId] IS NULL THEN 0 ELSE 1 END + CASE WHEN [ActivityId] IS NULL THEN 0 ELSE 1 END + CASE WHEN [PlaceId] IS NULL THEN 0 ELSE 1 END) = 1");
+                        });
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Guide", b =>
@@ -659,6 +761,76 @@ namespace VisitDreznica.Services.Migrations
                     b.ToTable("ReservationStatusHistory", (string)null);
                 });
 
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("ActivityId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Comment")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("EquipmentId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PlaceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RoomId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActivityId");
+
+                    b.HasIndex("EquipmentId");
+
+                    b.HasIndex("PlaceId");
+
+                    b.HasIndex("RoomId");
+
+                    b.HasIndex("UserId", "ActivityId")
+                        .IsUnique()
+                        .HasFilter("[ActivityId] IS NOT NULL");
+
+                    b.HasIndex("UserId", "EquipmentId")
+                        .IsUnique()
+                        .HasFilter("[EquipmentId] IS NOT NULL");
+
+                    b.HasIndex("UserId", "PlaceId")
+                        .IsUnique()
+                        .HasFilter("[PlaceId] IS NOT NULL");
+
+                    b.HasIndex("UserId", "RoomId")
+                        .IsUnique()
+                        .HasFilter("[RoomId] IS NOT NULL");
+
+                    b.ToTable("Reviews", t =>
+                        {
+                            t.HasCheckConstraint("CK_Review_Rating", "[Rating] BETWEEN 1 AND 5");
+
+                            t.HasCheckConstraint("CK_Review_SingleTarget", "(CASE WHEN [RoomId] IS NULL THEN 0 ELSE 1 END + CASE WHEN [EquipmentId] IS NULL THEN 0 ELSE 1 END + CASE WHEN [ActivityId] IS NULL THEN 0 ELSE 1 END + CASE WHEN [PlaceId] IS NULL THEN 0 ELSE 1 END) = 1");
+                        });
+                });
+
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -1010,6 +1182,45 @@ namespace VisitDreznica.Services.Migrations
                     b.Navigation("Country");
                 });
 
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.ContentView", b =>
+                {
+                    b.HasOne("VisitDreznica.Services.Database.Entities.Activity", "Activity")
+                        .WithMany()
+                        .HasForeignKey("ActivityId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("VisitDreznica.Services.Database.Entities.Equipment", "Equipment")
+                        .WithMany()
+                        .HasForeignKey("EquipmentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("VisitDreznica.Services.Database.Entities.Place", "Place")
+                        .WithMany()
+                        .HasForeignKey("PlaceId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("VisitDreznica.Services.Database.Entities.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("VisitDreznica.Services.Database.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Activity");
+
+                    b.Navigation("Equipment");
+
+                    b.Navigation("Place");
+
+                    b.Navigation("Room");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Equipment", b =>
                 {
                     b.HasOne("VisitDreznica.Services.Database.Entities.EquipmentType", "EquipmentType")
@@ -1019,6 +1230,45 @@ namespace VisitDreznica.Services.Migrations
                         .IsRequired();
 
                     b.Navigation("EquipmentType");
+                });
+
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Favorite", b =>
+                {
+                    b.HasOne("VisitDreznica.Services.Database.Entities.Activity", "Activity")
+                        .WithMany()
+                        .HasForeignKey("ActivityId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("VisitDreznica.Services.Database.Entities.Equipment", "Equipment")
+                        .WithMany()
+                        .HasForeignKey("EquipmentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("VisitDreznica.Services.Database.Entities.Place", "Place")
+                        .WithMany()
+                        .HasForeignKey("PlaceId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("VisitDreznica.Services.Database.Entities.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("VisitDreznica.Services.Database.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Activity");
+
+                    b.Navigation("Equipment");
+
+                    b.Navigation("Place");
+
+                    b.Navigation("Room");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.News", b =>
@@ -1103,6 +1353,45 @@ namespace VisitDreznica.Services.Migrations
                     b.Navigation("ChangedByUser");
 
                     b.Navigation("Reservation");
+                });
+
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Review", b =>
+                {
+                    b.HasOne("VisitDreznica.Services.Database.Entities.Activity", "Activity")
+                        .WithMany()
+                        .HasForeignKey("ActivityId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("VisitDreznica.Services.Database.Entities.Equipment", "Equipment")
+                        .WithMany()
+                        .HasForeignKey("EquipmentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("VisitDreznica.Services.Database.Entities.Place", "Place")
+                        .WithMany()
+                        .HasForeignKey("PlaceId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("VisitDreznica.Services.Database.Entities.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("VisitDreznica.Services.Database.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Activity");
+
+                    b.Navigation("Equipment");
+
+                    b.Navigation("Place");
+
+                    b.Navigation("Room");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Room", b =>

@@ -24,10 +24,10 @@ using VisitDreznica.Services.Rooms;
 using VisitDreznica.Services.Security;
 using VisitDreznica.Services.Users;
 using VisitDreznica.Services.Reservations;
-using Stripe;
 using VisitDreznica.Services.Payments;
 using VisitDreznica.API.BackgroundServices;
 using VisitDreznica.Services.Messaging;
+using VisitDreznica.Services.Interactions;
 
 // Učitava .env u environment varijable. U Dockeru .env fajla nema,
 // pa vrijednosti dolaze iz docker-compose (NoClobber ih ne pregazi).
@@ -42,10 +42,10 @@ builder.Services.AddSingleton(builder.Configuration.GetReservationSettings());
 var paymentSettings = builder.Configuration.GetPaymentSettings();
 builder.Services.AddSingleton(paymentSettings);
 builder.Services.AddHttpClient("Stripe");
-builder.Services.AddSingleton<IStripeClient>(serviceProvider =>
+builder.Services.AddSingleton<Stripe.IStripeClient>(serviceProvider =>
 {
     var httpClient = serviceProvider.GetRequiredService<IHttpClientFactory>().CreateClient("Stripe");
-    return new StripeClient(paymentSettings.SecretKey, httpClient: new SystemNetHttpClient(httpClient));
+    return new Stripe.StripeClient(paymentSettings.SecretKey, httpClient: new Stripe.SystemNetHttpClient(httpClient));
 });
 
 // ---------- Baza ----------
@@ -82,6 +82,9 @@ builder.Services.AddHostedService<ReservationExpiryWorker>();
 builder.Services.AddSingleton(builder.Configuration.GetRabbitMqSettings());
 builder.Services.AddSingleton<IEmailQueue, RabbitMqEmailQueue>();
 builder.Services.AddScoped<IReservationEmailService, ReservationEmailService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<IFavoriteService, FavoriteService>();
+builder.Services.AddScoped<IContentViewService, ContentViewService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
