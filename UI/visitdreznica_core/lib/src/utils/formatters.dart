@@ -14,5 +14,16 @@ abstract final class Formatters {
 
   static String dateTime(DateTime value) => DateFormat('dd.MM.yyyy. HH:mm', 'bs').format(value.toLocal());
 
+    static String relative(DateTime value) {
+    final difference = DateTime.now().difference(value.toLocal());
+
+    if (difference.inMinutes < 1) return 'upravo';
+    if (difference.inMinutes < 60) return 'prije ${difference.inMinutes} min';
+    if (difference.inHours < 24) return 'prije ${difference.inHours} h';
+    if (difference.inDays < 7) return 'prije ${difference.inDays} d';
+
+    return date(value);
+  }
+
   static String monthShort(int month) => _months[month - 1];
 }

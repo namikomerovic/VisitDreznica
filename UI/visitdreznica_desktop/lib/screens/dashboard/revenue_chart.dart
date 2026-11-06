@@ -16,8 +16,12 @@ class RevenueChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final labelStyle = Theme.of(context).textTheme.bodySmall;
-    final maxTotal = data.fold<double>(0, (value, item) => max(value, _stackTotal(item)));
-    final maxY = maxTotal <= 0 ? 100.0 : (maxTotal * 1.15).ceilToDouble();
+    final maxTotal = data.fold<double>(
+      0,
+      (value, item) => max(value, _stackTotal(item)),
+    );
+    final interval = _niceInterval(maxTotal);
+    final maxY = (maxTotal / interval).floor() * interval + interval;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,18 +41,27 @@ class RevenueChart extends StatelessWidget {
             BarChartData(
               maxY: maxY,
               borderData: FlBorderData(show: false),
-              gridData: const FlGridData(drawVerticalLine: false),
+              gridData: FlGridData(
+                drawVerticalLine: false,
+                horizontalInterval: interval,
+              ),
               barGroups: [
                 for (var i = 0; i < data.length; i++) _group(i, data[i]),
               ],
               titlesData: FlTitlesData(
-                topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                topTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                rightTitles: const AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
                 leftTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,
+                    interval: interval,
                     reservedSize: 52,
-                    getTitlesWidget: (value, meta) => Text(_compact(value), style: labelStyle),
+                    getTitlesWidget: (value, meta) =>
+                        Text(_compact(value), style: labelStyle),
                   ),
                 ),
                 bottomTitles: AxisTitles(
@@ -64,7 +77,10 @@ class RevenueChart extends StatelessWidget {
 
                       return Padding(
                         padding: const EdgeInsets.only(top: 6),
-                        child: Text(Formatters.monthShort(data[index].month), style: labelStyle),
+                        child: Text(
+                          Formatters.monthShort(data[index].month),
+                          style: labelStyle,
+                        ),
                       );
                     },
                   ),
@@ -116,10 +132,31 @@ class RevenueChart extends StatelessWidget {
   }
 
   static double _stackTotal(MonthlyRevenue item) =>
-      max(0.0, item.rooms) + max(0.0, item.equipment) + max(0.0, item.activities);
+      max(0.0, item.rooms) +
+      max(0.0, item.equipment) +
+      max(0.0, item.activities);
 
-  static String _compact(double value) =>
-      value >= 1000 ? '${Formatters.decimal(value / 1000)}k' : value.toStringAsFixed(0);
+  static String _compact(double value) => value >= 1000
+      ? '${Formatters.decimal(value / 1000)}k'
+      : value.toStringAsFixed(0);
+
+  static double _niceInterval(double maxValue) {
+    if (maxValue <= 0) return 100;
+
+    final rough = maxValue / 5;
+    final magnitude = pow(10, (log(rough) / ln10).floor()).toDouble();
+    final normalized = rough / magnitude;
+
+    final step = normalized <= 1
+        ? 1
+        : normalized <= 2
+        ? 2
+        : normalized <= 5
+        ? 5
+        : 10;
+
+    return step * magnitude;
+  }
 }
 
 class _Legend extends StatelessWidget {
@@ -133,7 +170,14 @@ class _Legend extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(width: 12, height: 12, decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(3))),
+        Container(
+          width: 12,
+          height: 12,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(3),
+          ),
+        ),
         const SizedBox(width: 6),
         Text(label),
       ],

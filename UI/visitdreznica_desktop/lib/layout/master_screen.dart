@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
+import '../widgets/notifications_panel.dart';
 import '../screens/dashboard/dashboard_screen.dart';
 import '../widgets/under_construction.dart';
 
@@ -15,21 +16,78 @@ class _Section {
 }
 
 final _sections = <_Section>[
-  _Section('Dashboard', Icons.dashboard_outlined, Icons.dashboard, (_) => const DashboardScreen()),
-  _Section('Rezervacije', Icons.event_note_outlined, Icons.event_note,
-      (_) => const UnderConstruction(title: 'Rezervacije')),
-  _Section('Sobe', Icons.bed_outlined, Icons.bed, (_) => const UnderConstruction(title: 'Sobe')),
-  _Section('Oprema', Icons.kayaking_outlined, Icons.kayaking, (_) => const UnderConstruction(title: 'Oprema')),
-  _Section('Aktivnosti', Icons.hiking_outlined, Icons.hiking, (_) => const UnderConstruction(title: 'Aktivnosti')),
-  _Section('Mjesta', Icons.place_outlined, Icons.place, (_) => const UnderConstruction(title: 'Mjesta')),
-  _Section('Novosti', Icons.newspaper_outlined, Icons.newspaper, (_) => const UnderConstruction(title: 'Novosti')),
-  _Section('Recenzije', Icons.reviews_outlined, Icons.reviews, (_) => const UnderConstruction(title: 'Recenzije')),
-  _Section('Korisnici', Icons.people_outline, Icons.people, (_) => const UnderConstruction(title: 'Korisnici')),
-  _Section('Šifarnici', Icons.list_alt_outlined, Icons.list_alt, (_) => const UnderConstruction(title: 'Šifarnici')),
-  _Section('Izvještaji', Icons.picture_as_pdf_outlined, Icons.picture_as_pdf,
-      (_) => const UnderConstruction(title: 'Izvještaji')),
-  _Section('Preporuke (ML)', Icons.auto_awesome_outlined, Icons.auto_awesome,
-      (_) => const UnderConstruction(title: 'Preporuke')),
+  _Section(
+    'Dashboard',
+    Icons.dashboard_outlined,
+    Icons.dashboard,
+    (_) => const DashboardScreen(),
+  ),
+  _Section(
+    'Rezervacije',
+    Icons.event_note_outlined,
+    Icons.event_note,
+    (_) => const UnderConstruction(title: 'Rezervacije'),
+  ),
+  _Section(
+    'Sobe',
+    Icons.bed_outlined,
+    Icons.bed,
+    (_) => const UnderConstruction(title: 'Sobe'),
+  ),
+  _Section(
+    'Oprema',
+    Icons.kayaking_outlined,
+    Icons.kayaking,
+    (_) => const UnderConstruction(title: 'Oprema'),
+  ),
+  _Section(
+    'Aktivnosti',
+    Icons.hiking_outlined,
+    Icons.hiking,
+    (_) => const UnderConstruction(title: 'Aktivnosti'),
+  ),
+  _Section(
+    'Mjesta',
+    Icons.place_outlined,
+    Icons.place,
+    (_) => const UnderConstruction(title: 'Mjesta'),
+  ),
+  _Section(
+    'Novosti',
+    Icons.newspaper_outlined,
+    Icons.newspaper,
+    (_) => const UnderConstruction(title: 'Novosti'),
+  ),
+  _Section(
+    'Recenzije',
+    Icons.reviews_outlined,
+    Icons.reviews,
+    (_) => const UnderConstruction(title: 'Recenzije'),
+  ),
+  _Section(
+    'Korisnici',
+    Icons.people_outline,
+    Icons.people,
+    (_) => const UnderConstruction(title: 'Korisnici'),
+  ),
+  _Section(
+    'Šifarnici',
+    Icons.list_alt_outlined,
+    Icons.list_alt,
+    (_) => const UnderConstruction(title: 'Šifarnici'),
+  ),
+  _Section(
+    'Izvještaji',
+    Icons.picture_as_pdf_outlined,
+    Icons.picture_as_pdf,
+    (_) => const UnderConstruction(title: 'Izvještaji'),
+  ),
+  _Section(
+    'Preporuke (ML)',
+    Icons.auto_awesome_outlined,
+    Icons.auto_awesome,
+    (_) => const UnderConstruction(title: 'Preporuke'),
+  ),
 ];
 
 class MasterScreen extends StatefulWidget {
@@ -62,8 +120,14 @@ class _MasterScreenState extends State<MasterScreen> {
         title: const Text('Odjava'),
         content: const Text('Da li se želite odjaviti?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Odustani')),
-          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('Odjavi se')),
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Odustani'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Odjavi se'),
+          ),
         ],
       ),
     );
@@ -86,17 +150,23 @@ class _MasterScreenState extends State<MasterScreen> {
             color: scheme.surfaceContainerLow,
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
-                  child: Row(
-                    children: [
-                      const AppLogo(size: 44),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Text('Visit Drežnica',
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
-                      ),
-                    ],
+                SizedBox(
+                  height: 64,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      children: [
+                        const AppLogo(size: 40),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            'Visit Drežnica',
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.w600),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 const Divider(height: 1),
@@ -109,14 +179,21 @@ class _MasterScreenState extends State<MasterScreen> {
                       final selected = index == _selectedIndex;
 
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
                         child: ListTile(
-                          leading: Icon(selected ? item.selectedIcon : item.icon),
+                          leading: Icon(
+                            selected ? item.selectedIcon : item.icon,
+                          ),
                           title: Text(item.label),
                           selected: selected,
                           selectedTileColor: scheme.secondaryContainer,
                           selectedColor: scheme.onSecondaryContainer,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                           onTap: () => setState(() => _selectedIndex = index),
                         ),
                       );
@@ -168,9 +245,7 @@ class _TopBar extends StatelessWidget {
             const Spacer(),
             IconButton(
               tooltip: 'Obavijesti',
-              onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Lista obavijesti dolazi u sljedećem koraku.')),
-              ),
+              onPressed: () => showNotificationsPanel(context),
               icon: Badge(
                 isLabelVisible: unread > 0,
                 label: Text(unread > 99 ? '99+' : '$unread'),
@@ -180,12 +255,18 @@ class _TopBar extends StatelessWidget {
             const SizedBox(width: 12),
             CircleAvatar(
               radius: 16,
-              child: Text(auth.session?.firstName.characters.first.toUpperCase() ?? '?'),
+              child: Text(
+                auth.session?.firstName.characters.first.toUpperCase() ?? '?',
+              ),
             ),
             const SizedBox(width: 8),
             Text(auth.session?.fullName ?? ''),
             const SizedBox(width: 8),
-            IconButton(tooltip: 'Odjava', onPressed: onLogout, icon: const Icon(Icons.logout)),
+            IconButton(
+              tooltip: 'Odjava',
+              onPressed: onLogout,
+              icon: const Icon(Icons.logout),
+            ),
           ],
         ),
       ),

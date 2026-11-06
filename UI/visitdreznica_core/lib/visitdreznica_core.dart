@@ -11,3 +11,6 @@ export 'src/notifications/notification_provider.dart';
 export 'src/services/report_service.dart';
 export 'src/utils/formatters.dart';
 export 'src/widgets/app_logo.dart';
+export 'src/models/notification.dart';
+export 'src/models/page_result.dart';
+export 'src/services/notification_service.dart';
