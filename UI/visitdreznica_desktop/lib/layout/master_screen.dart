@@ -6,6 +6,7 @@ import '../screens/reservations/reservations_screen.dart';
 import '../widgets/notifications_panel.dart';
 import '../screens/dashboard/dashboard_screen.dart';
 import '../widgets/under_construction.dart';
+import '../screens/rooms/rooms_screen.dart';
 
 class _Section {
   const _Section(this.label, this.icon, this.selectedIcon, this.builder);
@@ -29,12 +30,7 @@ final _sections = <_Section>[
     Icons.event_note,
     (_) => const ReservationsScreen(),
   ),
-  _Section(
-    'Sobe',
-    Icons.bed_outlined,
-    Icons.bed,
-    (_) => const UnderConstruction(title: 'Sobe'),
-  ),
+  _Section('Sobe', Icons.bed_outlined, Icons.bed, (_) => const RoomsScreen()),
   _Section(
     'Oprema',
     Icons.kayaking_outlined,

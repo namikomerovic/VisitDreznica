@@ -16,3 +16,7 @@ export 'src/models/page_result.dart';
 export 'src/services/notification_service.dart';
 export 'src/models/reservation.dart';
 export 'src/services/reservation_service.dart';
+export 'src/models/lookup.dart';
+export 'src/models/room.dart';
+export 'src/services/lookup_service.dart';
+export 'src/services/room_service.dart';
