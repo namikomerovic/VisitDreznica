@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Net;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +6,7 @@ using VisitDreznica.Model.Messaging;
 using VisitDreznica.Services.Database;
 using VisitDreznica.Services.Database.Entities;
 using VisitDreznica.Services.Payments;
+using VisitDreznica.Services.Reservations;
 
 namespace VisitDreznica.Services.Messaging;
 
@@ -15,7 +15,6 @@ public class ReservationEmailService(
     IEmailQueue emailQueue,
     PaymentSettings paymentSettings) : IReservationEmailService
 {
-    private static readonly TimeZoneInfo LocalZone = TimeZoneInfo.FindSystemTimeZoneById("Europe/Sarajevo");
     private const string RefundNote = "Sredstva su obično vidljiva na vašem računu za 5 do 10 radnih dana.";
 
     public async Task NotifyStatusChangedAsync(int reservationId)
@@ -68,10 +67,10 @@ public class ReservationEmailService(
 
         var rows = new List<(string Label, string Value)>
         {
-            ("Vrsta", TypeLabel(data.Type)),
-            ("Početak", FormatLocal(data.StartTime)),
-            ("Kraj", FormatLocal(data.EndTime)),
-            ("Iznos", FormatMoney(data.TotalPrice))
+            ("Vrsta", ReservationText.TypeLabel(data.Type)),
+            ("Početak", ReservationText.FormatLocal(data.StartTime)),
+            ("Kraj", ReservationText.FormatLocal(data.EndTime)),
+            ("Iznos", ReservationText.FormatMoney(data.TotalPrice, paymentSettings.Currency))
         };
 
         if (data.Status != ReservationStatus.Confirmed && !string.IsNullOrWhiteSpace(data.LastComment))
@@ -80,7 +79,7 @@ public class ReservationEmailService(
         }
 
         string? note = data.RefundedAmount > 0
-            ? $"Uplaćeni iznos od {FormatMoney(data.RefundedAmount)} vraćen je na vašu karticu. {RefundNote}"
+            ? $"Uplaćeni iznos od {ReservationText.FormatMoney(data.RefundedAmount, paymentSettings.Currency)} vraćen je na vašu karticu. {RefundNote}"
             : null;
 
         await emailQueue.EnqueueAsync(new EmailMessage
@@ -121,20 +120,4 @@ public class ReservationEmailService(
     }
 
     private static string Encode(string value) => WebUtility.HtmlEncode(value);
-
-    private static string TypeLabel(ReservationType type) => type switch
-    {
-        ReservationType.Room => "Smještaj",
-        ReservationType.Equipment => "Najam opreme",
-        _ => "Aktivnost"
-    };
-
-    private static string FormatLocal(DateTime utc) =>
-        TimeZoneInfo.ConvertTimeFromUtc(utc, LocalZone).ToString("dd.MM.yyyy. HH:mm", CultureInfo.InvariantCulture);
-
-    private string FormatMoney(decimal amount)
-    {
-        var currency = paymentSettings.Currency == "bam" ? "KM" : paymentSettings.Currency.ToUpperInvariant();
-        return $"{amount.ToString("0.00", CultureInfo.InvariantCulture).Replace('.', ',')} {currency}";
-    }
 }

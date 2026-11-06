@@ -13,6 +13,7 @@ using VisitDreznica.Services.Messaging;
 using VisitDreznica.Services.Payments;
 using VisitDreznica.Services.Reservations.StateMachine;
 using VisitDreznica.Services.Security;
+using VisitDreznica.Services.Notifications;
 
 namespace VisitDreznica.Services.Reservations;
 
@@ -21,7 +22,8 @@ public class ReservationService(
     IMapper mapper,
     ICurrentUser currentUser,
     IReservationPaymentService reservationPaymentService,
-    IReservationEmailService reservationEmailService)
+    IReservationEmailService reservationEmailService,
+    INotificationPublisher notificationPublisher)
     : BaseReadService<Reservation, ReservationResponse, ReservationSearchObject>(dbContext, mapper),
       IReservationService
 {
@@ -166,6 +168,7 @@ public class ReservationService(
         await DbContext.SaveChangesAsync();
 
         await reservationEmailService.NotifyStatusChangedAsync(reservation.Id);
+        await notificationPublisher.ReservationStatusChangedAsync(reservation.Id);
 
         return await GetByIdAsync(id);
     }

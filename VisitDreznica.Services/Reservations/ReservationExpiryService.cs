@@ -5,6 +5,7 @@ using VisitDreznica.Services.Database;
 using VisitDreznica.Services.Messaging;
 using VisitDreznica.Services.Payments;
 using VisitDreznica.Services.Reservations.StateMachine;
+using VisitDreznica.Services.Notifications;
 
 namespace VisitDreznica.Services.Reservations;
 
@@ -12,6 +13,7 @@ public class ReservationExpiryService(
     VisitDreznicaDbContext dbContext,
     IReservationPaymentService reservationPaymentService,
     IReservationEmailService reservationEmailService,
+    INotificationPublisher notificationPublisher,
     PaymentSettings settings,
     ILogger<ReservationExpiryService> logger) : IReservationExpiryService
 {
@@ -64,6 +66,7 @@ public class ReservationExpiryService(
                 expiredCount++;
 
                 await reservationEmailService.NotifyStatusChangedAsync(id);
+                await notificationPublisher.ReservationStatusChangedAsync(id);
             }
             catch (Exception ex) when (ex is not OperationCanceledException)
             {

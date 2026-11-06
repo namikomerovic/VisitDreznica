@@ -36,6 +36,7 @@ public class VisitDreznicaDbContext(DbContextOptions<VisitDreznicaDbContext> opt
     public DbSet<Review> Reviews => Set<Review>();
     public DbSet<Favorite> Favorites => Set<Favorite>();
     public DbSet<ContentView> ContentViews => Set<ContentView>();
+    public DbSet<Notification> Notifications => Set<Notification>();
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(VisitDreznicaDbContext).Assembly);

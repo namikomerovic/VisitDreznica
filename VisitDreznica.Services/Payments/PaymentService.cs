@@ -9,6 +9,7 @@ using VisitDreznica.Services.Database;
 using VisitDreznica.Services.Reservations;
 using VisitDreznica.Services.Security;
 using Payment = VisitDreznica.Services.Database.Entities.Payment;
+using VisitDreznica.Services.Notifications;
 
 namespace VisitDreznica.Services.Payments;
 
@@ -17,6 +18,7 @@ public class PaymentService(
     ICurrentUser currentUser,
     IStripeClient stripeClient,
     IReservationPaymentService reservationPaymentService,
+    INotificationPublisher notificationPublisher,
     PaymentSettings settings,
     ILogger<PaymentService> logger) : IPaymentService
 {
@@ -134,7 +136,12 @@ public class PaymentService(
                 "Uplata je stigla nakon što je rezervacija otkazana.");
         }
 
-        await dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
+
+        if (payment.Status == PaymentStatus.Succeeded)
+        {
+            await notificationPublisher.ReservationPaidAsync(payment.ReservationId);
+        }
 
         return ToResponse(payment);
     }
