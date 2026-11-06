@@ -28,6 +28,7 @@ using VisitDreznica.Services.Payments;
 using VisitDreznica.API.BackgroundServices;
 using VisitDreznica.Services.Messaging;
 using VisitDreznica.Services.Interactions;
+using VisitDreznica.Services.Recommendations;
 
 // Učitava .env u environment varijable. U Dockeru .env fajla nema,
 // pa vrijednosti dolaze iz docker-compose (NoClobber ih ne pregazi).
@@ -85,6 +86,10 @@ builder.Services.AddScoped<IReservationEmailService, ReservationEmailService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IFavoriteService, FavoriteService>();
 builder.Services.AddScoped<IContentViewService, ContentViewService>();
+builder.Services.AddSingleton<IRecommenderModelStore, RecommenderModelStore>();
+builder.Services.AddScoped<IRecommenderTrainer, RecommenderTrainer>();
+builder.Services.AddScoped<IRecommendationService, RecommendationService>();
+builder.Services.AddHostedService<RecommenderTrainingWorker>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
