@@ -37,6 +37,10 @@ dependencies:
   provider: ^6.1.5+1
   visitdreznica_core:
     path: ../visitdreznica_core
+  intl: ^0.20.3
+  fl_chart: ^1.3.0
+  flutter_localizations:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:
