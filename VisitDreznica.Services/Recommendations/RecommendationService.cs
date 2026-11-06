@@ -58,23 +58,22 @@ public class RecommendationService(
         store.Current?.ToResponse() ?? new RecommenderModelResponse { Note = "Model još nije treniran." };
 
     private static List<(CatalogItem Item, double Score)> ScoreWithModel(
-        ITransformer model, int userId, List<CatalogItem> candidates, int take)
+        ImplicitMfModel model, int userId, List<CatalogItem> candidates, int take)
     {
-        var ml = new MLContext();
-        var user = userId.ToString();
+        if (!model.KnowsUser(userId))
+        {
+            return [];
+        }
 
-        var input = ml.Data.LoadFromEnumerable(candidates.Select(x => new InteractionRow { User = user, Item = x.Key }));
-        var byKey = candidates.ToDictionary(x => x.Key);
+        var known = candidates.Where(x => model.KnowsItem(x.Key)).ToList();
+        var scores = model.Predict(known.Select(x => (userId, x.Key)).ToList());
 
-        return ml.Data.CreateEnumerable<ItemScoreRow>(model.Transform(input), reuseRowObject: false)
-            .Where(x => !float.IsNaN(x.Score))
+        return known
+            .Select((item, index) => (Item: item, Score: Math.Round(scores[index], 2)))
             .OrderByDescending(x => x.Score)
             .Take(take)
-            .Select(x => (byKey[x.Item], Math.Round(Math.Clamp((double)x.Score, 1, 5), 2)))
             .ToList();
-    }
-
-    private static List<RecommendationResponse> Popular(RecommenderSnapshot snapshot, List<CatalogItem> candidates, int take)
+    }    private static List<RecommendationResponse> Popular(RecommenderSnapshot snapshot, List<CatalogItem> candidates, int take)
     {
         var mean = snapshot.GlobalMean > 0 ? snapshot.GlobalMean : 3.5;
 

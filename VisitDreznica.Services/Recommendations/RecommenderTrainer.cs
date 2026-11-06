@@ -1,6 +1,4 @@
 using Microsoft.Extensions.Logging;
-using Microsoft.ML;
-using Microsoft.ML.Trainers;
 using VisitDreznica.Model.Responses;
 using VisitDreznica.Services.Database;
 
@@ -11,10 +9,22 @@ public class RecommenderTrainer(
     IRecommenderModelStore store,
     ILogger<RecommenderTrainer> logger) : IRecommenderTrainer
 {
-    private const int MinInteractions = 20;
+    private const int MinPositives = 20;
     private const int MinUsers = 3;
     private const int MinItems = 3;
+    private const int Folds = 5;
+    private const int TopK = 3;
     private const int Seed = 42;
+
+    private static readonly MfConfig[] Candidates =
+    [
+        new(4, 0.025, 0.01),
+        new(4, 0.1, 0.01),
+        new(8, 0.025, 0.01),
+        new(8, 0.1, 0.01),
+        new(8, 0.1, 0.1),
+        new(16, 0.1, 0.01)
+    ];
 
     public async Task<RecommenderModelResponse> TrainAsync(CancellationToken cancellationToken)
     {
@@ -28,8 +38,11 @@ public class RecommenderTrainer(
             store.Set(snapshot);
 
             logger.LogInformation(
-                "Model preporuka: {Interactions} interakcija, treniran: {Trained}, RMSE {Rmse}, baseline {Baseline}",
-                snapshot.InteractionCount, snapshot.Model is not null, snapshot.Rmse, snapshot.BaselineRmse);
+                "Model preporuka: {Positives} izbora, treniran: {Trained}, HitRate@{K} {HitRate} " +
+                "(popularnost {Popularity}, slučajno {Random}), rank {Rank}, lambda {Lambda}, alpha {Alpha}",
+                snapshot.PositiveCount, snapshot.Model is not null, snapshot.TopK, snapshot.HitRate,
+                snapshot.PopularityHitRate, snapshot.RandomHitRate,
+                snapshot.Config?.Rank, snapshot.Config?.Lambda, snapshot.Config?.Alpha);
 
             return snapshot.ToResponse();
         }
@@ -49,78 +62,131 @@ public class RecommenderTrainer(
 
         var globalMean = scores.Count == 0 ? 0 : scores.Average(x => (double)x.Score);
 
-        RecommenderSnapshot Snapshot(ITransformer? model, Evaluation? evaluation, string? note) => new()
+        var positives = scores.Where(x => x.Score >= InteractionWeights.PositiveThreshold).ToList();
+        var positiveUsers = positives.Select(x => x.UserId).Distinct().Count();
+        var positiveItems = positives.Select(x => x.ItemKey).Distinct().Count();
+
+        if (positives.Count < MinPositives || positiveUsers < MinUsers || positiveItems < MinItems)
+        {
+            return new RecommenderSnapshot
+            {
+                TrainedAt = DateTime.UtcNow,
+                UserItems = userItems,
+                ItemUsers = itemUsers,
+                GlobalMean = globalMean,
+                InteractionCount = scores.Count,
+                PositiveCount = positives.Count,
+                TopK = TopK,
+                Note = $"Premalo podataka za treniranje (potrebno najmanje {MinPositives} izbora, " +
+                       $"{MinUsers} gosta i {MinItems} stavke). Koriste se popularne stavke."
+            };
+        }
+
+        var itemKeys = itemUsers.Keys.OrderBy(x => x, StringComparer.Ordinal).ToList();
+
+        var best = Candidates
+            .Select(config => Evaluate(positives, itemKeys, config))
+            .OrderByDescending(x => x.HitRate)
+            .ThenBy(x => x.Config.Rank)
+            .First();
+
+        return new RecommenderSnapshot
         {
             TrainedAt = DateTime.UtcNow,
-            Model = model,
+            Model = ImplicitMfModel.Fit(positives, best.Config, Seed),
             UserItems = userItems,
             ItemUsers = itemUsers,
             GlobalMean = globalMean,
             InteractionCount = scores.Count,
-            Rmse = evaluation?.Rmse,
-            Mae = evaluation?.Mae,
-            BaselineRmse = evaluation?.BaselineRmse,
-            EvaluatedCount = evaluation?.Count ?? 0,
-            Note = note
+            PositiveCount = positives.Count,
+            TopK = TopK,
+            HitRate = best.HitRate,
+            PopularityHitRate = best.PopularityHitRate,
+            RandomHitRate = best.RandomHitRate,
+            EvaluatedCount = best.Count,
+            Config = best.Config
         };
-
-        if (scores.Count < MinInteractions || userItems.Count < MinUsers || itemUsers.Count < MinItems)
-        {
-            return Snapshot(null, null,
-                $"Premalo podataka za treniranje (potrebno najmanje {MinInteractions} interakcija, {MinUsers} gosta i {MinItems} stavke). Koriste se popularne stavke.");
-        }
-
-        var ml = new MLContext(seed: Seed);
-
-        var rows = scores
-            .Select(x => new InteractionRow { User = x.UserId.ToString(), Item = x.ItemKey, Label = x.Score })
-            .ToList();
-
-        var data = ml.Data.LoadFromEnumerable(rows);
-        var split = ml.Data.TrainTestSplit(data, testFraction: 0.2, seed: Seed);
-
-        var pipeline = ml.Transforms.Conversion.MapValueToKey("UserKey", nameof(InteractionRow.User))
-            .Append(ml.Transforms.Conversion.MapValueToKey("ItemKey", nameof(InteractionRow.Item)))
-            .Append(ml.Recommendation().Trainers.MatrixFactorization(new MatrixFactorizationTrainer.Options
-            {
-                MatrixColumnIndexColumnName = "UserKey",
-                MatrixRowIndexColumnName = "ItemKey",
-                LabelColumnName = nameof(InteractionRow.Label),
-                ApproximationRank = 8,
-                NumberOfIterations = 50,
-                LearningRate = 0.1,
-                Lambda = 0.05,
-                Quiet = true
-            }));
-
-        var evaluationModel = pipeline.Fit(split.TrainSet);
-        var evaluation = Evaluate(ml, evaluationModel, split);
-
-        var model = pipeline.Fit(data);
-
-        return Snapshot(model, evaluation, null);
     }
 
-    private static Evaluation? Evaluate(MLContext ml, ITransformer model, DataOperationsCatalog.TrainTestData split)
+    private static RankingResult Evaluate(List<UserItemScore> positives, List<string> itemKeys, MfConfig config)
     {
-        var trainMean = ml.Data.CreateEnumerable<InteractionRow>(split.TrainSet, reuseRowObject: false)
-            .Average(x => (double)x.Label);
+        var rng = new Random(Seed);
 
-        var predictions = ml.Data.CreateEnumerable<ScoredRow>(model.Transform(split.TestSet), reuseRowObject: false)
-            .Where(x => !float.IsNaN(x.Score))
-            .ToList();
+        var shuffledByUser = positives
+            .GroupBy(x => x.UserId)
+            .Where(g => g.Count() >= 2)
+            .OrderBy(g => g.Key)
+            .ToDictionary(
+                g => g.Key,
+                g => g.OrderBy(x => x.ItemKey, StringComparer.Ordinal).OrderBy(_ => rng.Next()).ToList());
 
-        if (predictions.Count == 0)
+        int tests = 0, modelHits = 0, popularityHits = 0;
+        double randomExpected = 0;
+
+        for (var fold = 0; fold < Folds; fold++)
         {
-            return null;
+            var heldOut = shuffledByUser
+                .SelectMany(x => x.Value.Where((_, index) => index % Folds == fold))
+                .ToList();
+
+            if (heldOut.Count == 0)
+            {
+                continue;
+            }
+
+            var heldOutKeys = heldOut.Select(x => (x.UserId, x.ItemKey)).ToHashSet();
+            var train = positives.Where(x => !heldOutKeys.Contains((x.UserId, x.ItemKey))).ToList();
+
+            var model = ImplicitMfModel.Fit(train, config, Seed);
+
+            var popularity = train.GroupBy(x => x.ItemKey).ToDictionary(g => g.Key, g => g.Count());
+            var seenByUser = train.GroupBy(x => x.UserId)
+                .ToDictionary(g => g.Key, g => g.Select(x => x.ItemKey).ToHashSet());
+
+            foreach (var userTests in heldOut.GroupBy(x => x.UserId))
+            {
+                var seen = seenByUser.GetValueOrDefault(userTests.Key) ?? [];
+                var candidates = itemKeys.Where(x => !seen.Contains(x)).ToList();
+
+                if (candidates.Count == 0)
+                {
+                    continue;
+                }
+
+                var scores = model.Predict(candidates.Select(x => (userTests.Key, x)).ToList());
+
+                var modelTop = candidates
+                    .Select((key, index) => (Key: key, Score: scores[index]))
+                    .OrderByDescending(x => x.Score)
+                    .ThenBy(x => x.Key, StringComparer.Ordinal)
+                    .Take(TopK)
+                    .Select(x => x.Key)
+                    .ToHashSet();
+
+                var popularTop = candidates
+                    .OrderByDescending(x => popularity.GetValueOrDefault(x))
+                    .ThenBy(x => x, StringComparer.Ordinal)
+                    .Take(TopK)
+                    .ToHashSet();
+
+                foreach (var test in userTests)
+                {
+                    tests++;
+
+                    if (modelTop.Contains(test.ItemKey)) modelHits++;
+                    if (popularTop.Contains(test.ItemKey)) popularityHits++;
+
+                    randomExpected += Math.Min(TopK, candidates.Count) / (double)candidates.Count;
+                }
+            }
         }
 
-        var rmse = Math.Sqrt(predictions.Average(x => Math.Pow(x.Label - Math.Clamp(x.Score, 1f, 5f), 2)));
-        var mae = predictions.Average(x => Math.Abs(x.Label - Math.Clamp(x.Score, 1f, 5f)));
-        var baselineRmse = Math.Sqrt(predictions.Average(x => Math.Pow(x.Label - trainMean, 2)));
-
-        return new Evaluation(rmse, mae, baselineRmse, predictions.Count);
+        return tests == 0
+            ? new RankingResult(config, 0, 0, 0, 0)
+            : new RankingResult(config, modelHits / (double)tests, popularityHits / (double)tests,
+                randomExpected / tests, tests);
     }
 
-    private sealed record Evaluation(double Rmse, double Mae, double BaselineRmse, int Count);
+    private sealed record RankingResult(
+        MfConfig Config, double HitRate, double PopularityHitRate, double RandomHitRate, int Count);
 }

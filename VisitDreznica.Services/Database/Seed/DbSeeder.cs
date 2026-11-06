@@ -6,7 +6,7 @@ using VisitDreznica.Services.Security;
 
 namespace VisitDreznica.Services.Database.Seed;
 
-public class DbSeeder(VisitDreznicaDbContext dbContext, IPasswordHasher passwordHasher)
+public partial class DbSeeder(VisitDreznicaDbContext dbContext, IPasswordHasher passwordHasher)
 {
     private const string DefaultPassword = "test";
 
@@ -19,6 +19,7 @@ public class DbSeeder(VisitDreznicaDbContext dbContext, IPasswordHasher password
         await SeedActivitiesAsync();
         await SeedPlacesAsync();
         await SeedNewsAsync();
+        await SeedInteractionsAsync();
     }
     private async Task SeedNewsAsync()
 {

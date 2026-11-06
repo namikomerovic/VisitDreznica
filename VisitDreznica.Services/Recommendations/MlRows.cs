@@ -9,14 +9,7 @@ public class InteractionRow
     public float Label { get; set; }
 }
 
-public class ScoredRow
+public class FactorScoreRow
 {
-    public float Label { get; set; }
-    public float Score { get; set; }
-}
-
-public class ItemScoreRow
-{
-    public string Item { get; set; } = string.Empty;
     public float Score { get; set; }
 }
