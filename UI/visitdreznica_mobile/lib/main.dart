@@ -6,6 +6,8 @@ import 'package:visitdreznica_core/visitdreznica_core.dart';
 
 import 'screens/auth/login_screen.dart';
 import 'screens/shell/main_shell.dart';
+import 'providers/favorites_provider.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +20,7 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         Provider<ApiClient>.value(value: api),
+        ChangeNotifierProvider(create: (_) => FavoritesProvider(api)),
         ChangeNotifierProvider(create: (_) => AuthProvider(api, requiredRole: AppRoles.guest)),
         ChangeNotifierProvider(create: (_) => NotificationProvider(api)),
       ],

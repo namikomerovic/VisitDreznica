@@ -42,3 +42,6 @@ export 'src/models/register_request.dart';
 export 'src/models/item_type.dart';
 export 'src/models/recommendation.dart';
 export 'src/widgets/auth_image.dart';
+export 'src/models/favorite.dart';
+export 'src/services/favorite_service.dart';
+export 'src/services/content_view_service.dart';

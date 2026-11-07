@@ -36,3 +36,27 @@ class Review {
         userFullName: json['userFullName'] as String,
       );
 }
+
+class ReviewSummary {
+  ReviewSummary({
+    required this.averageRating,
+    required this.reviewCount,
+    required this.ratingCounts,
+    required this.canReview,
+    required this.myReview,
+  });
+
+  final double? averageRating;
+  final int reviewCount;
+  final List<int> ratingCounts;
+  final bool canReview;
+  final Review? myReview;
+
+  factory ReviewSummary.fromJson(Map<String, dynamic> json) => ReviewSummary(
+        averageRating: (json['averageRating'] as num?)?.toDouble(),
+        reviewCount: json['reviewCount'] as int,
+        ratingCounts: (json['ratingCounts'] as List<dynamic>).map((x) => x as int).toList(),
+        canReview: json['canReview'] as bool,
+        myReview: json['myReview'] == null ? null : Review.fromJson(json['myReview'] as Map<String, dynamic>),
+      );
+}

@@ -6,6 +6,8 @@ import '../../widgets/coming_soon.dart';
 import '../profile/profile_tab.dart';
 import '../explore/explore_tab.dart';
 import '../home/home_tab.dart';
+import '../../providers/favorites_provider.dart';
+import '../favorites/favorites_tab.dart';
 
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
@@ -31,6 +33,7 @@ class _MainShellState extends State<MainShell> {
   void initState() {
     super.initState();
     _notifications = context.read<NotificationProvider>()..start();
+    context.read<FavoritesProvider>().load();
   }
 
   @override
@@ -75,7 +78,7 @@ class _MainShellState extends State<MainShell> {
             title: 'Rezervacije',
             icon: Icons.event_note_outlined,
           ),
-          const ComingSoon(title: 'Favoriti', icon: Icons.favorite_outline),
+          const FavoritesTab(),
           const ProfileTab(),
         ],
       ),
