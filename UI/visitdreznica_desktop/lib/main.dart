@@ -31,7 +31,10 @@ class VisitDreznicaAdminApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isLoggedIn = context.select<AuthProvider, bool>((auth) => auth.isLoggedIn);
+
     return MaterialApp(
+      key: ValueKey(isLoggedIn),
       title: 'Visit Drežnica – Administracija',
       debugShowCheckedModeBanner: false,
       locale: const Locale('bs'),
@@ -41,13 +44,8 @@ class VisitDreznicaAdminApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      theme: ThemeData(
-        colorSchemeSeed: const Color(0xFF0F766E),
-        useMaterial3: true,
-      ),
-      home: Consumer<AuthProvider>(
-        builder: (context, auth, _) => auth.isLoggedIn ? const MasterScreen() : const LoginScreen(),
-      ),
+      theme: ThemeData(colorSchemeSeed: const Color(0xFF0F766E), useMaterial3: true),
+      home: isLoggedIn ? const MasterScreen() : const LoginScreen(),
     );
   }
 }

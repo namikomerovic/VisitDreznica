@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import '../api/api_client.dart';
 import '../api/api_exception.dart';
 import '../models/login_response.dart';
+import '../models/register_request.dart';
 import 'app_roles.dart';
 
 class AuthProvider extends ChangeNotifier {
@@ -28,7 +29,20 @@ class AuthProvider extends ChangeNotifier {
       'password': password,
     });
 
-    final response = LoginResponse.fromJson(json as Map<String, dynamic>);
+    await _start(LoginResponse.fromJson(json as Map<String, dynamic>));
+  }
+
+  Future<void> register(RegisterRequest request) async {
+    final json = await _api.post('Auth/register', body: request.toJson());
+    await _start(LoginResponse.fromJson(json as Map<String, dynamic>));
+  }
+
+  Future<void> logout() async {
+    await _revokeQuietly();
+    _clear();
+  }
+
+  Future<void> _start(LoginResponse response) async {
     _api.token = response.token;
 
     if (!response.roles.contains(requiredRole)) {
@@ -37,17 +51,12 @@ class AuthProvider extends ChangeNotifier {
 
       throw ApiException(requiredRole == AppRoles.admin
           ? 'Ova aplikacija je namijenjena administratorima.'
-          : 'Ova aplikacija je namijenjena gostima.');
+          : 'Ova aplikacija je namijenjena gostima. Administratori koriste desktop aplikaciju.');
     }
 
     _session = response;
     _sessionMessage = null;
     notifyListeners();
-  }
-
-  Future<void> logout() async {
-    await _revokeQuietly();
-    _clear();
   }
 
   void _expire() => _clear(message: 'Sesija je istekla. Prijavite se ponovo.');

@@ -28,7 +28,7 @@ class AuthImage extends StatelessWidget {
       width: width,
       height: height,
       fit: fit,
-      errorBuilder: (_, __, ___) => placeholder(Icon(Icons.broken_image_outlined, color: scheme.outline)),
+      errorBuilder: (_, _, _) => placeholder(Icon(Icons.broken_image_outlined, color: scheme.outline)),
       loadingBuilder: (_, child, progress) => progress == null
           ? child
           : placeholder(const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))),

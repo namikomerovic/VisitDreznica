@@ -229,7 +229,7 @@ class _NotificationsPanelState extends State<NotificationsPanel> {
 
     return ListView.separated(
       itemCount: _items.length + (_hasMore ? 1 : 0),
-      separatorBuilder: (_, __) => const Divider(height: 1),
+      separatorBuilder: (_, _) => const Divider(height: 1),
       itemBuilder: (context, index) {
         if (index == _items.length) {
           return Padding(

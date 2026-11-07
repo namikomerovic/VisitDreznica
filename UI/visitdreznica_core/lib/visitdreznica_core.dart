@@ -37,3 +37,5 @@ export 'src/models/recommender_model.dart';
 export 'src/models/review.dart';
 export 'src/services/recommendation_service.dart';
 export 'src/services/review_service.dart';
+export 'src/utils/form_helpers.dart';
+export 'src/models/register_request.dart';

@@ -20,6 +20,11 @@ class CityService {
     return PageResult.fromJson(json, City.fromJson);
   }
 
+    Future<List<City>> getForRegistration() async {
+    final json = await _api.get('Auth/cities', query: {'page': 1, 'pageSize': 100});
+    return PageResult.fromJson(json, City.fromJson).items..sort((a, b) => a.name.compareTo(b.name));
+  }
+
   Future<void> insert({required String name, String? postalCode, required int countryId}) async {
     await _api.post('Cities', body: {'name': name, 'postalCode': postalCode, 'countryId': countryId});
   }

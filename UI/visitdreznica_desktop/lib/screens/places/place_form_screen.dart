@@ -1,12 +1,10 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
-import '../../utils/form_helpers.dart';
+
 import '../../widgets/dialogs.dart';
 import '../../widgets/error_view.dart';
 import '../../widgets/image_gallery.dart';

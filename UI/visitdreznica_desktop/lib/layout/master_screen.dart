@@ -5,7 +5,6 @@ import 'package:visitdreznica_core/visitdreznica_core.dart';
 import '../screens/reservations/reservations_screen.dart';
 import '../widgets/notifications_panel.dart';
 import '../screens/dashboard/dashboard_screen.dart';
-import '../widgets/under_construction.dart';
 import '../screens/rooms/rooms_screen.dart';
 import '../screens/equipment/equipment_screen.dart';
 import '../screens/activities/activities_screen.dart';
