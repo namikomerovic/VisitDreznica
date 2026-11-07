@@ -70,6 +70,11 @@ public class ReviewService(VisitDreznicaDbContext dbContext, IMapper mapper, ICu
             query = query.Where(x => x.Rating >= search.MinRating.Value);
         }
 
+        if (search.MaxRating.HasValue)
+        {
+            query = query.Where(x => x.Rating <= search.MaxRating.Value);
+        }
+
         return query;
     }
 

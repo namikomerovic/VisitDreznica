@@ -13,6 +13,9 @@ import '../screens/places/places_screen.dart';
 import '../screens/news/news_screen.dart';
 import '../screens/lookups/lookups_screen.dart';
 import '../screens/users/users_screen.dart';
+import '../screens/recommendations/recommendations_screen.dart';
+import '../screens/reports/reports_screen.dart';
+import '../screens/reviews/reviews_screen.dart';
 
 class _Section {
   const _Section(this.label, this.icon, this.selectedIcon, this.builder);
@@ -65,7 +68,7 @@ final _sections = <_Section>[
     'Recenzije',
     Icons.reviews_outlined,
     Icons.reviews,
-    (_) => const UnderConstruction(title: 'Recenzije'),
+    (_) => const ReviewsScreen(),
   ),
   _Section(
     'Korisnici',
@@ -83,13 +86,13 @@ final _sections = <_Section>[
     'Izvještaji',
     Icons.picture_as_pdf_outlined,
     Icons.picture_as_pdf,
-    (_) => const UnderConstruction(title: 'Izvještaji'),
+    (_) => const ReportsScreen(),
   ),
   _Section(
     'Preporuke (ML)',
     Icons.auto_awesome_outlined,
     Icons.auto_awesome,
-    (_) => const UnderConstruction(title: 'Preporuke'),
+    (_) => const RecommendationsScreen(),
   ),
 ];
 

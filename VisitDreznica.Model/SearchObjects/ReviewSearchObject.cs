@@ -9,4 +9,5 @@ public class ReviewSearchObject : BaseSearchObject
     public int? UserId { get; set; }
     public int? MinRating { get; set; }
     public bool OnlyMine { get; set; }
+    public int? MaxRating { get; set; }
 }

@@ -33,3 +33,7 @@ export 'src/models/city.dart';
 export 'src/services/city_service.dart';
 export 'src/models/user.dart';
 export 'src/services/user_service.dart';
+export 'src/models/recommender_model.dart';
+export 'src/models/review.dart';
+export 'src/services/recommendation_service.dart';
+export 'src/services/review_service.dart';
