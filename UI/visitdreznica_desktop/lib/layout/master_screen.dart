@@ -10,6 +10,7 @@ import '../screens/rooms/rooms_screen.dart';
 import '../screens/equipment/equipment_screen.dart';
 import '../screens/activities/activities_screen.dart';
 import '../screens/places/places_screen.dart';
+import '../screens/news/news_screen.dart';
 
 class _Section {
   const _Section(this.label, this.icon, this.selectedIcon, this.builder);
@@ -56,7 +57,7 @@ final _sections = <_Section>[
     'Novosti',
     Icons.newspaper_outlined,
     Icons.newspaper,
-    (_) => const UnderConstruction(title: 'Novosti'),
+    (_) => const NewsScreen(),
   ),
   _Section(
     'Recenzije',

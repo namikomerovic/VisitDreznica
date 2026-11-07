@@ -27,3 +27,5 @@ export 'src/services/activity_service.dart';
 export 'src/services/guide_service.dart';
 export 'src/models/place.dart';
 export 'src/services/place_service.dart';
+export 'src/models/news.dart';
+export 'src/services/news_service.dart';
