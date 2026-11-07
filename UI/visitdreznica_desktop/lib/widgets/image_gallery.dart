@@ -3,7 +3,6 @@ import 'image_picking.dart';
 import 'package:flutter/material.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
-import 'auth_image.dart';
 import 'dialogs.dart';
 
 class ImageGallery extends StatefulWidget {

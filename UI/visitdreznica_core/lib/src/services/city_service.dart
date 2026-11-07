@@ -15,7 +15,7 @@ class CityService {
       'page': page,
       'pageSize': pageSize,
       if (trimmed != null && trimmed.isNotEmpty) 'name': trimmed,
-      if (countryId != null) 'countryId': countryId,
+      'countryId': ?countryId,
     });
     return PageResult.fromJson(json, City.fromJson);
   }

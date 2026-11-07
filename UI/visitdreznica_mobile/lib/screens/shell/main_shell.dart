@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
-import '../../widgets/coming_soon.dart';
 import '../profile/profile_tab.dart';
 import '../explore/explore_tab.dart';
 import '../home/home_tab.dart';
 import '../../providers/favorites_provider.dart';
 import '../favorites/favorites_tab.dart';
+import '../reservations/reservations_tab.dart';
 
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
@@ -20,6 +20,7 @@ class _MainShellState extends State<MainShell> {
   int _index = 0;
   final _exploreType = ValueNotifier<ItemType>(ItemType.room);
   late final NotificationProvider _notifications;
+  final _reservationsKey = GlobalKey<ReservationsTabState>();
 
   static const _titles = [
     'Visit Drežnica',
@@ -74,9 +75,9 @@ class _MainShellState extends State<MainShell> {
             },
           ),
           ExploreTab(selectedType: _exploreType),
-          const ComingSoon(
-            title: 'Rezervacije',
-            icon: Icons.event_note_outlined,
+          ReservationsTab(
+            key: _reservationsKey,
+            onExplore: () => setState(() => _index = 1),
           ),
           const FavoritesTab(),
           const ProfileTab(),
@@ -84,7 +85,10 @@ class _MainShellState extends State<MainShell> {
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
-        onDestinationSelected: (index) => setState(() => _index = index),
+        onDestinationSelected: (index) {
+          setState(() => _index = index);
+          if (index == 2) _reservationsKey.currentState?.reload();
+        },
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.home_outlined),

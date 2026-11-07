@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
-import 'auth_image.dart';
 import 'dialogs.dart';
 import 'image_picking.dart';
 

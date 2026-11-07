@@ -20,9 +20,9 @@ class ReviewService {
       'page': page,
       'pageSize': pageSize,
       if (itemType != null) 'itemType': itemType.value,
-      if (itemId != null) 'itemId': itemId,
-      if (minRating != null) 'minRating': minRating,
-      if (maxRating != null) 'maxRating': maxRating,
+      'itemId': itemId,
+      'minRating': minRating,
+      'maxRating': maxRating,
     });
     return PageResult.fromJson(json, Review.fromJson);
   }

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
-import '../../widgets/auth_image.dart';
 import '../../widgets/paged_table.dart';
 import 'activity_form_screen.dart';
 
