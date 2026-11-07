@@ -4,6 +4,8 @@ import 'package:visitdreznica_core/visitdreznica_core.dart';
 
 import '../../widgets/coming_soon.dart';
 import '../profile/profile_tab.dart';
+import '../explore/explore_tab.dart';
+import '../home/home_tab.dart';
 
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
@@ -14,9 +16,16 @@ class MainShell extends StatefulWidget {
 
 class _MainShellState extends State<MainShell> {
   int _index = 0;
+  final _exploreType = ValueNotifier<ItemType>(ItemType.room);
   late final NotificationProvider _notifications;
 
-  static const _titles = ['Visit Drežnica', 'Istraži', 'Moje rezervacije', 'Favoriti', 'Profil'];
+  static const _titles = [
+    'Visit Drežnica',
+    'Istraži',
+    'Moje rezervacije',
+    'Favoriti',
+    'Profil',
+  ];
 
   @override
   void initState() {
@@ -27,6 +36,7 @@ class _MainShellState extends State<MainShell> {
   @override
   void dispose() {
     _notifications.stop();
+    _exploreType.dispose();
     super.dispose();
   }
 
@@ -40,8 +50,9 @@ class _MainShellState extends State<MainShell> {
         actions: [
           IconButton(
             tooltip: 'Obavijesti',
-            onPressed: () => ScaffoldMessenger.of(context)
-                .showSnackBar(const SnackBar(content: Text('Obavijesti dolaze uskoro.'))),
+            onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Obavijesti dolaze uskoro.')),
+            ),
             icon: Badge(
               isLabelVisible: unread > 0,
               label: Text(unread > 99 ? '99+' : '$unread'),
@@ -52,24 +63,51 @@ class _MainShellState extends State<MainShell> {
       ),
       body: IndexedStack(
         index: _index,
-        children: const [
-          ComingSoon(title: 'Početna', icon: Icons.home_outlined),
-          ComingSoon(title: 'Istraži', icon: Icons.explore_outlined),
-          ComingSoon(title: 'Rezervacije', icon: Icons.event_note_outlined),
-          ComingSoon(title: 'Favoriti', icon: Icons.favorite_outline),
-          ProfileTab(),
+        children: [
+          HomeTab(
+            onOpenCategory: (type) {
+              _exploreType.value = type;
+              setState(() => _index = 1);
+            },
+          ),
+          ExploreTab(selectedType: _exploreType),
+          const ComingSoon(
+            title: 'Rezervacije',
+            icon: Icons.event_note_outlined,
+          ),
+          const ComingSoon(title: 'Favoriti', icon: Icons.favorite_outline),
+          const ProfileTab(),
         ],
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _index,
         onDestinationSelected: (index) => setState(() => _index = index),
         destinations: const [
-          NavigationDestination(icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), label: 'Početna'),
-          NavigationDestination(icon: Icon(Icons.explore_outlined), selectedIcon: Icon(Icons.explore), label: 'Istraži'),
           NavigationDestination(
-              icon: Icon(Icons.event_note_outlined), selectedIcon: Icon(Icons.event_note), label: 'Rezervacije'),
-          NavigationDestination(icon: Icon(Icons.favorite_outline), selectedIcon: Icon(Icons.favorite), label: 'Favoriti'),
-          NavigationDestination(icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), label: 'Profil'),
+            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home),
+            label: 'Početna',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.explore_outlined),
+            selectedIcon: Icon(Icons.explore),
+            label: 'Istraži',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.event_note_outlined),
+            selectedIcon: Icon(Icons.event_note),
+            label: 'Rezervacije',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.favorite_outline),
+            selectedIcon: Icon(Icons.favorite),
+            label: 'Favoriti',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person),
+            label: 'Profil',
+          ),
         ],
       ),
     );

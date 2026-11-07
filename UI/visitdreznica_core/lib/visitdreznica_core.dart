@@ -39,3 +39,6 @@ export 'src/services/recommendation_service.dart';
 export 'src/services/review_service.dart';
 export 'src/utils/form_helpers.dart';
 export 'src/models/register_request.dart';
+export 'src/models/item_type.dart';
+export 'src/models/recommendation.dart';
+export 'src/widgets/auth_image.dart';

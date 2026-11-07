@@ -5,6 +5,7 @@ using VisitDreznica.Model.Requests;
 using VisitDreznica.Model.Responses;
 using VisitDreznica.Model.SearchObjects;
 using VisitDreznica.Services.Interactions;
+using VisitDreznica.Model.Enums;
 
 namespace VisitDreznica.API.Controllers;
 
@@ -23,6 +24,10 @@ public class ReviewsController(IReviewService reviewService) : ControllerBase
     [HttpGet("summary")]
     public Task<ReviewSummaryResponse> Summary([FromQuery] ItemReferenceRequest item) =>
         reviewService.GetSummaryAsync(item);
+
+    [HttpGet("summaries")]
+    public Task<List<ReviewSummaryItemResponse>> Summaries([FromQuery] ItemType itemType) =>
+        reviewService.GetSummariesAsync(itemType);
 
     [HttpPost]
     [Authorize(Roles = AppRoles.Guest)]

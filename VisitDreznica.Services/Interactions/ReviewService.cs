@@ -113,6 +113,18 @@ public class ReviewService(VisitDreznicaDbContext dbContext, IMapper mapper, ICu
         return summary;
     }
 
+    public async Task<List<ReviewSummaryItemResponse>> GetSummariesAsync(ItemType itemType) =>
+        await DbContext.Reviews.AsNoTracking()
+            .Where(ItemTargets.OfType<Review>(itemType))
+            .Select(x => new { ItemId = x.RoomId ?? x.EquipmentId ?? x.ActivityId ?? x.PlaceId ?? 0, x.Rating })
+            .GroupBy(x => x.ItemId)
+            .Select(g => new ReviewSummaryItemResponse
+            {
+                ItemId = g.Key,
+                AverageRating = Math.Round(g.Average(x => (double)x.Rating), 1),
+                ReviewCount = g.Count()
+            })
+            .ToListAsync();
     public async Task<ReviewResponse> CreateAsync(ReviewInsertRequest request)
     {
         var userId = currentUser.UserId;

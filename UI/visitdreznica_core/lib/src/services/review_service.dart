@@ -1,6 +1,8 @@
 import '../api/api_client.dart';
 import '../models/page_result.dart';
 import '../models/review.dart';
+import '../models/recommendation.dart';
+
 
 class ReviewService {
   ReviewService(this._api);
@@ -26,5 +28,11 @@ class ReviewService {
 
   Future<void> delete(int id) async {
     await _api.delete('Reviews/$id');
+  }
+
+    Future<Map<int, ReviewSummaryItem>> getSummaries(ItemType itemType) async {
+    final json = await _api.get('Reviews/summaries', query: {'itemType': itemType.value}) as List<dynamic>;
+    final items = json.map((x) => ReviewSummaryItem.fromJson(x as Map<String, dynamic>));
+    return {for (final item in items) item.itemId: item};
   }
 }

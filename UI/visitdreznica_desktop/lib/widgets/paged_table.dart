@@ -134,7 +134,7 @@ class PagedTableState<T> extends State<PagedTable<T>> {
 
     return ListView.separated(
       itemCount: result.items.length,
-      separatorBuilder: (_, __) => const Divider(height: 1),
+      separatorBuilder: (_, _) => const Divider(height: 1),
       itemBuilder: (context, index) {
         final item = result.items[index];
 
