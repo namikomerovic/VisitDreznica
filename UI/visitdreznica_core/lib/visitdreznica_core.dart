@@ -45,3 +45,6 @@ export 'src/widgets/auth_image.dart';
 export 'src/models/favorite.dart';
 export 'src/services/favorite_service.dart';
 export 'src/services/content_view_service.dart';
+export 'src/models/booking.dart';
+export 'src/services/booking_service.dart';
+export 'src/services/payment_service.dart';
