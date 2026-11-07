@@ -7,6 +7,8 @@ class CityService {
 
   final ApiClient _api;
 
+  Future<List<City>> getAll() async => (await getPage(pageSize: 100)).items;
+
   Future<PageResult<City>> getPage({String? name, int? countryId, int page = 1, int pageSize = 20}) async {
     final trimmed = name?.trim();
     final json = await _api.get('Cities', query: {

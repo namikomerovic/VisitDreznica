@@ -12,6 +12,7 @@ import '../screens/activities/activities_screen.dart';
 import '../screens/places/places_screen.dart';
 import '../screens/news/news_screen.dart';
 import '../screens/lookups/lookups_screen.dart';
+import '../screens/users/users_screen.dart';
 
 class _Section {
   const _Section(this.label, this.icon, this.selectedIcon, this.builder);
@@ -70,7 +71,7 @@ final _sections = <_Section>[
     'Korisnici',
     Icons.people_outline,
     Icons.people,
-    (_) => const UnderConstruction(title: 'Korisnici'),
+    (_) => const UsersScreen(),
   ),
   _Section(
     'Šifarnici',

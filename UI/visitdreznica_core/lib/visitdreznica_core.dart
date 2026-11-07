@@ -31,3 +31,5 @@ export 'src/models/news.dart';
 export 'src/services/news_service.dart';
 export 'src/models/city.dart';
 export 'src/services/city_service.dart';
+export 'src/models/user.dart';
+export 'src/services/user_service.dart';
