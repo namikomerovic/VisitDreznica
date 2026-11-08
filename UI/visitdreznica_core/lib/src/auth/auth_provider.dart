@@ -24,10 +24,10 @@ class AuthProvider extends ChangeNotifier {
   String? get sessionMessage => _sessionMessage;
 
   Future<void> login(String username, String password) async {
-    final json = await _api.post('Auth/login', body: {
-      'username': username.trim(),
-      'password': password,
-    });
+    final json = await _api.post(
+      'Auth/login',
+      body: {'username': username.trim(), 'password': password},
+    );
 
     await _start(LoginResponse.fromJson(json as Map<String, dynamic>));
   }
@@ -42,6 +42,14 @@ class AuthProvider extends ChangeNotifier {
     _clear();
   }
 
+  void updateFullName(String fullName) {
+    final session = _session;
+    if (session == null) return;
+
+    _session = session.copyWith(fullName: fullName);
+    notifyListeners();
+  }
+
   Future<void> _start(LoginResponse response) async {
     _api.token = response.token;
 
@@ -49,9 +57,11 @@ class AuthProvider extends ChangeNotifier {
       await _revokeQuietly();
       _api.token = null;
 
-      throw ApiException(requiredRole == AppRoles.admin
-          ? 'Ova aplikacija je namijenjena administratorima.'
-          : 'Ova aplikacija je namijenjena gostima. Administratori koriste desktop aplikaciju.');
+      throw ApiException(
+        requiredRole == AppRoles.admin
+            ? 'Ova aplikacija je namijenjena administratorima.'
+            : 'Ova aplikacija je namijenjena gostima. Administratori koriste desktop aplikaciju.',
+      );
     }
 
     _session = response;

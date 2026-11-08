@@ -9,28 +9,65 @@ class CityService {
 
   Future<List<City>> getAll() async => (await getPage(pageSize: 100)).items;
 
-  Future<PageResult<City>> getPage({String? name, int? countryId, int page = 1, int pageSize = 20}) async {
+  Future<PageResult<City>> getPage({
+    String? name,
+    int? countryId,
+    int page = 1,
+    int pageSize = 20,
+  }) async {
     final trimmed = name?.trim();
-    final json = await _api.get('Cities', query: {
-      'page': page,
-      'pageSize': pageSize,
-      if (trimmed != null && trimmed.isNotEmpty) 'name': trimmed,
-      'countryId': ?countryId,
-    });
+    final json = await _api.get(
+      'Cities',
+      query: {
+        'page': page,
+        'pageSize': pageSize,
+        if (trimmed != null && trimmed.isNotEmpty) 'name': trimmed,
+        'countryId': ?countryId,
+      },
+    );
     return PageResult.fromJson(json, City.fromJson);
   }
 
-    Future<List<City>> getForRegistration() async {
-    final json = await _api.get('Auth/cities', query: {'page': 1, 'pageSize': 100});
-    return PageResult.fromJson(json, City.fromJson).items..sort((a, b) => a.name.compareTo(b.name));
+  Future<List<City>> getForRegistration() async {
+    final json = await _api.get(
+      'Auth/cities',
+      query: {'page': 1, 'pageSize': 100},
+    );
+    final cities = PageResult.fromJson(json, City.fromJson).items;
+
+    int homeFirst(City city) =>
+        city.countryName == 'Bosna i Hercegovina' ? 0 : 1;
+
+    return cities..sort((a, b) {
+      final byHome = homeFirst(a).compareTo(homeFirst(b));
+      if (byHome != 0) return byHome;
+
+      final byCountry = a.countryName.compareTo(b.countryName);
+      return byCountry != 0 ? byCountry : a.name.compareTo(b.name);
+    });
   }
 
-  Future<void> insert({required String name, String? postalCode, required int countryId}) async {
-    await _api.post('Cities', body: {'name': name, 'postalCode': postalCode, 'countryId': countryId});
+  Future<void> insert({
+    required String name,
+    String? postalCode,
+    required int countryId,
+  }) async {
+    await _api.post(
+      'Cities',
+      body: {'name': name, 'postalCode': postalCode, 'countryId': countryId},
+    );
   }
 
-  Future<void> update(int id, {required String name, String? postalCode, required int countryId}) async {
-    await _api.put('Cities/$id', body: {'name': name, 'postalCode': postalCode, 'countryId': countryId});
+  Future<void> update(
+    int id, {
+    required String name,
+    String? postalCode,
+    required int countryId,
+  }) async {
+    await _api.put(
+      'Cities/$id',
+      body: {'name': name, 'postalCode': postalCode, 'countryId': countryId},
+    );
   }
 
   Future<void> delete(int id) async {

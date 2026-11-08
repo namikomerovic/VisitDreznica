@@ -48,3 +48,4 @@ export 'src/services/content_view_service.dart';
 export 'src/models/booking.dart';
 export 'src/services/booking_service.dart';
 export 'src/services/payment_service.dart';
+export 'src/services/profile_service.dart';
