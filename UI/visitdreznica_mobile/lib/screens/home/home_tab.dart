@@ -198,7 +198,7 @@ class _RecommendationsSection extends StatelessWidget {
           ),
         const SizedBox(height: 10),
         SizedBox(
-          height: 196,
+          height: 210,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -243,20 +243,23 @@ class _RecommendationCard extends StatelessWidget {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(item.itemName, maxLines: 2, overflow: TextOverflow.ellipsis, style: theme.textTheme.titleSmall),
-                    const SizedBox(height: 6),
-                    Text(
-                      item.reason,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.bodySmall?.copyWith(fontStyle: FontStyle.italic),
-                    ),
-                  ],
+                          Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(item.itemName, maxLines: 2, overflow: TextOverflow.ellipsis, style: theme.textTheme.titleSmall),
+                      const SizedBox(height: 6),
+                      Expanded(
+                        child: Text(
+                          item.reason,
+                          overflow: TextOverflow.fade,
+                          style: theme.textTheme.bodySmall?.copyWith(fontStyle: FontStyle.italic),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

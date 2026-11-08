@@ -8,6 +8,7 @@ import '../home/home_tab.dart';
 import '../../providers/favorites_provider.dart';
 import '../favorites/favorites_tab.dart';
 import '../reservations/reservations_tab.dart';
+import '../notifications/notifications_screen.dart';
 
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
@@ -54,9 +55,15 @@ class _MainShellState extends State<MainShell> {
         actions: [
           IconButton(
             tooltip: 'Obavijesti',
-            onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Obavijesti dolaze uskoro.')),
-            ),
+            onPressed: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => const NotificationsScreen(),
+                ),
+              );
+              _notifications.refresh();
+              if (_index == 2) _reservationsKey.currentState?.reload();
+            },
             icon: Badge(
               isLabelVisible: unread > 0,
               label: Text(unread > 99 ? '99+' : '$unread'),
