@@ -51,7 +51,16 @@ class _MainShellState extends State<MainShell> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_titles[_index]),
+        titleSpacing: 16,
+        title: Row(
+          children: [
+            const AppLogo(size: 32),
+            const SizedBox(width: 10),
+            Flexible(
+              child: Text(_titles[_index], overflow: TextOverflow.ellipsis),
+            ),
+          ],
+        ),
         actions: [
           IconButton(
             tooltip: 'Obavijesti',
