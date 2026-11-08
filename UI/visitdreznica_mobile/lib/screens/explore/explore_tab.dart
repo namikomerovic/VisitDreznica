@@ -8,6 +8,7 @@ import '../../utils/item_type_ui.dart';
 import '../details/item_navigation.dart';
 import 'explore_card.dart';
 import 'explore_item.dart';
+import '../map/places_map_screen.dart';
 
 class ExploreTab extends StatefulWidget {
   const ExploreTab({super.key, required this.selectedType});
@@ -98,19 +99,35 @@ class _ExploreTabState extends State<ExploreTab> {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: TextField(
-            controller: _searchController,
-            textInputAction: TextInputAction.search,
-            onChanged: (_) {
-              _debounce?.cancel();
-              _debounce = Timer(const Duration(milliseconds: 400), _load);
-            },
-            decoration: InputDecoration(
-              isDense: true,
-              prefixIcon: const Icon(Icons.search),
-              hintText: 'Pretraži: ${_type.pluralLabel.toLowerCase()}',
-              border: const OutlineInputBorder(),
-            ),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _searchController,
+                  textInputAction: TextInputAction.search,
+                  onChanged: (_) {
+                    _debounce?.cancel();
+                    _debounce = Timer(const Duration(milliseconds: 400), _load);
+                  },
+                  decoration: InputDecoration(
+                    isDense: true,
+                    prefixIcon: const Icon(Icons.search),
+                    hintText: 'Pretraži: ${_type.pluralLabel.toLowerCase()}',
+                    border: const OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              if (_type == ItemType.place) ...[
+                const SizedBox(width: 8),
+                IconButton.filledTonal(
+                  tooltip: 'Prikaži na mapi',
+                  onPressed: () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(builder: (_) => const PlacesMapScreen()),
+                  ),
+                  icon: const Icon(Icons.map_outlined),
+                ),
+              ],
+            ],
           ),
         ),
         const SizedBox(height: 8),

@@ -9,6 +9,12 @@ import 'item_details.dart';
 import 'item_navigation.dart';
 import 'reviews_section.dart';
 
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
+
+import '../../utils/maps.dart';
+import '../map/places_map_screen.dart';
+
 class ItemDetailsScreen extends StatefulWidget {
   const ItemDetailsScreen({super.key, required this.type, required this.id});
 
@@ -46,7 +52,10 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
       future: _future,
       builder: (context, snapshot) {
         if (snapshot.connectionState != ConnectionState.done) {
-          return Scaffold(appBar: AppBar(), body: const Center(child: CircularProgressIndicator()));
+          return Scaffold(
+            appBar: AppBar(),
+            body: const Center(child: CircularProgressIndicator()),
+          );
         }
 
         if (snapshot.hasError) {
@@ -61,12 +70,16 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      error is ApiException ? error.message : 'Detalje nije moguće učitati.',
+                      error is ApiException
+                          ? error.message
+                          : 'Detalje nije moguće učitati.',
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 12),
                     OutlinedButton(
-                      onPressed: () => setState(() => _future = _loader.load(widget.type, widget.id)),
+                      onPressed: () => setState(
+                        () => _future = _loader.load(widget.type, widget.id),
+                      ),
                       child: const Text('Pokušaj ponovo'),
                     ),
                   ],
@@ -111,7 +124,9 @@ class _DetailsView extends StatelessWidget {
               FavoriteButton(type: type, id: details.id, filled: true),
               const SizedBox(width: 8),
             ],
-            flexibleSpace: FlexibleSpaceBar(background: ImageGallery(urls: details.imageUrls, type: type)),
+            flexibleSpace: FlexibleSpaceBar(
+              background: ImageGallery(urls: details.imageUrls, type: type),
+            ),
           ),
           SliverToBoxAdapter(
             child: Padding(
@@ -123,7 +138,12 @@ class _DetailsView extends StatelessWidget {
                     children: [
                       Icon(type.icon, size: 18, color: type.color),
                       const SizedBox(width: 6),
-                      Text(details.subtitle, style: theme.textTheme.labelLarge?.copyWith(color: type.color)),
+                      Text(
+                        details.subtitle,
+                        style: theme.textTheme.labelLarge?.copyWith(
+                          color: type.color,
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 6),
@@ -142,13 +162,18 @@ class _DetailsView extends StatelessWidget {
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
-                    children: [for (final fact in details.facts) _FactChip(fact: fact)],
+                    children: [
+                      for (final fact in details.facts) _FactChip(fact: fact),
+                    ],
                   ),
                   if (description != null && description.isNotEmpty) ...[
                     const SizedBox(height: 24),
                     Text('Opis', style: theme.textTheme.titleLarge),
                     const SizedBox(height: 8),
-                    Text(description, style: theme.textTheme.bodyLarge?.copyWith(height: 1.5)),
+                    Text(
+                      description,
+                      style: theme.textTheme.bodyLarge?.copyWith(height: 1.5),
+                    ),
                   ],
                   if (details.tags.isNotEmpty) ...[
                     const SizedBox(height: 24),
@@ -159,13 +184,26 @@ class _DetailsView extends StatelessWidget {
                       runSpacing: 8,
                       children: [
                         for (final tag in details.tags)
-                          Chip(label: Text(tag), visualDensity: VisualDensity.compact),
+                          Chip(
+                            label: Text(tag),
+                            visualDensity: VisualDensity.compact,
+                          ),
                       ],
                     ),
                   ],
+                  if (details.latitude != null &&
+                      details.longitude != null) ...[
+                    const SizedBox(height: 24),
+                    Text('Lokacija', style: theme.textTheme.titleLarge),
+                    const SizedBox(height: 8),
+                    _LocationPreview(details: details),
+                  ],
                   if (type == ItemType.activity) ...[
                     const SizedBox(height: 24),
-                    Text('Nadolazeći termini', style: theme.textTheme.titleLarge),
+                    Text(
+                      'Nadolazeći termini',
+                      style: theme.textTheme.titleLarge,
+                    ),
                     const SizedBox(height: 4),
                     _SlotsList(slots: details.slots),
                   ],
@@ -183,7 +221,9 @@ class _DetailsView extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
                 child: FilledButton.icon(
                   onPressed: () => startReservation(context, type, details.id),
-                  style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52)),
+                  style: FilledButton.styleFrom(
+                    minimumSize: const Size.fromHeight(52),
+                  ),
                   icon: const Icon(Icons.event_available),
                   label: const Text('Rezerviši'),
                 ),
@@ -244,13 +284,99 @@ class _SlotsList extends StatelessWidget {
             title: Text(Formatters.dateTime(slot.startTime)),
             subtitle: Text('Vodič: ${slot.guideFullName}'),
             trailing: Text(
-              slot.availableSpots == 0 ? 'Popunjeno' : 'Slobodno: ${slot.availableSpots}',
+              slot.availableSpots == 0
+                  ? 'Popunjeno'
+                  : 'Slobodno: ${slot.availableSpots}',
               style: TextStyle(
-                color: slot.availableSpots == 0 ? Theme.of(context).colorScheme.error : null,
+                color: slot.availableSpots == 0
+                    ? Theme.of(context).colorScheme.error
+                    : null,
                 fontWeight: FontWeight.w600,
               ),
             ),
           ),
+      ],
+    );
+  }
+}
+
+class _LocationPreview extends StatelessWidget {
+  const _LocationPreview({required this.details});
+
+  final ItemDetails details;
+
+  @override
+  Widget build(BuildContext context) {
+    final latitude = details.latitude!;
+    final longitude = details.longitude!;
+    final point = LatLng(latitude, longitude);
+
+    void openMap() => Navigator.of(context).push(
+          MaterialPageRoute<void>(builder: (_) => PlacesMapScreen(focusPlaceId: details.id)),
+        );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: SizedBox(
+            height: 180,
+            child: Stack(
+              children: [
+                FlutterMap(
+                  options: MapOptions(
+                    initialCenter: point,
+                    initialZoom: 14,
+                    interactionOptions: const InteractionOptions(flags: InteractiveFlag.none),
+                  ),
+                  children: [
+                    osmTileLayer(),
+                    MarkerLayer(
+                      markers: [
+                        Marker(
+                          point: point,
+                          width: 40,
+                          height: 40,
+                          alignment: Alignment.topCenter,
+                          child: const Icon(Icons.location_on, color: Color(0xFFDC2626), size: 40),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Positioned.fill(
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(onTap: openMap),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text('© OpenStreetMap contributors', style: Theme.of(context).textTheme.bodySmall),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: openMap,
+                icon: const Icon(Icons.map_outlined),
+                label: const Text('Otvori mapu'),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: FilledButton.tonalIcon(
+                onPressed: () => openDirections(context, latitude, longitude),
+                icon: const Icon(Icons.directions_outlined),
+                label: const Text('Upute'),
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }
