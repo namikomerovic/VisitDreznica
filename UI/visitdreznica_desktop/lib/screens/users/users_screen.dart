@@ -174,7 +174,7 @@ class _UsersScreenState extends State<UsersScreen> {
                     alignEnd: true,
                     cell: (user) => Text(
                       user.isActive ? 'Aktivan' : 'Neaktivan',
-                      style: TextStyle(color: user.isActive ? const Color(0xFF16A34A) : scheme.outline),
+                      style: TextStyle(color: user.isActive ? AppColors.success : scheme.outline),
                     ),
                   ),
                 ],

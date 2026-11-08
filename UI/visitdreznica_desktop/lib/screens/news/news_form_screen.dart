@@ -251,7 +251,7 @@ class _NewsFormScreenState extends State<NewsFormScreen> {
                                     ? 'Zakazano: gosti će novost vidjeti tek od odabranog trenutka.'
                                     : 'Gosti vide novost odmah nakon čuvanja.',
                                 style: theme.textTheme.bodySmall?.copyWith(
-                                  color: _isScheduled ? const Color(0xFFB45309) : theme.colorScheme.onSurfaceVariant,
+                                  color: _isScheduled ? AppColors.warning : theme.colorScheme.onSurfaceVariant,
                                 ),
                               ),
                             ),

@@ -72,7 +72,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
                 Icon(
                   info.isModelTrained ? Icons.check_circle : Icons.info_outline,
                   size: 32,
-                  color: info.isModelTrained ? const Color(0xFF16A34A) : theme.colorScheme.tertiary,
+                  color: info.isModelTrained ? AppColors.success : theme.colorScheme.tertiary,
                 ),
                 const SizedBox(width: 16),
                 Expanded(

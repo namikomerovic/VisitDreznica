@@ -248,6 +248,30 @@ class _TopBar extends StatelessWidget {
           children: [
             Text(title, style: Theme.of(context).textTheme.titleLarge),
             const Spacer(),
+            PopupMenuButton<ThemeMode>(
+              tooltip: 'Izgled',
+              icon: Icon(switch (context.watch<ThemeController>().mode) {
+                ThemeMode.system => Icons.brightness_auto_outlined,
+                ThemeMode.light => Icons.light_mode_outlined,
+                ThemeMode.dark => Icons.dark_mode_outlined,
+              }),
+              onSelected: context.read<ThemeController>().setMode,
+              itemBuilder: (context) {
+                final current = context.read<ThemeController>().mode;
+                return [
+                  for (final (mode, label) in [
+                    (ThemeMode.system, 'Prati sistem'),
+                    (ThemeMode.light, 'Svijetla tema'),
+                    (ThemeMode.dark, 'Tamna tema'),
+                  ])
+                    CheckedPopupMenuItem(
+                      value: mode,
+                      checked: mode == current,
+                      child: Text(label),
+                    ),
+                ];
+              },
+            ),
             IconButton(
               tooltip: 'Obavijesti',
               onPressed: () => showNotificationsPanel(context),

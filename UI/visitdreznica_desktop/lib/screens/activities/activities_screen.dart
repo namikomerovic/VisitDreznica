@@ -72,7 +72,10 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                       controller: _nameController,
                       onChanged: (_) {
                         _debounce?.cancel();
-                        _debounce = Timer(const Duration(milliseconds: 400), _filtersChanged);
+                        _debounce = Timer(
+                          const Duration(milliseconds: 400),
+                          _filtersChanged,
+                        );
                       },
                       decoration: const InputDecoration(
                         isDense: true,
@@ -87,19 +90,31 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                     width: 200,
                     child: FutureBuilder<List<LookupItem>>(
                       future: _categories,
-                      builder: (context, snapshot) => DropdownButtonFormField<int?>(
-                        initialValue: _categoryId,
-                        decoration: const InputDecoration(labelText: 'Kategorija', isDense: true, border: OutlineInputBorder()),
-                        items: [
-                          const DropdownMenuItem(value: null, child: Text('Sve kategorije')),
-                          for (final category in snapshot.data ?? const <LookupItem>[])
-                            DropdownMenuItem(value: category.id, child: Text(category.name)),
-                        ],
-                        onChanged: (value) {
-                          _categoryId = value;
-                          _filtersChanged();
-                        },
-                      ),
+                      builder: (context, snapshot) =>
+                          DropdownButtonFormField<int?>(
+                            initialValue: _categoryId,
+                            decoration: const InputDecoration(
+                              labelText: 'Kategorija',
+                              isDense: true,
+                              border: OutlineInputBorder(),
+                            ),
+                            items: [
+                              const DropdownMenuItem(
+                                value: null,
+                                child: Text('Sve kategorije'),
+                              ),
+                              for (final category
+                                  in snapshot.data ?? const <LookupItem>[])
+                                DropdownMenuItem(
+                                  value: category.id,
+                                  child: Text(category.name),
+                                ),
+                            ],
+                            onChanged: (value) {
+                              _categoryId = value;
+                              _filtersChanged();
+                            },
+                          ),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -107,11 +122,18 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                     width: 170,
                     child: DropdownButtonFormField<bool?>(
                       initialValue: _isActive,
-                      decoration: const InputDecoration(labelText: 'Status', isDense: true, border: OutlineInputBorder()),
+                      decoration: const InputDecoration(
+                        labelText: 'Status',
+                        isDense: true,
+                        border: OutlineInputBorder(),
+                      ),
                       items: const [
                         DropdownMenuItem(value: null, child: Text('Sve')),
                         DropdownMenuItem(value: true, child: Text('Aktivne')),
-                        DropdownMenuItem(value: false, child: Text('Neaktivne')),
+                        DropdownMenuItem(
+                          value: false,
+                          child: Text('Neaktivne'),
+                        ),
                       ],
                       onChanged: (value) {
                         _isActive = value;
@@ -134,7 +156,11 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                 key: _tableKey,
                 query: _queryVersion,
                 load: (page, pageSize) => _service.getPage(
-                  ActivitySearch(name: _nameController.text, activityCategoryId: _categoryId, isActive: _isActive),
+                  ActivitySearch(
+                    name: _nameController.text,
+                    activityCategoryId: _categoryId,
+                    isActive: _isActive,
+                  ),
                   page: page,
                   pageSize: pageSize,
                 ),
@@ -147,22 +173,38 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                     cell: (item) => ClipRRect(
                       borderRadius: BorderRadius.circular(6),
                       child: item.hasImage
-                          ? AuthImage(url: _service.imageUrl(item.id), width: 64, height: 44)
+                          ? AuthImage(
+                              url: _service.imageUrl(item.id),
+                              width: 64,
+                              height: 44,
+                            )
                           : Container(
                               width: 64,
                               height: 44,
                               color: scheme.surfaceContainerHighest,
-                              child: Icon(Icons.hiking_outlined, color: scheme.outline),
+                              child: Icon(
+                                Icons.hiking_outlined,
+                                color: scheme.outline,
+                              ),
                             ),
                     ),
                   ),
-                  PagedColumn(header: 'Naziv', flex: 5, cell: (item) => Text(item.name)),
-                  PagedColumn(header: 'Kategorija', flex: 2, cell: (item) => Text(item.activityCategoryName)),
+                  PagedColumn(
+                    header: 'Naziv',
+                    flex: 5,
+                    cell: (item) => Text(item.name),
+                  ),
+                  PagedColumn(
+                    header: 'Kategorija',
+                    flex: 2,
+                    cell: (item) => Text(item.activityCategoryName),
+                  ),
                   PagedColumn(
                     header: 'Trajanje',
                     flex: 2,
                     alignEnd: true,
-                    cell: (item) => Text(Formatters.duration(item.durationMinutes)),
+                    cell: (item) =>
+                        Text(Formatters.duration(item.durationMinutes)),
                   ),
                   PagedColumn(
                     header: 'Max osoba',
@@ -181,8 +223,12 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                     flex: 3,
                     alignEnd: true,
                     cell: (item) => Text(
-                      item.nextSlotStart == null ? 'Nema termina' : Formatters.dateTime(item.nextSlotStart!),
-                      style: item.nextSlotStart == null ? TextStyle(color: scheme.error) : null,
+                      item.nextSlotStart == null
+                          ? 'Nema termina'
+                          : Formatters.dateTime(item.nextSlotStart!),
+                      style: item.nextSlotStart == null
+                          ? TextStyle(color: scheme.error)
+                          : null,
                     ),
                   ),
                   PagedColumn(
@@ -191,7 +237,11 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                     alignEnd: true,
                     cell: (item) => Text(
                       item.isActive ? 'Aktivna' : 'Neaktivna',
-                      style: TextStyle(color: item.isActive ? const Color(0xFF16A34A) : scheme.outline),
+                      style: TextStyle(
+                        color: item.isActive
+                            ? AppColors.success
+                            : scheme.outline,
+                      ),
                     ),
                   ),
                 ],

@@ -130,7 +130,7 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                       child: Icon(
                         r.isPaid ? Icons.check_circle : Icons.radio_button_unchecked,
                         size: 20,
-                        color: r.isPaid ? const Color(0xFF16A34A) : Theme.of(context).colorScheme.outline,
+                        color: r.isPaid ? AppColors.success : Theme.of(context).colorScheme.outline,
                       ),
                     ),
                   ),

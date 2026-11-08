@@ -11,15 +11,23 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('bs');
 
-  const apiUrl = String.fromEnvironment('API_URL', defaultValue: 'http://localhost:5291');
+  const apiUrl = String.fromEnvironment(
+    'API_URL',
+    defaultValue: 'http://localhost:5291',
+  );
   final api = ApiClient(baseUrl: apiUrl);
+  final themeController = ThemeController();
+  await themeController.load();
 
   runApp(
     MultiProvider(
       providers: [
         Provider<ApiClient>.value(value: api),
-        ChangeNotifierProvider(create: (_) => AuthProvider(api, requiredRole: AppRoles.admin)),
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider(api, requiredRole: AppRoles.admin),
+        ),
         ChangeNotifierProvider(create: (_) => NotificationProvider(api)),
+        ChangeNotifierProvider<ThemeController>.value(value: themeController),
       ],
       child: const VisitDreznicaAdminApp(),
     ),
@@ -31,7 +39,9 @@ class VisitDreznicaAdminApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLoggedIn = context.select<AuthProvider, bool>((auth) => auth.isLoggedIn);
+    final isLoggedIn = context.select<AuthProvider, bool>(
+      (auth) => auth.isLoggedIn,
+    );
 
     return MaterialApp(
       key: ValueKey(isLoggedIn),
@@ -44,7 +54,9 @@ class VisitDreznicaAdminApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      theme: ThemeData(colorSchemeSeed: const Color(0xFF0F766E), useMaterial3: true),
+      theme: AppTheme.light(),
+      darkTheme: AppTheme.dark(),
+      themeMode: context.watch<ThemeController>().mode,
       home: isLoggedIn ? const MasterScreen() : const LoginScreen(),
     );
   }

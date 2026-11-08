@@ -4,7 +4,12 @@ import 'package:latlong2/latlong.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
 class LocationPicker extends StatefulWidget {
-  const LocationPicker({super.key, required this.value, required this.onChanged, this.height = 380});
+  const LocationPicker({
+    super.key,
+    required this.value,
+    required this.onChanged,
+    this.height = 380,
+  });
 
   final LatLng? value;
   final ValueChanged<LatLng> onChanged;
@@ -15,11 +20,15 @@ class LocationPicker extends StatefulWidget {
 }
 
 class LocationPickerState extends State<LocationPicker> {
-  static const _accommodation = LatLng(Accommodation.latitude, Accommodation.longitude);
+  static const _accommodation = LatLng(
+    Accommodation.latitude,
+    Accommodation.longitude,
+  );
 
   final _mapController = MapController();
 
-  void centerOn(LatLng point) => _mapController.move(point, _mapController.camera.zoom);
+  void centerOn(LatLng point) =>
+      _mapController.move(point, _mapController.camera.zoom);
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +60,11 @@ class LocationPickerState extends State<LocationPicker> {
                       height: 36,
                       child: Tooltip(
                         message: 'Smještaj',
-                        child: Icon(Icons.house_rounded, color: scheme.primary, size: 32),
+                        child: Icon(
+                          Icons.house_rounded,
+                          color: scheme.primary,
+                          size: 32,
+                        ),
                       ),
                     ),
                     if (widget.value != null)
@@ -60,7 +73,11 @@ class LocationPickerState extends State<LocationPicker> {
                         width: 44,
                         height: 44,
                         alignment: Alignment.topCenter,
-                        child: const Icon(Icons.location_on, color: Color(0xFFDC2626), size: 44),
+                        child: const Icon(
+                          Icons.location_on,
+                          color: AppColors.place,
+                          size: 44,
+                        ),
                       ),
                   ],
                 ),
@@ -70,9 +87,18 @@ class LocationPickerState extends State<LocationPicker> {
               left: 8,
               top: 8,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.9), borderRadius: BorderRadius.circular(8)),
-                child: const Text('Kliknite na kartu da postavite lokaciju'),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.9),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Text(
+                  'Kliknite na kartu da postavite lokaciju',
+                  style: TextStyle(color: Colors.black87),
+                ),
               ),
             ),
             Positioned(
@@ -81,7 +107,10 @@ class LocationPickerState extends State<LocationPicker> {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 color: Colors.white.withValues(alpha: 0.8),
-                child: const Text('© OpenStreetMap contributors', style: TextStyle(fontSize: 11)),
+                child: const Text(
+                  '© OpenStreetMap contributors',
+                  style: TextStyle(fontSize: 11, color: Colors.black87),
+                ),
               ),
             ),
           ],

@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
-Color reservationStatusColor(ReservationStatus status) => switch (status) {
-      ReservationStatus.pending => const Color(0xFFF59E0B),
-      ReservationStatus.confirmed => const Color(0xFF3B82F6),
-      ReservationStatus.completed => const Color(0xFF16A34A),
-      ReservationStatus.cancelled => const Color(0xFF6B7280),
-      ReservationStatus.rejected => const Color(0xFFDC2626),
-    };
+Color reservationStatusColor(ReservationStatus status) => AppColors.forStatus(status);
 
 class ReservationStatusChip extends StatelessWidget {
   const ReservationStatusChip({super.key, required this.status});

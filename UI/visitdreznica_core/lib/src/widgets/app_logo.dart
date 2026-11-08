@@ -5,15 +5,26 @@ class AppLogo extends StatelessWidget {
 
   final double size;
 
-  @override
+   @override
   Widget build(BuildContext context) {
-    return Image.asset(
+    final image = Image.asset(
       'assets/images/logo.png',
       package: 'visitdreznica_core',
       width: size,
       height: size,
       fit: BoxFit.contain,
       semanticLabel: 'Visit Drežnica',
+    );
+
+    if (Theme.of(context).brightness == Brightness.light) {
+      return image;
+    }
+
+    return Container(
+      width: size,
+      height: size,
+      decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+      child: image,
     );
   }
 }

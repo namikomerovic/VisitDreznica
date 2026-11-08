@@ -100,7 +100,7 @@ class _PlacesMapScreenState extends State<PlacesMapScreen> {
                       onTap: () => _select(place),
                       child: Icon(
                         Icons.location_on,
-                        color: place.id == selected?.id ? scheme.primary : const Color(0xFFDC2626),
+                        color: place.id == selected?.id ? scheme.primary : AppColors.place,
                         size: place.id == selected?.id ? 52 : 40,
                       ),
                     ),

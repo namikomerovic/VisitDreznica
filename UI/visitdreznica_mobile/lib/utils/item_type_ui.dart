@@ -9,12 +9,7 @@ extension ItemTypeUi on ItemType {
         ItemType.place => Icons.place_outlined,
       };
 
-  Color get color => switch (this) {
-        ItemType.room => const Color(0xFF0F766E),
-        ItemType.equipment => const Color(0xFF2563EB),
-        ItemType.activity => const Color(0xFFEA580C),
-        ItemType.place => const Color(0xFF16A34A),
-      };
+  Color get color => AppColors.forItemType(this);
 
   String get pluralLabel => switch (this) {
         ItemType.room => 'Sobe',

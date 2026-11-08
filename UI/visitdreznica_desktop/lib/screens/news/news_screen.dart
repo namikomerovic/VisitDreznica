@@ -36,9 +36,9 @@ class _NewsScreenState extends State<NewsScreen> {
   }
 
   Future<void> _openForm({int? id}) async {
-    final changed = await Navigator.of(context).push<bool>(
-      MaterialPageRoute(builder: (_) => NewsFormScreen(newsId: id)),
-    );
+    final changed = await Navigator.of(
+      context,
+    ).push<bool>(MaterialPageRoute(builder: (_) => NewsFormScreen(newsId: id)));
 
     if (changed == true) {
       _tableKey.currentState?.reload();
@@ -92,7 +92,11 @@ class _NewsScreenState extends State<NewsScreen> {
               child: PagedTable<NewsItem>(
                 key: _tableKey,
                 query: _queryVersion,
-                load: (page, pageSize) => _service.getPage(title: _titleController.text, page: page, pageSize: pageSize),
+                load: (page, pageSize) => _service.getPage(
+                  title: _titleController.text,
+                  page: page,
+                  pageSize: pageSize,
+                ),
                 onRowTap: (item) => _openForm(id: item.id),
                 emptyText: 'Nema novosti.',
                 columns: [
@@ -102,21 +106,33 @@ class _NewsScreenState extends State<NewsScreen> {
                     cell: (item) => ClipRRect(
                       borderRadius: BorderRadius.circular(6),
                       child: item.hasImage
-                          ? AuthImage(url: _service.imageUrl(item.id), width: 64, height: 44)
+                          ? AuthImage(
+                              url: _service.imageUrl(item.id),
+                              width: 64,
+                              height: 44,
+                            )
                           : Container(
                               width: 64,
                               height: 44,
                               color: scheme.surfaceContainerHighest,
-                              child: Icon(Icons.newspaper_outlined, color: scheme.outline),
+                              child: Icon(
+                                Icons.newspaper_outlined,
+                                color: scheme.outline,
+                              ),
                             ),
                     ),
                   ),
                   PagedColumn(
                     header: 'Naslov',
                     flex: 6,
-                    cell: (item) => Text(item.title, overflow: TextOverflow.ellipsis),
+                    cell: (item) =>
+                        Text(item.title, overflow: TextOverflow.ellipsis),
                   ),
-                  PagedColumn(header: 'Autor', flex: 2, cell: (item) => Text(item.createdByFullName)),
+                  PagedColumn(
+                    header: 'Autor',
+                    flex: 2,
+                    cell: (item) => Text(item.createdByFullName),
+                  ),
                   PagedColumn(
                     header: 'Datum objave',
                     flex: 3,
@@ -131,7 +147,9 @@ class _NewsScreenState extends State<NewsScreen> {
                       item.isPublished ? 'Objavljeno' : 'Zakazano',
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
-                        color: item.isPublished ? const Color(0xFF16A34A) : const Color(0xFFF59E0B),
+                        color: item.isPublished
+                            ? AppColors.success
+                            : AppColors.warning,
                       ),
                     ),
                   ),

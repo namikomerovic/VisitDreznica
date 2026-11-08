@@ -7,10 +7,6 @@ import 'package:visitdreznica_core/visitdreznica_core.dart';
 class RevenueChart extends StatelessWidget {
   const RevenueChart({super.key, required this.data});
 
-  static const roomsColor = Color(0xFF0F766E);
-  static const equipmentColor = Color(0xFFF59E0B);
-  static const activitiesColor = Color(0xFF3B82F6);
-
   final List<MonthlyRevenue> data;
 
   @override
@@ -29,9 +25,9 @@ class RevenueChart extends StatelessWidget {
         const Wrap(
           spacing: 16,
           children: [
-            _Legend(color: roomsColor, label: 'Smještaj'),
-            _Legend(color: equipmentColor, label: 'Oprema'),
-            _Legend(color: activitiesColor, label: 'Aktivnosti'),
+            _Legend(color: AppColors.room, label: 'Smještaj'),
+            _Legend(color: AppColors.equipment, label: 'Oprema'),
+            _Legend(color: AppColors.activity, label: 'Aktivnosti'),
           ],
         ),
         const SizedBox(height: 16),
@@ -122,9 +118,9 @@ class RevenueChart extends StatelessWidget {
           width: 20,
           borderRadius: BorderRadius.circular(3),
           rodStackItems: [
-            BarChartRodStackItem(0, rooms, roomsColor),
-            BarChartRodStackItem(rooms, rooms + equipment, equipmentColor),
-            BarChartRodStackItem(rooms + equipment, total, activitiesColor),
+            BarChartRodStackItem(0, rooms, AppColors.room),
+            BarChartRodStackItem(rooms, rooms + equipment, AppColors.equipment),
+            BarChartRodStackItem(rooms + equipment, total, AppColors.activity),
           ],
         ),
       ],

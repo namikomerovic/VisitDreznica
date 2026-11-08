@@ -18,7 +18,7 @@ class RatingBadge extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Icon(Icons.star_rounded, size: 18, color: Color(0xFFF59E0B)),
+        const Icon(Icons.star_rounded, size: 18, color:AppColors.star),
         const SizedBox(width: 2),
         Text(Formatters.decimal(average!), style: style?.copyWith(fontWeight: FontWeight.w600)),
         Text(' ($count)', style: style),

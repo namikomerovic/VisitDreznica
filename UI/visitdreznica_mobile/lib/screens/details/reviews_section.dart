@@ -266,7 +266,7 @@ class _SummaryView extends StatelessWidget {
                           child: LinearProgressIndicator(
                             value: maxCount == 0 ? 0 : summary.ratingCounts[rating - 1] / maxCount,
                             minHeight: 8,
-                            color: const Color(0xFFF59E0B),
+                            color: AppColors.star,
                             backgroundColor: theme.colorScheme.surfaceContainerHighest,
                           ),
                         ),

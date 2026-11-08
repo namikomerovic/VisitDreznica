@@ -72,7 +72,10 @@ class _RoomsScreenState extends State<RoomsScreen> {
                       controller: _nameController,
                       onChanged: (_) {
                         _debounce?.cancel();
-                        _debounce = Timer(const Duration(milliseconds: 400), _filtersChanged);
+                        _debounce = Timer(
+                          const Duration(milliseconds: 400),
+                          _filtersChanged,
+                        );
                       },
                       decoration: const InputDecoration(
                         isDense: true,
@@ -87,23 +90,31 @@ class _RoomsScreenState extends State<RoomsScreen> {
                     width: 200,
                     child: FutureBuilder<List<LookupItem>>(
                       future: _roomTypes,
-                      builder: (context, snapshot) => DropdownButtonFormField<int?>(
-                        initialValue: _roomTypeId,
-                        decoration: const InputDecoration(
-                          labelText: 'Tip sobe',
-                          isDense: true,
-                          border: OutlineInputBorder(),
-                        ),
-                        items: [
-                          const DropdownMenuItem(value: null, child: Text('Svi tipovi')),
-                          for (final type in snapshot.data ?? const <LookupItem>[])
-                            DropdownMenuItem(value: type.id, child: Text(type.name)),
-                        ],
-                        onChanged: (value) {
-                          _roomTypeId = value;
-                          _filtersChanged();
-                        },
-                      ),
+                      builder: (context, snapshot) =>
+                          DropdownButtonFormField<int?>(
+                            initialValue: _roomTypeId,
+                            decoration: const InputDecoration(
+                              labelText: 'Tip sobe',
+                              isDense: true,
+                              border: OutlineInputBorder(),
+                            ),
+                            items: [
+                              const DropdownMenuItem(
+                                value: null,
+                                child: Text('Svi tipovi'),
+                              ),
+                              for (final type
+                                  in snapshot.data ?? const <LookupItem>[])
+                                DropdownMenuItem(
+                                  value: type.id,
+                                  child: Text(type.name),
+                                ),
+                            ],
+                            onChanged: (value) {
+                              _roomTypeId = value;
+                              _filtersChanged();
+                            },
+                          ),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -111,11 +122,18 @@ class _RoomsScreenState extends State<RoomsScreen> {
                     width: 170,
                     child: DropdownButtonFormField<bool?>(
                       initialValue: _isActive,
-                      decoration: const InputDecoration(labelText: 'Status', isDense: true, border: OutlineInputBorder()),
+                      decoration: const InputDecoration(
+                        labelText: 'Status',
+                        isDense: true,
+                        border: OutlineInputBorder(),
+                      ),
                       items: const [
                         DropdownMenuItem(value: null, child: Text('Sve')),
                         DropdownMenuItem(value: true, child: Text('Aktivne')),
-                        DropdownMenuItem(value: false, child: Text('Neaktivne')),
+                        DropdownMenuItem(
+                          value: false,
+                          child: Text('Neaktivne'),
+                        ),
                       ],
                       onChanged: (value) {
                         _isActive = value;
@@ -138,7 +156,11 @@ class _RoomsScreenState extends State<RoomsScreen> {
                 key: _tableKey,
                 query: _queryVersion,
                 load: (page, pageSize) => _service.getPage(
-                  RoomSearch(name: _nameController.text, roomTypeId: _roomTypeId, isActive: _isActive),
+                  RoomSearch(
+                    name: _nameController.text,
+                    roomTypeId: _roomTypeId,
+                    isActive: _isActive,
+                  ),
                   page: page,
                   pageSize: pageSize,
                 ),
@@ -155,14 +177,34 @@ class _RoomsScreenState extends State<RoomsScreen> {
                               width: 64,
                               height: 44,
                               color: scheme.surfaceContainerHighest,
-                              child: Icon(Icons.bed_outlined, color: scheme.outline),
+                              child: Icon(
+                                Icons.bed_outlined,
+                                color: scheme.outline,
+                              ),
                             )
-                          : AuthImage(url: _service.imageUrl(room.coverImageId!), width: 64, height: 44),
+                          : AuthImage(
+                              url: _service.imageUrl(room.coverImageId!),
+                              width: 64,
+                              height: 44,
+                            ),
                     ),
                   ),
-                  PagedColumn(header: 'Naziv', flex: 5, cell: (room) => Text(room.name)),
-                  PagedColumn(header: 'Tip', flex: 2, cell: (room) => Text(room.roomTypeName)),
-                  PagedColumn(header: 'Kapacitet', flex: 2, alignEnd: true, cell: (room) => Text('${room.capacity}')),
+                  PagedColumn(
+                    header: 'Naziv',
+                    flex: 5,
+                    cell: (room) => Text(room.name),
+                  ),
+                  PagedColumn(
+                    header: 'Tip',
+                    flex: 2,
+                    cell: (room) => Text(room.roomTypeName),
+                  ),
+                  PagedColumn(
+                    header: 'Kapacitet',
+                    flex: 2,
+                    alignEnd: true,
+                    cell: (room) => Text('${room.capacity}'),
+                  ),
                   PagedColumn(
                     header: 'Površina',
                     flex: 2,
@@ -181,7 +223,11 @@ class _RoomsScreenState extends State<RoomsScreen> {
                     alignEnd: true,
                     cell: (room) => Text(
                       room.isActive ? 'Aktivna' : 'Neaktivna',
-                      style: TextStyle(color: room.isActive ? const Color(0xFF16A34A) : scheme.outline),
+                      style: TextStyle(
+                        color: room.isActive
+                            ? AppColors.success
+                            : scheme.outline,
+                      ),
                     ),
                   ),
                 ],

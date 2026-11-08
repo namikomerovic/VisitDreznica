@@ -6,13 +6,7 @@ class StatusBreakdown extends StatelessWidget {
 
   final List<StatusCount> data;
 
-  static Color colorFor(ReservationStatus status) => switch (status) {
-        ReservationStatus.pending => const Color(0xFFF59E0B),
-        ReservationStatus.confirmed => const Color(0xFF3B82F6),
-        ReservationStatus.completed => const Color(0xFF16A34A),
-        ReservationStatus.cancelled => const Color(0xFF9CA3AF),
-        ReservationStatus.rejected => const Color(0xFFDC2626),
-      };
+   static Color colorFor(ReservationStatus status) => AppColors.forStatus(status);
 
   @override
   Widget build(BuildContext context) {

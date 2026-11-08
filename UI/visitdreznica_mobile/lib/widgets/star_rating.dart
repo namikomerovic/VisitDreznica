@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:visitdreznica_core/visitdreznica_core.dart';
 
 class StarRating extends StatelessWidget {
   const StarRating({super.key, required this.rating, this.size = 18});
@@ -19,7 +20,7 @@ class StarRating extends StatelessWidget {
                     ? Icons.star_half_rounded
                     : Icons.star_outline_rounded,
             size: size,
-            color: const Color(0xFFF59E0B),
+            color: AppColors.star,
           ),
       ],
     );

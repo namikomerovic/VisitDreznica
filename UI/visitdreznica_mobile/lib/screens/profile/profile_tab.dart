@@ -79,7 +79,10 @@ class _ProfileTabState extends State<ProfileTab> {
             ),
             if (profile.hasImage)
               ListTile(
-                leading: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error),
+                leading: Icon(
+                  Icons.delete_outline,
+                  color: Theme.of(context).colorScheme.error,
+                ),
                 title: const Text('Ukloni sliku'),
                 onTap: () => Navigator.pop(context, 'remove'),
               ),
@@ -144,8 +147,14 @@ class _ProfileTabState extends State<ProfileTab> {
         title: const Text('Odjava'),
         content: const Text('Da li se želite odjaviti?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Odustani')),
-          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('Odjavi se')),
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Odustani'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Odjavi se'),
+          ),
         ],
       ),
     );
@@ -159,7 +168,9 @@ class _ProfileTabState extends State<ProfileTab> {
     final session = context.watch<AuthProvider>().session;
     final profile = _profile;
     final fullName = profile?.fullName ?? session?.fullName ?? '';
-    final initial = fullName.isEmpty ? '?' : fullName.characters.first.toUpperCase();
+    final initial = fullName.isEmpty
+        ? '?'
+        : fullName.characters.first.toUpperCase();
 
     return RefreshIndicator(
       onRefresh: _load,
@@ -168,7 +179,9 @@ class _ProfileTabState extends State<ProfileTab> {
         children: [
           Center(
             child: GestureDetector(
-              onTap: profile == null || _imageBusy ? null : () => _photoOptions(profile),
+              onTap: profile == null || _imageBusy
+                  ? null
+                  : () => _photoOptions(profile),
               child: Stack(
                 children: [
                   CircleAvatar(
@@ -176,10 +189,14 @@ class _ProfileTabState extends State<ProfileTab> {
                     child: _imageBusy
                         ? const CircularProgressIndicator()
                         : profile != null && profile.hasImage
-                            ? ClipOval(
-                                child: AuthImage(url: _service.imageUrl(version: _imageVersion), width: 96, height: 96),
-                              )
-                            : Text(initial, style: theme.textTheme.headlineMedium),
+                        ? ClipOval(
+                            child: AuthImage(
+                              url: _service.imageUrl(version: _imageVersion),
+                              width: 96,
+                              height: 96,
+                            ),
+                          )
+                        : Text(initial, style: theme.textTheme.headlineMedium),
                   ),
                   Positioned(
                     right: 0,
@@ -187,7 +204,11 @@ class _ProfileTabState extends State<ProfileTab> {
                     child: CircleAvatar(
                       radius: 16,
                       backgroundColor: theme.colorScheme.primary,
-                      child: Icon(Icons.photo_camera_outlined, size: 18, color: theme.colorScheme.onPrimary),
+                      child: Icon(
+                        Icons.photo_camera_outlined,
+                        size: 18,
+                        color: theme.colorScheme.onPrimary,
+                      ),
                     ),
                   ),
                 ],
@@ -195,22 +216,40 @@ class _ProfileTabState extends State<ProfileTab> {
             ),
           ),
           const SizedBox(height: 12),
-          Text(fullName, textAlign: TextAlign.center, style: theme.textTheme.titleLarge),
-          Text('@${profile?.username ?? session?.username ?? ''}',
-              textAlign: TextAlign.center, style: theme.textTheme.bodyMedium),
+          Text(
+            fullName,
+            textAlign: TextAlign.center,
+            style: theme.textTheme.titleLarge,
+          ),
+          Text(
+            '@${profile?.username ?? session?.username ?? ''}',
+            textAlign: TextAlign.center,
+            style: theme.textTheme.bodyMedium,
+          ),
           const SizedBox(height: 20),
           if (_error != null && profile == null)
-            Center(child: TextButton(onPressed: _load, child: Text('$_error Pokušaj ponovo.'))),
+            Center(
+              child: TextButton(
+                onPressed: _load,
+                child: Text('$_error Pokušaj ponovo.'),
+              ),
+            ),
           if (profile != null)
             Card(
               child: Column(
                 children: [
-                  ListTile(leading: const Icon(Icons.email_outlined), title: Text(profile.email)),
+                  ListTile(
+                    leading: const Icon(Icons.email_outlined),
+                    title: Text(profile.email),
+                  ),
                   ListTile(
                     leading: const Icon(Icons.phone_outlined),
                     title: Text(profile.phoneNumber ?? 'Telefon nije unesen'),
                   ),
-                  ListTile(leading: const Icon(Icons.location_city_outlined), title: Text(profile.cityName)),
+                  ListTile(
+                    leading: const Icon(Icons.location_city_outlined),
+                    title: Text(profile.cityName),
+                  ),
                 ],
               ),
             ),
@@ -236,9 +275,29 @@ class _ProfileTabState extends State<ProfileTab> {
           ),
           const SizedBox(height: 8),
           Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Izgled', style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 12),
+                  const SizedBox(
+                    width: double.infinity,
+                    child: ThemeModeSelector(),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Card(
             child: ListTile(
               leading: Icon(Icons.logout, color: theme.colorScheme.error),
-              title: Text('Odjava', style: TextStyle(color: theme.colorScheme.error)),
+              title: Text(
+                'Odjava',
+                style: TextStyle(color: theme.colorScheme.error),
+              ),
               onTap: _logout,
             ),
           ),

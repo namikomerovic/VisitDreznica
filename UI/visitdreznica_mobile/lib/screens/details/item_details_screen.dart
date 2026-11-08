@@ -339,7 +339,7 @@ class _LocationPreview extends StatelessWidget {
                           width: 40,
                           height: 40,
                           alignment: Alignment.topCenter,
-                          child: const Icon(Icons.location_on, color: Color(0xFFDC2626), size: 40),
+                          child: const Icon(Icons.location_on, color: AppColors.place, size: 40),
                         ),
                       ],
                     ),

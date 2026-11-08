@@ -194,7 +194,7 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
                     alignEnd: true,
                     cell: (item) => Text(
                       item.isActive ? 'Aktivna' : 'Neaktivna',
-                      style: TextStyle(color: item.isActive ? const Color(0xFF16A34A) : scheme.outline),
+                      style: TextStyle(color: item.isActive ? AppColors.success : scheme.outline),
                     ),
                   ),
                 ],

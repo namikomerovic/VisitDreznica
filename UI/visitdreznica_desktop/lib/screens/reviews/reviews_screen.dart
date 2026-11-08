@@ -193,7 +193,7 @@ class _Stars extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         for (var i = 1; i <= 5; i++)
-          Icon(i <= rating ? Icons.star : Icons.star_border, size: size, color: const Color(0xFFF59E0B)),
+          Icon(i <= rating ? Icons.star : Icons.star_border, size: size, color: AppColors.star),
       ],
     );
   }

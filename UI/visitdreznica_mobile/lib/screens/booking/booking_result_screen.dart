@@ -58,7 +58,7 @@ class _BookingResultScreenState extends State<BookingResultScreen> {
           Icon(
             paid ? Icons.check_circle : Icons.schedule,
             size: 80,
-            color: paid ? const Color(0xFF16A34A) : const Color(0xFFF59E0B),
+            color: paid ? AppColors.success : AppColors.warning,
           ),
           const SizedBox(height: 16),
           Text(

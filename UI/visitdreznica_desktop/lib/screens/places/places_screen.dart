@@ -72,7 +72,10 @@ class _PlacesScreenState extends State<PlacesScreen> {
                       controller: _nameController,
                       onChanged: (_) {
                         _debounce?.cancel();
-                        _debounce = Timer(const Duration(milliseconds: 400), _filtersChanged);
+                        _debounce = Timer(
+                          const Duration(milliseconds: 400),
+                          _filtersChanged,
+                        );
                       },
                       decoration: const InputDecoration(
                         isDense: true,
@@ -87,19 +90,31 @@ class _PlacesScreenState extends State<PlacesScreen> {
                     width: 200,
                     child: FutureBuilder<List<LookupItem>>(
                       future: _types,
-                      builder: (context, snapshot) => DropdownButtonFormField<int?>(
-                        initialValue: _typeId,
-                        decoration: const InputDecoration(labelText: 'Tip mjesta', isDense: true, border: OutlineInputBorder()),
-                        items: [
-                          const DropdownMenuItem(value: null, child: Text('Svi tipovi')),
-                          for (final type in snapshot.data ?? const <LookupItem>[])
-                            DropdownMenuItem(value: type.id, child: Text(type.name)),
-                        ],
-                        onChanged: (value) {
-                          _typeId = value;
-                          _filtersChanged();
-                        },
-                      ),
+                      builder: (context, snapshot) =>
+                          DropdownButtonFormField<int?>(
+                            initialValue: _typeId,
+                            decoration: const InputDecoration(
+                              labelText: 'Tip mjesta',
+                              isDense: true,
+                              border: OutlineInputBorder(),
+                            ),
+                            items: [
+                              const DropdownMenuItem(
+                                value: null,
+                                child: Text('Svi tipovi'),
+                              ),
+                              for (final type
+                                  in snapshot.data ?? const <LookupItem>[])
+                                DropdownMenuItem(
+                                  value: type.id,
+                                  child: Text(type.name),
+                                ),
+                            ],
+                            onChanged: (value) {
+                              _typeId = value;
+                              _filtersChanged();
+                            },
+                          ),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -107,11 +122,18 @@ class _PlacesScreenState extends State<PlacesScreen> {
                     width: 170,
                     child: DropdownButtonFormField<bool?>(
                       initialValue: _isActive,
-                      decoration: const InputDecoration(labelText: 'Status', isDense: true, border: OutlineInputBorder()),
+                      decoration: const InputDecoration(
+                        labelText: 'Status',
+                        isDense: true,
+                        border: OutlineInputBorder(),
+                      ),
                       items: const [
                         DropdownMenuItem(value: null, child: Text('Sva')),
                         DropdownMenuItem(value: true, child: Text('Aktivna')),
-                        DropdownMenuItem(value: false, child: Text('Neaktivna')),
+                        DropdownMenuItem(
+                          value: false,
+                          child: Text('Neaktivna'),
+                        ),
                       ],
                       onChanged: (value) {
                         _isActive = value;
@@ -134,7 +156,11 @@ class _PlacesScreenState extends State<PlacesScreen> {
                 key: _tableKey,
                 query: _queryVersion,
                 load: (page, pageSize) => _service.getPage(
-                  PlaceSearch(name: _nameController.text, placeTypeId: _typeId, isActive: _isActive),
+                  PlaceSearch(
+                    name: _nameController.text,
+                    placeTypeId: _typeId,
+                    isActive: _isActive,
+                  ),
                   page: page,
                   pageSize: pageSize,
                 ),
@@ -151,23 +177,42 @@ class _PlacesScreenState extends State<PlacesScreen> {
                               width: 64,
                               height: 44,
                               color: scheme.surfaceContainerHighest,
-                              child: Icon(Icons.place_outlined, color: scheme.outline),
+                              child: Icon(
+                                Icons.place_outlined,
+                                color: scheme.outline,
+                              ),
                             )
-                          : AuthImage(url: _service.imageUrl(place.coverImageId!), width: 64, height: 44),
+                          : AuthImage(
+                              url: _service.imageUrl(place.coverImageId!),
+                              width: 64,
+                              height: 44,
+                            ),
                     ),
                   ),
-                  PagedColumn(header: 'Naziv', flex: 4, cell: (place) => Text(place.name)),
-                  PagedColumn(header: 'Tip', flex: 2, cell: (place) => Text(place.placeTypeName)),
+                  PagedColumn(
+                    header: 'Naziv',
+                    flex: 4,
+                    cell: (place) => Text(place.name),
+                  ),
+                  PagedColumn(
+                    header: 'Tip',
+                    flex: 2,
+                    cell: (place) => Text(place.placeTypeName),
+                  ),
                   PagedColumn(
                     header: 'Adresa',
                     flex: 3,
-                    cell: (place) => Text(place.address ?? '—', overflow: TextOverflow.ellipsis),
+                    cell: (place) => Text(
+                      place.address ?? '—',
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   PagedColumn(
                     header: 'Udaljenost',
                     flex: 2,
                     alignEnd: true,
-                    cell: (place) => Text('${Formatters.decimal(place.distanceKm)} km'),
+                    cell: (place) =>
+                        Text('${Formatters.decimal(place.distanceKm)} km'),
                   ),
                   PagedColumn(
                     header: 'Status',
@@ -175,7 +220,11 @@ class _PlacesScreenState extends State<PlacesScreen> {
                     alignEnd: true,
                     cell: (place) => Text(
                       place.isActive ? 'Aktivno' : 'Neaktivno',
-                      style: TextStyle(color: place.isActive ? const Color(0xFF16A34A) : scheme.outline),
+                      style: TextStyle(
+                        color: place.isActive
+                            ? AppColors.success
+                            : scheme.outline,
+                      ),
                     ),
                   ),
                 ],
