@@ -5,6 +5,7 @@ import 'package:visitdreznica_core/visitdreznica_core.dart';
 import '../../widgets/error_view.dart';
 import 'revenue_chart.dart';
 import 'status_breakdown.dart';
+import '../../widgets/equal_height_grid.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -22,7 +23,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _future = _load();
   }
 
-  Future<DashboardResponse> _load() => ReportService(context.read<ApiClient>()).getDashboard();
+  Future<DashboardResponse> _load() =>
+      ReportService(context.read<ApiClient>()).getDashboard();
 
   void _refresh() => setState(() => _future = _load());
 
@@ -36,7 +38,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         }
 
         if (snapshot.hasError) {
-          return ErrorView(message: snapshot.error.toString(), onRetry: _refresh);
+          return ErrorView(
+            message: snapshot.error.toString(),
+            onRetry: _refresh,
+          );
         }
 
         return _DashboardContent(data: snapshot.data!, onRefresh: _refresh);
@@ -62,19 +67,24 @@ class _DashboardContent extends StatelessWidget {
           children: [
             Text('Pregled poslovanja', style: theme.textTheme.titleMedium),
             const Spacer(),
-            IconButton(tooltip: 'Osvježi', onPressed: onRefresh, icon: const Icon(Icons.refresh)),
+            IconButton(
+              tooltip: 'Osvježi',
+              onPressed: onRefresh,
+              icon: const Icon(Icons.refresh),
+            ),
           ],
         ),
         const SizedBox(height: 12),
-        Wrap(
-          spacing: 16,
-          runSpacing: 16,
+        EqualHeightGrid(
           children: [
             _KpiCard(
               icon: Icons.payments_outlined,
               title: 'Prihod ovog mjeseca',
               value: Formatters.money(data.revenueThisMonth),
-              subtitle: _revenueTrend(data.revenueThisMonth, data.revenueLastMonth),
+              subtitle: _revenueTrend(
+                data.revenueThisMonth,
+                data.revenueLastMonth,
+              ),
             ),
             _KpiCard(
               icon: Icons.event_available_outlined,
@@ -96,7 +106,9 @@ class _DashboardContent extends StatelessWidget {
             _KpiCard(
               icon: Icons.star_outline,
               title: 'Prosječna ocjena',
-              value: data.averageRating == null ? '–' : '${Formatters.decimal(data.averageRating!)} ★',
+              value: data.averageRating == null
+                  ? '–'
+                  : '${Formatters.decimal(data.averageRating!)} ★',
               subtitle: 'Iz ${data.reviewCount} recenzija',
             ),
             _KpiCard(
@@ -109,31 +121,56 @@ class _DashboardContent extends StatelessWidget {
         const SizedBox(height: 24),
         LayoutBuilder(
           builder: (context, constraints) {
-            final revenue = _Panel(
-              title: 'Neto prihod po mjesecima',
-              child: RevenueChart(data: data.revenueByMonth),
-            );
-            final statuses = _Panel(
-              title: 'Rezervacije po statusu',
-              child: StatusBreakdown(data: data.reservationsByStatus),
-            );
-
             if (constraints.maxWidth < 1100) {
-              return Column(children: [revenue, const SizedBox(height: 16), statuses]);
+              return Column(
+                children: [
+                  _Panel(
+                    title: 'Neto prihod po mjesecima',
+                    child: RevenueChart(data: data.revenueByMonth),
+                  ),
+                  const SizedBox(height: 16),
+                  _Panel(
+                    title: 'Rezervacije po statusu',
+                    child: StatusBreakdown(data: data.reservationsByStatus),
+                  ),
+                ],
+              );
             }
 
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(flex: 2, child: revenue),
-                const SizedBox(width: 16),
-                Expanded(child: statuses),
-              ],
+            return SizedBox(
+              height: 400,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: _Panel(
+                      title: 'Neto prihod po mjesecima',
+                      expand: true,
+                      child: RevenueChart(
+                        data: data.revenueByMonth,
+                        expand: true,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: _Panel(
+                      title: 'Rezervacije po statusu',
+                      expand: true,
+                      child: StatusBreakdown(data: data.reservationsByStatus),
+                    ),
+                  ),
+                ],
+              ),
             );
           },
         ),
         const SizedBox(height: 16),
-        _Panel(title: 'Najtraženije u zadnjih godinu dana', child: _TopItems(items: data.topItems)),
+        _Panel(
+          title: 'Najtraženije u zadnjih godinu dana',
+          child: _TopItems(items: data.topItems),
+        ),
       ],
     );
   }
@@ -170,8 +207,8 @@ class _KpiCard extends StatelessWidget {
     final scheme = theme.colorScheme;
 
     return SizedBox(
-      width: 250,
       child: Card(
+        margin: EdgeInsets.zero,
         color: highlight ? scheme.tertiaryContainer : null,
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -182,14 +219,26 @@ class _KpiCard extends StatelessWidget {
                 children: [
                   Icon(icon, size: 20, color: scheme.primary),
                   const SizedBox(width: 8),
-                  Expanded(child: Text(title, style: theme.textTheme.bodyMedium)),
+                  Expanded(
+                    child: Text(title, style: theme.textTheme.bodyMedium),
+                  ),
                 ],
               ),
               const SizedBox(height: 12),
-              Text(value, style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w600)),
+              Text(
+                value,
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               if (subtitle != null) ...[
                 const SizedBox(height: 4),
-                Text(subtitle!, style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant)),
+                Text(
+                  subtitle!,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: scheme.onSurfaceVariant,
+                  ),
+                ),
               ],
             ],
           ),
@@ -200,14 +249,16 @@ class _KpiCard extends StatelessWidget {
 }
 
 class _Panel extends StatelessWidget {
-  const _Panel({required this.title, required this.child});
+  const _Panel({required this.title, required this.child, this.expand = false});
 
   final String title;
   final Widget child;
+  final bool expand;
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: EdgeInsets.zero,
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -215,14 +266,13 @@ class _Panel extends StatelessWidget {
           children: [
             Text(title, style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 16),
-            child,
+            if (expand) Expanded(child: child) else child,
           ],
         ),
       ),
     );
   }
 }
-
 class _TopItems extends StatelessWidget {
   const _TopItems({required this.items});
 
@@ -247,7 +297,10 @@ class _TopItems extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text('${items[i].reservationCount} rezervacija'),
-                Text(Formatters.money(items[i].revenue), style: Theme.of(context).textTheme.bodySmall),
+                Text(
+                  Formatters.money(items[i].revenue),
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
               ],
             ),
           ),

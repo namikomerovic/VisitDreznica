@@ -106,9 +106,9 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                 onRowTap: _openDetails,
                 emptyText: _hasFilters ? 'Nema rezervacija za odabrane filtere.' : 'Još nema rezervacija.',
                 columns: [
-                  PagedColumn(header: '#', flex: 1, cell: (r) => Text('${r.id}')),
+                  PagedColumn(header: '#', width: 64, cell: (r) => Text('${r.id}')),
                   PagedColumn(header: 'Gost', flex: 3, cell: (r) => Text(r.userFullName)),
-                  PagedColumn(header: 'Vrsta', flex: 2, cell: (r) => Text(r.type.label)),
+                  PagedColumn(header: 'Vrsta', flex: 2, hideBelow: 1000, cell: (r) => Text(r.type.label)),
                   PagedColumn(
                     header: 'Stavka',
                     flex: 4,
@@ -117,14 +117,12 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                   PagedColumn(header: 'Termin', flex: 4, cell: (r) => Text(r.periodLabel)),
                   PagedColumn(
                     header: 'Iznos',
-                    flex: 2,
-                    alignEnd: true,
+                    width: 110, alignEnd: true,
                     cell: (r) => Text(Formatters.money(r.totalPrice)),
                   ),
                   PagedColumn(
                     header: 'Plaćeno',
-                    flex: 1,
-                    alignEnd: true,
+                    width: 80, center: true,
                     cell: (r) => Tooltip(
                       message: r.isPaid ? 'Plaćeno' : 'Nije plaćeno',
                       child: Icon(
@@ -136,8 +134,7 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                   ),
                   PagedColumn(
                     header: 'Status',
-                    flex: 2,
-                    alignEnd: true,
+                    width: 130, alignEnd: true,
                     cell: (r) => ReservationStatusChip(status: r.status),
                   ),
                 ],

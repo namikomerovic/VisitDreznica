@@ -5,10 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
 class RevenueChart extends StatelessWidget {
-  const RevenueChart({super.key, required this.data});
+  const RevenueChart({super.key, required this.data, this.expand = false});
 
   final List<MonthlyRevenue> data;
-
+  final bool expand;
+  
   @override
   Widget build(BuildContext context) {
     final labelStyle = Theme.of(context).textTheme.bodySmall;
@@ -31,8 +32,8 @@ class RevenueChart extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16),
-        SizedBox(
-          height: 260,
+        _ChartBox(
+          expand: expand,
           child: BarChart(
             BarChartData(
               maxY: maxY,
@@ -179,4 +180,15 @@ class _Legend extends StatelessWidget {
       ],
     );
   }
+}
+
+class _ChartBox extends StatelessWidget {
+  const _ChartBox({required this.expand, required this.child});
+
+  final bool expand;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) =>
+      expand ? Expanded(child: child) : SizedBox(height: 260, child: child);
 }

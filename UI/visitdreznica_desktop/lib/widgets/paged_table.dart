@@ -4,12 +4,36 @@ import 'package:visitdreznica_core/visitdreznica_core.dart';
 import 'error_view.dart';
 
 class PagedColumn<T> {
-  const PagedColumn({required this.header, required this.cell, this.flex = 1, this.alignEnd = false});
+  const PagedColumn({
+    required this.header,
+    required this.cell,
+    this.flex = 1,
+    this.width,
+    this.alignEnd = false,
+    this.center = false,
+    this.hideBelow,
+  });
 
   final String header;
   final Widget Function(T item) cell;
+
+  /// Udio u preostaloj širini (kad [width] nije zadan).
   final int flex;
+
+  /// Fiksna širina kolone – za uske kolone poput broja, iznosa ili statusa.
+  final double? width;
+
   final bool alignEnd;
+  final bool center;
+
+  /// Kolona se sakrije kad je tabela uža od ove širine.
+  final double? hideBelow;
+
+  Alignment get alignment => center
+      ? Alignment.center
+      : alignEnd
+          ? Alignment.centerRight
+          : Alignment.centerLeft;
 }
 
 class PagedTable<T> extends StatefulWidget {
@@ -34,6 +58,7 @@ class PagedTable<T> extends StatefulWidget {
 
 class PagedTableState<T> extends State<PagedTable<T>> {
   static const _pageSizes = [10, 20, 50];
+  static const _cellGap = 12.0;
 
   int _page = 1;
   int _pageSize = 20;
@@ -87,37 +112,61 @@ class PagedTableState<T> extends State<PagedTable<T>> {
     _load();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Column(
+  Widget _row(List<PagedColumn<T>> columns, Widget Function(PagedColumn<T> column) build) {
+    return Row(
       children: [
-        SizedBox(height: 3, child: _loading ? const LinearProgressIndicator() : null),
-        Container(
-          color: theme.colorScheme.surfaceContainerHigh,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Row(
-            children: [
-              for (final column in widget.columns)
-                Expanded(
-                  flex: column.flex,
-                  child: Align(
-                    alignment: column.alignEnd ? Alignment.centerRight : Alignment.centerLeft,
-                    child: Text(column.header, style: theme.textTheme.labelLarge),
-                  ),
+        for (final column in columns)
+          _sized(
+            column,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: _cellGap / 2),
+              child: Align(
+                alignment: column.alignment,
+                child: DefaultTextStyle.merge(
+                  maxLines: 1,
+                  softWrap: false,
+                  overflow: TextOverflow.ellipsis,
+                  child: build(column),
                 ),
-            ],
+              ),
+            ),
           ),
-        ),
-        Expanded(child: _buildBody(theme)),
-        const Divider(height: 1),
-        _buildFooter(theme),
       ],
     );
   }
 
-  Widget _buildBody(ThemeData theme) {
+  Widget _sized(PagedColumn<T> column, Widget child) =>
+      column.width != null ? SizedBox(width: column.width, child: child) : Expanded(flex: column.flex, child: child);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final columns = [
+          for (final column in widget.columns)
+            if (column.hideBelow == null || constraints.maxWidth >= column.hideBelow!) column,
+        ];
+
+        return Column(
+          children: [
+            SizedBox(height: 3, child: _loading ? const LinearProgressIndicator() : null),
+            Container(
+              color: theme.colorScheme.surfaceContainerHigh,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+              child: _row(columns, (column) => Text(column.header, style: theme.textTheme.labelLarge)),
+            ),
+            Expanded(child: _buildBody(theme, columns)),
+            const Divider(height: 1),
+            _buildFooter(theme),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildBody(ThemeData theme, List<PagedColumn<T>> columns) {
     if (_error != null) {
       return ErrorView(message: _error!, onRetry: _load);
     }
@@ -141,19 +190,8 @@ class PagedTableState<T> extends State<PagedTable<T>> {
         return InkWell(
           onTap: widget.onRowTap == null ? null : () => widget.onRowTap!(item),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Row(
-              children: [
-                for (final column in widget.columns)
-                  Expanded(
-                    flex: column.flex,
-                    child: Align(
-                      alignment: column.alignEnd ? Alignment.centerRight : Alignment.centerLeft,
-                      child: column.cell(item),
-                    ),
-                  ),
-              ],
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+            child: _row(columns, (column) => column.cell(item)),
           ),
         );
       },
@@ -170,7 +208,7 @@ class PagedTableState<T> extends State<PagedTable<T>> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       child: Row(
         children: [
-          Text('Prikazano $first–$last od $total'),
+          Flexible(child: Text('Prikazano $first–$last od $total', overflow: TextOverflow.ellipsis)),
           const Spacer(),
           const Text('Redova po stranici:'),
           const SizedBox(width: 8),

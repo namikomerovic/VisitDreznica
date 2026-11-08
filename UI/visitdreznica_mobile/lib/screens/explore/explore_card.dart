@@ -6,7 +6,12 @@ import '../../widgets/rating_badge.dart';
 import 'explore_item.dart';
 
 class ExploreCard extends StatelessWidget {
-  const ExploreCard({super.key, required this.item, required this.rating, required this.onTap});
+  const ExploreCard({
+    super.key,
+    required this.item,
+    required this.rating,
+    required this.onTap,
+  });
 
   final ExploreItem item;
   final ReviewSummaryItem? rating;
@@ -29,7 +34,11 @@ class ExploreCard extends StatelessWidget {
               child: item.imageUrl == null
                   ? Container(
                       color: item.type.color.withValues(alpha: 0.12),
-                      child: Icon(item.type.icon, size: 40, color: item.type.color),
+                      child: Icon(
+                        item.type.icon,
+                        size: 40,
+                        color: item.type.color,
+                      ),
                     )
                   : AuthImage(url: item.imageUrl!),
             ),
@@ -39,20 +48,46 @@ class ExploreCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(item.title, maxLines: 2, overflow: TextOverflow.ellipsis, style: theme.textTheme.titleMedium),
+                    Text(
+                      item.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.titleMedium,
+                    ),
                     const SizedBox(height: 4),
-                    Text(item.subtitle, maxLines: 2, overflow: TextOverflow.ellipsis, style: theme.textTheme.bodySmall),
+                    Text(
+                      item.subtitle,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodySmall,
+                    ),
                     if (item.extra != null) ...[
                       const SizedBox(height: 2),
-                      Text(item.extra!, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.primary)),
+                      Text(
+                        item.extra!,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
                     ],
                     const SizedBox(height: 8),
-                    Row(
+                    Wrap(
+                      alignment: WrapAlignment.spaceBetween,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 8,
+                      runSpacing: 4,
                       children: [
-                        RatingBadge(average: rating?.averageRating, count: rating?.reviewCount ?? 0),
-                        const Spacer(),
+                        RatingBadge(
+                          average: rating?.averageRating,
+                          count: rating?.reviewCount ?? 0,
+                        ),
                         if (item.priceLabel != null)
-                          Text(item.priceLabel!, style: theme.textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w700)),
+                          Text(
+                            item.priceLabel!,
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                       ],
                     ),
                   ],
