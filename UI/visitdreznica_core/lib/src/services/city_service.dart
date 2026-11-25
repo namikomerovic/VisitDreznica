@@ -28,23 +28,24 @@ class CityService {
     return PageResult.fromJson(json, City.fromJson);
   }
 
-  Future<List<City>> getForRegistration() async {
-    final json = await _api.get(
-      'Auth/cities',
-      query: {'page': 1, 'pageSize': 100},
-    );
-    final cities = PageResult.fromJson(json, City.fromJson).items;
+  static const homeCountry = 'Bosna i Hercegovina';
 
-    int homeFirst(City city) =>
-        city.countryName == 'Bosna i Hercegovina' ? 0 : 1;
+  static List<City> sortHomeFirst(List<City> cities) {
+    int homeFirst(City city) => city.countryName == homeCountry ? 0 : 1;
 
-    return cities..sort((a, b) {
-      final byHome = homeFirst(a).compareTo(homeFirst(b));
-      if (byHome != 0) return byHome;
+    return [...cities]
+      ..sort((a, b) {
+        final byHome = homeFirst(a).compareTo(homeFirst(b));
+        if (byHome != 0) return byHome;
 
-      final byCountry = a.countryName.compareTo(b.countryName);
-      return byCountry != 0 ? byCountry : a.name.compareTo(b.name);
-    });
+        final byCountry = a.countryName.compareTo(b.countryName);
+        return byCountry != 0 ? byCountry : a.name.compareTo(b.name);
+      });
+  }
+
+   Future<List<City>> getForRegistration() async {
+    final json = await _api.get('Auth/cities', query: {'page': 1, 'pageSize': 100});
+    return sortHomeFirst(PageResult.fromJson(json, City.fromJson).items);
   }
 
   Future<void> insert({

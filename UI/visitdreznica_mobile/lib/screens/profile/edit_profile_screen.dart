@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
+import '../../widgets/email_field.dart';
 import '../../widgets/message_box.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -86,13 +87,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     }
   }
 
-  InputDecoration _decoration(String label, String field, {IconData? icon, String? hint}) => InputDecoration(
-        labelText: label,
-        hintText: hint,
-        prefixIcon: icon == null ? null : Icon(icon),
-        border: const OutlineInputBorder(),
-        errorText: _serverErrors[field.toLowerCase()],
-      );
+  InputDecoration _decoration(
+    String label,
+    String field, {
+    IconData? icon,
+    String? hint,
+  }) => InputDecoration(
+    labelText: label,
+    hintText: hint,
+    prefixIcon: icon == null ? null : Icon(icon),
+    border: const OutlineInputBorder(),
+    errorText: _serverErrors[field.toLowerCase()],
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -111,24 +117,43 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   controller: _firstName,
                   textCapitalization: TextCapitalization.words,
                   textInputAction: TextInputAction.next,
-                  decoration: _decoration('Ime *', 'firstName', icon: Icons.badge_outlined),
-                  validator: (v) => validateLength(v, 1, 50, 'Unesite ime (najviše 50 znakova).'),
+                  decoration: _decoration(
+                    'Ime *',
+                    'firstName',
+                    icon: Icons.badge_outlined,
+                  ),
+                  validator: (v) => validateLength(
+                    v,
+                    1,
+                    50,
+                    'Unesite ime (najviše 50 znakova).',
+                  ),
                 ),
                 const SizedBox(height: 14),
                 TextFormField(
                   controller: _lastName,
                   textCapitalization: TextCapitalization.words,
                   textInputAction: TextInputAction.next,
-                  decoration: _decoration('Prezime *', 'lastName', icon: Icons.badge_outlined),
-                  validator: (v) => validateLength(v, 1, 50, 'Unesite prezime (najviše 50 znakova).'),
+                  decoration: _decoration(
+                    'Prezime *',
+                    'lastName',
+                    icon: Icons.badge_outlined,
+                  ),
+                  validator: (v) => validateLength(
+                    v,
+                    1,
+                    50,
+                    'Unesite prezime (najviše 50 znakova).',
+                  ),
                 ),
                 const SizedBox(height: 14),
-                TextFormField(
+                EmailField(
                   controller: _email,
-                  keyboardType: TextInputType.emailAddress,
-                  autocorrect: false,
-                  textInputAction: TextInputAction.next,
-                  decoration: _decoration('E-mail *', 'email', icon: Icons.email_outlined),
+                  decoration: _decoration(
+                    'E-mail *',
+                    'email',
+                    icon: Icons.email_outlined,
+                  ),
                   validator: validateEmail,
                 ),
                 const SizedBox(height: 14),
@@ -136,7 +161,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   controller: _phone,
                   keyboardType: TextInputType.phone,
                   textInputAction: TextInputAction.done,
-                  decoration: _decoration('Telefon', 'phoneNumber', icon: Icons.phone_outlined, hint: '061 234 567'),
+                  decoration: _decoration(
+                    'Telefon',
+                    'phoneNumber',
+                    icon: Icons.phone_outlined,
+                    hint: '061 234 567',
+                  ),
                   validator: validateOptionalPhone,
                 ),
                 const SizedBox(height: 14),
@@ -144,7 +174,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   future: _cities,
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
-                      return const MessageBox(text: 'Gradove nije moguće učitati. Provjerite vezu.', isError: true);
+                      return const MessageBox(
+                        text: 'Gradove nije moguće učitati. Provjerite vezu.',
+                        isError: true,
+                      );
                     }
 
                     final cities = snapshot.data;
@@ -156,15 +189,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     }
 
                     return DropdownButtonFormField<int>(
-                      initialValue: cities.any((x) => x.id == _cityId) ? _cityId : null,
+                      initialValue: cities.any((x) => x.id == _cityId)
+                          ? _cityId
+                          : null,
                       isExpanded: true,
-                      decoration: _decoration('Grad *', 'cityId', icon: Icons.location_city_outlined),
+                      decoration: _decoration(
+                        'Grad *',
+                        'cityId',
+                        icon: Icons.location_city_outlined,
+                      ),
                       items: [
                         for (final city in cities)
-                          DropdownMenuItem(value: city.id, child: Text('${city.name}, ${city.countryName}')),
+                          DropdownMenuItem(
+                            value: city.id,
+                            child: Text('${city.name}, ${city.countryName}'),
+                          ),
                       ],
-                      onChanged: _saving ? null : (value) => setState(() => _cityId = value!),
-                      validator: (value) => value == null ? 'Odaberite grad.' : null,
+                      onChanged: _saving
+                          ? null
+                          : (value) => setState(() => _cityId = value!),
+                      validator: (value) =>
+                          value == null ? 'Odaberite grad.' : null,
                     );
                   },
                 ),
@@ -176,9 +221,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 const SizedBox(height: 24),
                 FilledButton(
                   onPressed: _saving ? null : _save,
-                  style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52)),
+                  style: FilledButton.styleFrom(
+                    minimumSize: const Size.fromHeight(52),
+                  ),
                   child: _saving
-                      ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.5))
+                      ? const SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: CircularProgressIndicator(strokeWidth: 2.5),
+                        )
                       : const Text('Sačuvaj'),
                 ),
               ],
