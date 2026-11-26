@@ -38,6 +38,8 @@ class Reservation {
     this.equipmentId,
     this.activityId,
     this.activitySlotId,
+    this.coverImageId,
+    this.hasImage = false,
   });
 
   final int id;
@@ -60,6 +62,8 @@ class Reservation {
   final int? equipmentId;
   final int? activityId;
   final int? activitySlotId;
+  final int? coverImageId;
+  final bool hasImage;
 
   ItemType get itemType => switch (type) {
     ReservationType.room => ItemType.room,
@@ -121,6 +125,8 @@ class Reservation {
     equipmentId: json['equipmentId'] as int?,
     activityId: json['activityId'] as int?,
     activitySlotId: json['activitySlotId'] as int?,
+    coverImageId: json['coverImageId'] as int?,
+    hasImage: json['hasImage'] as bool? ?? false,
   );
 }
 

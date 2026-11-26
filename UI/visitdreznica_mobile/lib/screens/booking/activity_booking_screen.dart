@@ -66,6 +66,9 @@ class _ActivityBookingScreenState extends State<ActivityBookingScreen> {
 
   Future<void> _submit() async {
     final slot = _slot!;
+    final total = Formatters.money(_activity!.pricePerPerson * _participants);
+    if (!await confirmPayment(context, total)) return;
+    if (!mounted) return;
     setState(() => _submitting = true);
 
     await submitBooking(

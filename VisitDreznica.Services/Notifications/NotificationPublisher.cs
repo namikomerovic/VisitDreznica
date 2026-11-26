@@ -49,14 +49,14 @@ public class NotificationPublisher(VisitDreznicaDbContext dbContext, PaymentSett
 
         var (title, message) = data.Status switch
         {
-            ReservationStatus.Confirmed => ($"Rezervacija #{data.Id} je potvrđena",
+            ReservationStatus.Confirmed => ("Rezervacija je potvrđena",
                 $"{what} Radujemo se vašem dolasku!"),
-            ReservationStatus.Rejected => ($"Rezervacija #{data.Id} je odbijena",
+            ReservationStatus.Rejected => ("Rezervacija je odbijena",
                 $"{what}{reason}{refund}"),
-            ReservationStatus.Cancelled => ($"Rezervacija #{data.Id} je otkazana",
+            ReservationStatus.Cancelled => ("Rezervacija je otkazana",
                 $"{what}{reason}{refund}"),
             ReservationStatus.Completed => ("Kako vam je bilo?",
-                $"Rezervacija #{data.Id} je završena. Ocijenite iskustvo i pomozite drugim gostima pri izboru."),
+                $"{what} Rezervacija je završena. Ocijenite iskustvo i pomozite drugim gostima pri izboru."),
             _ => (null, null)
         };
 
@@ -98,7 +98,7 @@ public class NotificationPublisher(VisitDreznicaDbContext dbContext, PaymentSett
             .Select(x => x.Id)
             .ToListAsync();
 
-        var title = $"Nova plaćena rezervacija #{data.Id}";
+        var title = "Nova plaćena rezervacija";
         var message = $"{data.GuestName} je platio/la: {ReservationText.TypeLabel(data.Type)}, " +
                       $"{ReservationText.FormatLocal(data.StartTime)} " +
                       $"({ReservationText.FormatMoney(data.TotalPrice, paymentSettings.Currency)}). Rezervacija čeka potvrdu.";

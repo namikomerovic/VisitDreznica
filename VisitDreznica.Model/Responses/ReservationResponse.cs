@@ -18,6 +18,8 @@ public class ReservationResponse
     public string UserFullName { get; set; } = string.Empty;
 
     public string ItemName { get; set; } = string.Empty;
+    public int? CoverImageId { get; set; }
+    public bool HasImage { get; set; }
 
     public int? RoomId { get; set; }
     public int? GuestCount { get; set; }

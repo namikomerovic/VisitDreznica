@@ -135,6 +135,8 @@ class _RoomBookingScreenState extends State<RoomBookingScreen> {
 
   Future<void> _submit() async {
     final range = _range!;
+    if (!await confirmPayment(context, Formatters.money(_quote!.totalPrice))) return;
+    if (!mounted) return;
     setState(() => _submitting = true);
 
     await submitBooking(

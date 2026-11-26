@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
-import '../../utils/item_type_ui.dart';
+import '../../widgets/item_thumbnail.dart';
 import '../../widgets/status_chip.dart';
 import 'reservation_details_screen.dart';
 
 enum _Filter {
   active('Aktivne', {ReservationStatus.pending, ReservationStatus.confirmed}),
   completed('Završene', {ReservationStatus.completed}),
-  cancelled('Otkazane', {ReservationStatus.cancelled, ReservationStatus.rejected});
+  cancelled('Otkazane', {
+    ReservationStatus.cancelled,
+    ReservationStatus.rejected,
+  });
 
   const _Filter(this.label, this.statuses);
 
@@ -50,7 +53,10 @@ class ReservationsTabState extends State<ReservationsTab> {
     });
 
     try {
-      final page = await _service.getPage(ReservationSearch(statuses: _filter.statuses), pageSize: 50);
+      final page = await _service.getPage(
+        ReservationSearch(statuses: _filter.statuses),
+        pageSize: 50,
+      );
       if (!mounted || requestId != _requestId) return;
       setState(() => _items = page.items);
     } on ApiException catch (e) {
@@ -62,7 +68,9 @@ class ReservationsTabState extends State<ReservationsTab> {
 
   Future<void> _open(Reservation reservation) async {
     await Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => ReservationDetailsScreen(reservationId: reservation.id)),
+      MaterialPageRoute<void>(
+        builder: (_) => ReservationDetailsScreen(reservationId: reservation.id),
+      ),
     );
     if (mounted) reload();
   }
@@ -78,7 +86,8 @@ class ReservationsTabState extends State<ReservationsTab> {
             child: SegmentedButton<_Filter>(
               showSelectedIcon: false,
               segments: [
-                for (final filter in _Filter.values) ButtonSegment(value: filter, label: Text(filter.label)),
+                for (final filter in _Filter.values)
+                  ButtonSegment(value: filter, label: Text(filter.label)),
               ],
               selected: {_filter},
               onSelectionChanged: (selection) {
@@ -112,7 +121,10 @@ class ReservationsTabState extends State<ReservationsTab> {
             children: [
               Text(_error!, textAlign: TextAlign.center),
               const SizedBox(height: 12),
-              OutlinedButton(onPressed: reload, child: const Text('Pokušaj ponovo')),
+              OutlinedButton(
+                onPressed: reload,
+                child: const Text('Pokušaj ponovo'),
+              ),
             ],
           ),
         ),
@@ -125,7 +137,11 @@ class ReservationsTabState extends State<ReservationsTab> {
           ? ListView(
               children: [
                 const SizedBox(height: 100),
-                Icon(Icons.event_note_outlined, size: 56, color: theme.colorScheme.outline),
+                Icon(
+                  Icons.event_note_outlined,
+                  size: 56,
+                  color: theme.colorScheme.outline,
+                ),
                 const SizedBox(height: 12),
                 Center(
                   child: Text(switch (_filter) {
@@ -137,7 +153,10 @@ class ReservationsTabState extends State<ReservationsTab> {
                 if (_filter == _Filter.active) ...[
                   const SizedBox(height: 12),
                   Center(
-                    child: FilledButton.tonal(onPressed: widget.onExplore, child: const Text('Istraži ponudu')),
+                    child: FilledButton.tonal(
+                      onPressed: widget.onExplore,
+                      child: const Text('Istraži ponudu'),
+                    ),
                   ),
                 ],
               ],
@@ -147,7 +166,10 @@ class ReservationsTabState extends State<ReservationsTab> {
               itemCount: _items.length,
               itemBuilder: (context, index) {
                 final reservation = _items[index];
-                return _ReservationCard(reservation: reservation, onTap: () => _open(reservation));
+                return _ReservationCard(
+                  reservation: reservation,
+                  onTap: () => _open(reservation),
+                );
               },
             ),
     );
@@ -172,51 +194,85 @@ class _ReservationCard extends StatelessWidget {
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.all(14),
-          child: Column(
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Icon(itemType.icon, color: itemType.color, size: 20),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      reservation.itemName,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.titleMedium,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  StatusChip(status: reservation.status),
-                ],
+              ItemThumbnail(
+                type: itemType,
+                size: 72,
+                url: reservation.itemId == null
+                    ? null
+                    : itemImageUrl(
+                        context.read<ApiClient>(),
+                        itemType,
+                        reservation.itemId!,
+                        coverImageId: reservation.coverImageId,
+                        hasImage: reservation.hasImage,
+                      ),
               ),
-              const SizedBox(height: 6),
-              Text(reservation.periodLabel, style: theme.textTheme.bodyMedium),
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  Text(reservation.quantityLabel, style: theme.textTheme.bodySmall),
-                  const Spacer(),
-                  Text(
-                    Formatters.money(reservation.totalPrice),
-                    style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
-                  ),
-                ],
-              ),
-              if (reservation.awaitsPayment) ...[
-                const SizedBox(height: 8),
-                Row(
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.credit_card_off_outlined, size: 16, color: theme.colorScheme.error),
-                    const SizedBox(width: 6),
-                    Text(
-                      'Čeka plaćanje',
-                      style: TextStyle(color: theme.colorScheme.error, fontWeight: FontWeight.w600),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            reservation.itemName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.titleMedium,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        StatusChip(status: reservation.status),
+                      ],
                     ),
+                    const SizedBox(height: 6),
+                    Text(
+                      reservation.periodLabel,
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Text(
+                          reservation.quantityLabel,
+                          style: theme.textTheme.bodySmall,
+                        ),
+                        const Spacer(),
+                        Text(
+                          Formatters.money(reservation.totalPrice),
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (reservation.awaitsPayment) ...[
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.credit_card_off_outlined,
+                            size: 16,
+                            color: theme.colorScheme.error,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            'Čeka plaćanje',
+                            style: TextStyle(
+                              color: theme.colorScheme.error,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
-              ],
+              ),
             ],
           ),
         ),

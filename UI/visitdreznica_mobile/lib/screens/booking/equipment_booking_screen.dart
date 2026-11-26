@@ -122,6 +122,8 @@ class _EquipmentBookingScreenState extends State<EquipmentBookingScreen> {
   }
 
   Future<void> _submit() async {
+    if (!await confirmPayment(context, Formatters.money(_quote!.totalPrice))) return;
+    if (!mounted) return;
     setState(() => _submitting = true);
 
     await submitBooking(

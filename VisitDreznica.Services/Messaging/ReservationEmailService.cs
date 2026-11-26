@@ -51,11 +51,11 @@ public class ReservationEmailService(
 
         var (subject, intro) = data.Status switch
         {
-            ReservationStatus.Confirmed => ($"Rezervacija #{data.Id} je potvrđena",
+            ReservationStatus.Confirmed => ("Rezervacija je potvrđena",
                 "Vaša rezervacija je potvrđena. Radujemo se vašem dolasku u Drežnicu!"),
-            ReservationStatus.Rejected => ($"Rezervacija #{data.Id} je odbijena",
+            ReservationStatus.Rejected => ("Rezervacija je odbijena",
                 "Nažalost, vašu rezervaciju nismo mogli prihvatiti."),
-            ReservationStatus.Cancelled => ($"Rezervacija #{data.Id} je otkazana",
+            ReservationStatus.Cancelled => ("Rezervacija je otkazana",
                 "Vaša rezervacija je otkazana."),
             _ => (null, null)
         };

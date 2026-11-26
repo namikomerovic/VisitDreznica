@@ -24,6 +24,13 @@ public class FavoriteService(VisitDreznicaDbContext dbContext, ICurrentUser curr
             : x.Equipment != null ? x.Equipment.Name
             : x.Activity != null ? x.Activity.Name
             : x.Place!.Name,
+        CoverImageId = x.Room != null ? x.Room.Images.Where(i => i.IsCover).Select(i => (int?)i.Id).FirstOrDefault()
+            : x.Place != null ? x.Place.Images.Where(i => i.IsCover).Select(i => (int?)i.Id).FirstOrDefault()
+            : null,
+        HasImage = x.Room != null ? x.Room.Images.Any()
+            : x.Place != null ? x.Place.Images.Any()
+            : x.Equipment != null ? x.Equipment.ImageData != null
+            : x.Activity!.ImageData != null,
         CreatedAt = x.CreatedAt
     };
 

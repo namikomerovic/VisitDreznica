@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
 import '../../providers/favorites_provider.dart';
-import '../../utils/item_type_ui.dart';
 import '../../widgets/favorite_button.dart';
+import '../../widgets/item_thumbnail.dart';
 import '../details/item_navigation.dart';
 
 class FavoritesTab extends StatelessWidget {
@@ -65,9 +65,15 @@ class FavoritesTab extends StatelessWidget {
                 final type = favorite.itemType;
 
                 return ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: type.color.withValues(alpha: 0.14),
-                    child: Icon(type.icon, color: type.color),
+                  leading: ItemThumbnail(
+                    type: type,
+                    url: itemImageUrl(
+                      context.read<ApiClient>(),
+                      type,
+                      favorite.itemId,
+                      coverImageId: favorite.coverImageId,
+                      hasImage: favorite.hasImage,
+                    ),
                   ),
                   title: Text(favorite.itemName),
                   subtitle: Text('${type.label} · sačuvano ${Formatters.date(favorite.createdAt)}'),

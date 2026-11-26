@@ -161,3 +161,23 @@ String countLabel(int count, String one, String few, String many) {
   if (lastDigit >= 2 && lastDigit <= 4 && (lastTwo < 12 || lastTwo > 14)) return few;
   return many;
 }
+
+Future<bool> confirmPayment(BuildContext context, String amount) async {
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Potvrda plaćanja'),
+      content: Text('Nastaviti na plaćanje karticom u iznosu od $amount?'),
+      actions: [
+        TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Odustani')),
+        FilledButton.icon(
+          onPressed: () => Navigator.pop(context, true),
+          icon: const Icon(Icons.lock_outline),
+          label: const Text('Plati'),
+        ),
+      ],
+    ),
+  );
+
+  return confirmed ?? false;
+}

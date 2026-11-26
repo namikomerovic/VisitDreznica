@@ -29,6 +29,13 @@ public static class ReservationProjections
             : r is EquipmentReservation ? ((EquipmentReservation)r).Equipment.Name
             : ((ActivityReservation)r).ActivitySlot.Activity.Name,
 
+        CoverImageId = r is RoomReservation
+            ? ((RoomReservation)r).Room.Images.Where(i => i.IsCover).Select(i => (int?)i.Id).FirstOrDefault()
+            : null,
+        HasImage = r is RoomReservation ? ((RoomReservation)r).Room.Images.Any()
+            : r is EquipmentReservation ? ((EquipmentReservation)r).Equipment.ImageData != null
+            : ((ActivityReservation)r).ActivitySlot.Activity.ImageData != null,
+
         RoomId = r is RoomReservation ? (int?)((RoomReservation)r).RoomId : null,
         GuestCount = r is RoomReservation ? (int?)((RoomReservation)r).GuestCount : null,
 

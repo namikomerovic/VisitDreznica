@@ -125,18 +125,18 @@ class _ReservationDetailsDialogState extends State<ReservationDetailsDialog> {
   }
 
   Future<void> _confirmReservation(Reservation r) async {
-    if (!await _confirm('Potvrda rezervacije', 'Potvrditi rezervaciju #${r.id}? Gost će dobiti obavijest.')) return;
+    if (!await _confirm('Potvrda rezervacije', 'Potvrditi rezervaciju gosta ${r.userFullName} (${r.itemName})? Gost će dobiti obavijest.')) return;
     await _perform('Rezervacija je potvrđena.', () => _service.confirm(r.id));
   }
 
   Future<void> _rejectReservation(Reservation r) async {
-    final reason = await _askReason('Odbijanje rezervacije #${r.id}', 'npr. Soba nije dostupna zbog radova.');
+    final reason = await _askReason('Odbijanje rezervacije', 'npr. Soba nije dostupna zbog radova.');
     if (reason == null) return;
     await _perform('Rezervacija je odbijena.', () => _service.reject(r.id, comment: reason));
   }
 
   Future<void> _completeReservation(Reservation r) async {
-    if (!await _confirm('Završetak rezervacije', 'Označiti rezervaciju #${r.id} kao završenu? '
+    if (!await _confirm('Završetak rezervacije', 'Označiti rezervaciju gosta ${r.userFullName} kao završenu? '
         'Gost će dobiti poziv da ostavi recenziju.')) {
       return;
     }
@@ -144,7 +144,7 @@ class _ReservationDetailsDialogState extends State<ReservationDetailsDialog> {
   }
 
   Future<void> _cancelReservation(Reservation r) async {
-    final reason = await _askReason('Otkazivanje rezervacije #${r.id}', 'npr. Loši vremenski uslovi.');
+    final reason = await _askReason('Otkazivanje rezervacije', 'npr. Loši vremenski uslovi.');
     if (reason == null) return;
     await _perform('Rezervacija je otkazana.', () => _service.cancel(r.id, comment: reason));
   }
@@ -191,7 +191,7 @@ class _ReservationDetailsDialogState extends State<ReservationDetailsDialog> {
           padding: const EdgeInsets.fromLTRB(24, 16, 8, 8),
           child: Row(
             children: [
-              Text('Rezervacija #${r.id}', style: theme.textTheme.titleLarge),
+              Text('Detalji rezervacije', style: theme.textTheme.titleLarge),
               const SizedBox(width: 12),
               ReservationStatusChip(status: r.status),
               const Spacer(),

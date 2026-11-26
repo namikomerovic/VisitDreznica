@@ -106,7 +106,6 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                 onRowTap: _openDetails,
                 emptyText: _hasFilters ? 'Nema rezervacija za odabrane filtere.' : 'Još nema rezervacija.',
                 columns: [
-                  PagedColumn(header: '#', width: 64, cell: (r) => Text('${r.id}')),
                   PagedColumn(header: 'Gost', flex: 3, cell: (r) => Text(r.userFullName)),
                   PagedColumn(header: 'Vrsta', flex: 2, hideBelow: 1000, cell: (r) => Text(r.type.label)),
                   PagedColumn(

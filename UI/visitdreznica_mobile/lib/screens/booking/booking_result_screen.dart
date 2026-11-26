@@ -4,6 +4,7 @@ import 'package:visitdreznica_core/visitdreznica_core.dart';
 
 import '../../payments/checkout.dart';
 import '../../widgets/message_box.dart';
+import 'booking_widgets.dart';
 
 class BookingResultScreen extends StatefulWidget {
   const BookingResultScreen({
@@ -27,6 +28,8 @@ class _BookingResultScreenState extends State<BookingResultScreen> {
   bool _paying = false;
 
   Future<void> _payAgain() async {
+    if (!await confirmPayment(context, Formatters.money(widget.reservation.totalPrice))) return;
+    if (!mounted) return;
     final checkout = Checkout(context.read<ApiClient>());
     setState(() {
       _paying = true;
@@ -88,7 +91,6 @@ class _BookingResultScreenState extends State<BookingResultScreen> {
                   const Divider(height: 24),
                   _row('Termin', reservation.periodLabel),
                   _row(reservation.quantityLabel.split(':').first, reservation.quantityLabel.split(':').last.trim()),
-                  _row('Broj rezervacije', '#${reservation.id}'),
                   _row('Iznos', Formatters.money(reservation.totalPrice)),
                 ],
               ),

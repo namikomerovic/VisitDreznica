@@ -12,7 +12,7 @@ Future<void> main() async {
   await initializeDateFormatting('bs');
 
   const apiUrl = String.fromEnvironment(
-    'API_URL',
+    'API_BASE_URL',
     defaultValue: 'http://localhost:5291',
   );
   final api = ApiClient(baseUrl: apiUrl);

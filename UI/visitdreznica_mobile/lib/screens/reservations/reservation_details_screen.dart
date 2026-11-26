@@ -7,6 +7,7 @@ import '../../utils/item_type_ui.dart';
 import '../../utils/reservation_status_ui.dart';
 import '../../widgets/message_box.dart';
 import '../../widgets/status_chip.dart';
+import '../booking/booking_widgets.dart';
 import '../details/item_navigation.dart';
 import '../details/review_sheet.dart';
 
@@ -63,6 +64,10 @@ class _ReservationDetailsScreenState extends State<ReservationDetailsScreen> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
 
   Future<void> _pay() async {
+    final reservation = _reservation;
+    if (reservation == null) return;
+    if (!await confirmPayment(context, Formatters.money(reservation.totalPrice))) return;
+    if (!mounted) return;
     final checkout = Checkout(context.read<ApiClient>());
     setState(() => _busy = true);
 
@@ -121,7 +126,7 @@ class _ReservationDetailsScreenState extends State<ReservationDetailsScreen> {
     final reservation = _reservation;
 
     return Scaffold(
-      appBar: AppBar(title: Text('Rezervacija #${widget.reservationId}')),
+      appBar: AppBar(title: const Text('Detalji rezervacije')),
       body: reservation == null
           ? Center(child: _error == null ? const CircularProgressIndicator() : Text(_error!))
           : RefreshIndicator(onRefresh: _load, child: _buildContent(reservation)),

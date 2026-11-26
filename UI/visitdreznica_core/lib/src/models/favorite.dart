@@ -7,6 +7,8 @@ class Favorite {
     required this.itemId,
     required this.itemName,
     required this.createdAt,
+    this.coverImageId,
+    this.hasImage = false,
   });
 
   final int id;
@@ -14,6 +16,8 @@ class Favorite {
   final int itemId;
   final String itemName;
   final DateTime createdAt;
+  final int? coverImageId;
+  final bool hasImage;
 
   factory Favorite.fromJson(Map<String, dynamic> json) => Favorite(
         id: json['id'] as int,
@@ -21,5 +25,7 @@ class Favorite {
         itemId: json['itemId'] as int,
         itemName: json['itemName'] as String,
         createdAt: DateTime.parse(json['createdAt'] as String),
+        coverImageId: json['coverImageId'] as int?,
+        hasImage: json['hasImage'] as bool? ?? false,
       );
 }
