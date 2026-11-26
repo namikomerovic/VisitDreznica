@@ -11,7 +11,8 @@ namespace VisitDreznica.API.Controllers;
 [ApiController]
 [Route("[controller]")]
 [Authorize]
-public class AuthController(IAuthService authService, ICityService cityService) : ControllerBase
+public class AuthController(IAuthService authService, IPasswordResetService passwordResetService, ICityService cityService)
+    : ControllerBase
 {
     [AllowAnonymous]
     [HttpPost("login")]
@@ -20,6 +21,22 @@ public class AuthController(IAuthService authService, ICityService cityService) 
     [AllowAnonymous]
     [HttpPost("register")]
     public Task<LoginResponse> Register([FromBody] RegisterRequest request) => authService.RegisterAsync(request);
+
+    [AllowAnonymous]
+    [HttpPost("password-reset/request")]
+    public async Task<IActionResult> RequestPasswordReset([FromBody] PasswordResetRequest request)
+    {
+        await passwordResetService.RequestAsync(request);
+        return NoContent();
+    }
+
+    [AllowAnonymous]
+    [HttpPost("password-reset/confirm")]
+    public async Task<IActionResult> ConfirmPasswordReset([FromBody] PasswordResetConfirmRequest request)
+    {
+        await passwordResetService.ConfirmAsync(request);
+        return NoContent();
+    }
 
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()

@@ -11,6 +11,7 @@ public class VisitDreznicaDbContext(DbContextOptions<VisitDreznicaDbContext> opt
     public DbSet<User> Users => Set<User>();
     public DbSet<UserRole> UserRoles => Set<UserRole>();
     public DbSet<UserSession> UserSessions => Set<UserSession>();
+    public DbSet<PasswordReset> PasswordResets => Set<PasswordReset>();
     public DbSet<RoomType> RoomTypes => Set<RoomType>();
     public DbSet<Amenity> Amenities => Set<Amenity>();
     public DbSet<EquipmentType> EquipmentTypes => Set<EquipmentType>();

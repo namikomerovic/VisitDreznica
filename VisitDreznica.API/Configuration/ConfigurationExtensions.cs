@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using System.Text;
+using VisitDreznica.Services.Auth;
 using VisitDreznica.Services.Security;
 using System.Globalization;
 using VisitDreznica.Services.Reservations;
@@ -51,6 +52,12 @@ public static class ConfigurationExtensions
     new()
     {
         TouristTaxPerPersonNight = decimal.Parse(configuration.GetRequired("TOURIST_TAX_PER_PERSON_NIGHT"), CultureInfo.InvariantCulture)
+    };
+
+    public static PasswordResetSettings GetPasswordResetSettings(this IConfiguration configuration) =>
+    new()
+    {
+        CodeExpiryMinutes = int.Parse(configuration.GetRequired("PASSWORD_RESET_CODE_MINUTES"))
     };
 
     public static PaymentSettings GetPaymentSettings(this IConfiguration configuration) =>

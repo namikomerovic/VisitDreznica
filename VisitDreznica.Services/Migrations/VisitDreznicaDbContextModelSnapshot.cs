@@ -525,6 +525,46 @@ namespace VisitDreznica.Services.Migrations
                     b.ToTable("Notifications");
                 });
 
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.PasswordReset", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CodeHash")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("CodeSalt")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FailedAttempts")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UsedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "CreatedAt");
+
+                    b.ToTable("PasswordResets");
+                });
+
             modelBuilder.Entity("VisitDreznica.Services.Database.Entities.Payment", b =>
                 {
                     b.Property<int>("Id")
@@ -1341,6 +1381,17 @@ namespace VisitDreznica.Services.Migrations
                         .IsRequired();
 
                     b.Navigation("Reservation");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("VisitDreznica.Services.Database.Entities.PasswordReset", b =>
+                {
+                    b.HasOne("VisitDreznica.Services.Database.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });

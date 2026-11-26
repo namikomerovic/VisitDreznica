@@ -50,6 +50,7 @@ export 'src/models/booking.dart';
 export 'src/services/booking_service.dart';
 export 'src/services/payment_service.dart';
 export 'src/services/profile_service.dart';
+export 'src/services/password_reset_service.dart';
 export 'src/theme/app_colors.dart';
 export 'src/theme/app_theme.dart';
 export 'src/theme/theme_controller.dart';

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
 import '../../widgets/message_box.dart';
+import 'forgot_password_screen.dart';
 import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -43,6 +44,19 @@ class _LoginScreenState extends State<LoginScreen> {
       if (mounted) setState(() => _error = e.message);
     } finally {
       if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  Future<void> _openForgotPassword() async {
+    final messenger = ScaffoldMessenger.of(context);
+    final changed = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(builder: (_) => const ForgotPasswordScreen()),
+    );
+
+    if (changed == true) {
+      messenger.showSnackBar(
+        const SnackBar(content: Text('Lozinka je promijenjena. Prijavite se novom lozinkom.')),
+      );
     }
   }
 
@@ -100,7 +114,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     validator: (value) => (value == null || value.isEmpty) ? 'Unesite lozinku.' : null,
                   ),
-                  const SizedBox(height: 24),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: _loading ? null : _openForgotPassword,
+                      child: const Text('Zaboravili ste lozinku?'),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
                   FilledButton(
                     onPressed: _loading ? null : _submit,
                     style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52)),
