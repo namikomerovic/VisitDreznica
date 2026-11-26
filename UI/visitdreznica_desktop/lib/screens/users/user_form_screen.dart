@@ -170,6 +170,7 @@ class _UserFormScreenState extends State<UserFormScreen> {
         context,
         wasNew ? 'Korisnik je dodan.' : 'Izmjene su sačuvane.$sessionNote',
       );
+      Navigator.pop(context, true);
     } on ApiException catch (e) {
       if (!mounted) return;
 

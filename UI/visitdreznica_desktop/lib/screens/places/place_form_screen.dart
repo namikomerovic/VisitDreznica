@@ -166,6 +166,7 @@ class _PlaceFormScreenState extends State<PlaceFormScreen> {
             ? 'Mjesto je dodano (${Formatters.decimal(saved.distanceKm)} km od smještaja). Sada možete dodati slike.'
             : 'Izmjene su sačuvane.',
       );
+      if (!wasNew) Navigator.pop(context, true);
     } on ApiException catch (e) {
       if (!mounted) return;
 

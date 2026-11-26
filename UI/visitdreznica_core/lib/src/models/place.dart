@@ -99,6 +99,6 @@ class PlaceSearch {
 }
 
 abstract final class Accommodation {
-  static const latitude = 43.5336;
-  static const longitude = 17.7008;
+  static const latitude = 43.520101;
+  static const longitude = 17.737718;
 }

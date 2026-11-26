@@ -35,7 +35,12 @@ class _SingleImageEditorState extends State<SingleImageEditor> {
 
     try {
       await action();
-      await NetworkImage(widget.imageUrl).evict();
+
+      // AuthImage šalje i zaglavlje s tokenom, pa ključ u kešu nije isti kao NetworkImage(url).
+      // Zato se keš slika isprazni cijeli: slika se ponovo učita i ovdje i u listi ispod forme.
+      PaintingBinding.instance.imageCache
+        ..clear()
+        ..clearLiveImages();
 
       if (!mounted) return;
       setState(() => _version++);

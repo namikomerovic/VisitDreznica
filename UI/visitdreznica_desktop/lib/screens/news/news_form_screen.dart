@@ -122,6 +122,7 @@ class _NewsFormScreenState extends State<NewsFormScreen> {
 
       final status = saved.isPublished ? 'objavljena' : 'zakazana za ${Formatters.dateTime(saved.publishedAt)}';
       showMessage(context, wasNew ? 'Novost je $status. Sada možete dodati sliku.' : 'Izmjene su sačuvane.');
+      if (!wasNew) Navigator.pop(context, true);
     } on ApiException catch (e) {
       if (!mounted) return;
 

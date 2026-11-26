@@ -141,6 +141,7 @@ class _EquipmentFormScreenState extends State<EquipmentFormScreen> {
       });
 
       showMessage(context, wasNew ? 'Oprema je dodana. Sada možete dodati sliku.' : 'Izmjene su sačuvane.');
+      if (!wasNew) Navigator.pop(context, true);
     } on ApiException catch (e) {
       if (!mounted) return;
 

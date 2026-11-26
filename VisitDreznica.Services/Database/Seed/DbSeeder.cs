@@ -19,6 +19,7 @@ public partial class DbSeeder(VisitDreznicaDbContext dbContext, IPasswordHasher 
         await SeedActivitiesAsync();
         await SeedPlacesAsync();
         await SeedNewsAsync();
+        await SeedImagesAsync();
         await SeedInteractionsAsync();
     }
     private async Task SeedNewsAsync()
@@ -42,8 +43,8 @@ public partial class DbSeeder(VisitDreznicaDbContext dbContext, IPasswordHasher 
         },
         new News
         {
-            Title = "Uređena plaža na ušću Drežanke",
-            Content = "Na plaži na ušću Drežanke postavljeni su novi suncobrani i klupe. Plaža je udaljena samo nekoliko minuta hoda od smještaja.",
+            Title = "Uređeno kupalište Stupina",
+            Content = "Na kupalištu Stupina postavljeni su novi suncobrani i klupe, a uređen je i prilaz vodi. Tirkizna voda u kanjonu Drežanke idealna je za osvježenje u ljetnim danima.",
             PublishedAt = now.AddDays(-10),
             CreatedAt = now,
             CreatedByUser = admin
@@ -77,16 +78,28 @@ public partial class DbSeeder(VisitDreznicaDbContext dbContext, IPasswordHasher 
         var types = await dbContext.PlaceTypes.ToDictionaryAsync(x => x.Name);
 
         dbContext.Places.AddRange(
-            CreatePlace("Plaža na ušću Drežanke", types["Plaža"], 43.5329m, 17.7021m, "Donja Drežnica",
-                "Šljunkovita plaža na mjestu gdje se Drežanka ulijeva u Neretvu. Plitka i hladna voda, hlad ispod stabala."),
-            CreatePlace("Plaža Grabovica", types["Plaža"], 43.5876m, 17.7306m, "Grabovica",
+            CreatePlace("Ušće Drežanke", types["Priroda"], 43.518991m, 17.738178m, "Donja Drežnica",
+                "Mjesto gdje se bistra Drežanka ulijeva u Neretvu, okruženo strmim liticama Čvrsnice i Čabulje. Jedan od najljepših pogleda u dolini."),
+            CreatePlace("Plaža Grabovica", types["Plaža"], 43.595794m, 17.712559m, "Grabovica",
                 "Mirna plaža na obali Neretve, pogodna za kupanje i odmor nakon vožnje kajakom."),
-            CreatePlace("Vrelo Drežanke", types["Priroda"], 43.5590m, 17.6175m, "Gornja Drežnica",
+            CreatePlace("Vrelo Drežanke", types["Priroda"], 43.549590m, 17.499985m, "Gornja Drežnica",
                 "Izvor rijeke Drežanke u srcu kanjona, okružen netaknutom prirodom."),
-            CreatePlace("Željeznički most u Drežnici", types["Znamenitost"], 43.5341m, 17.7034m, "Donja Drežnica",
+            CreatePlace("Željeznički most u Drežnici", types["Znamenitost"], 43.519100m, 17.737850m, "Donja Drežnica",
                 "Kameni željeznički most s lukovima, jedan od zaštitnih znakova Drežnice."),
-            CreatePlace("Srušeni most na Neretvi", types["Znamenitost"], 43.6596m, 17.7587m, "Jablanica",
-                "Ostaci mosta iz Bitke na Neretvi 1943. godine, uz muzej posvećen ovom događaju."));
+            CreatePlace("Srušeni most na Neretvi", types["Znamenitost"], 43.654430m, 17.762486m, "Jablanica",
+                "Ostaci mosta iz Bitke na Neretvi 1943. godine, uz muzej posvećen ovom događaju."),
+            CreatePlace("Kupalište Brana", types["Plaža"], 43.527771m, 17.705295m, "Drežnica",
+                "Uređeno, betonirano kupalište uz Neretvu, idealno za skokove u vodu. Hlad, parking i restoran su odmah u blizini."),
+            CreatePlace("Kupalište Kamen", types["Plaža"], 43.527493m, 17.710307m, "Drežnica",
+                "Pješčano kupalište s hladovinom i stijenama za skakanje. Kafić u blizini za osvježenje nakon kupanja."),
+            CreatePlace("Kupalište kod motela", types["Plaža"], 43.525989m, 17.714361m, "Drežnica",
+                "Pješčana plaža uz rijeku s puno hlada, pogodna za porodice. Parking i restoran su u neposrednoj blizini."),
+            CreatePlace("Kupalište Stupina", types["Plaža"], 43.544383m, 17.554561m, "Drežnica",
+                "Kupalište s tirkiznom vodom u srcu kanjona Drežanke, okruženo stijenama i zelenilom. Daleko od gužve."),
+            CreatePlace("Italijanski bunkeri", types["Znamenitost"], 43.517463m, 17.739489m, "Drežnica",
+                "Bunkeri iz Drugog svjetskog rata iznad Neretve. Nakon rata su poslužili kao kulisa za scene filma Sutjeska."),
+            CreatePlace("Natpis Mastana Bubanjića", types["Znamenitost"], 43.521336m, 17.737522m, "Donja Drežnica",
+                "Natpis vojvode Mastana Bubanjića uklesan u stijenu, iz druge polovine 14. stoljeća, doba kralja Tvrtka I Kotromanića. Nacionalni spomenik Bosne i Hercegovine."));
 
         await dbContext.SaveChangesAsync();
     }
@@ -211,6 +224,8 @@ public partial class DbSeeder(VisitDreznicaDbContext dbContext, IPasswordHasher 
         }
 
         var kayakType = await dbContext.EquipmentTypes.FirstAsync(x => x.Name == "Kajak");
+        var supType = await dbContext.EquipmentTypes.FirstAsync(x => x.Name == "SUP daska");
+        var bikeType = await dbContext.EquipmentTypes.FirstAsync(x => x.Name == "Bicikl");
 
         dbContext.Equipment.AddRange(
             new Equipment
@@ -238,6 +253,32 @@ public partial class DbSeeder(VisitDreznicaDbContext dbContext, IPasswordHasher 
                 FullDayPrice = 70m,
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow
+            },
+            new Equipment
+            {
+                Name = "SUP daska",
+                Description = "Stabilna daska za veslanje stojeći na mirnoj vodi Neretve. Uključeni veslo i prsluk.",
+                EquipmentType = supType,
+                Capacity = 1,
+                TotalQuantity = 4,
+                FirstHourPrice = 10m,
+                AdditionalHourPrice = 6m,
+                FullDayPrice = 40m,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
+            },
+            new Equipment
+            {
+                Name = "Bicikl",
+                Description = "Brdski bicikl za vožnju uz Neretvu i kroz dolinu Drežanke. Uz bicikl dobijate kacigu.",
+                EquipmentType = bikeType,
+                Capacity = 1,
+                TotalQuantity = 6,
+                FirstHourPrice = 5m,
+                AdditionalHourPrice = 3m,
+                FullDayPrice = 25m,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow
             });
 
         await dbContext.SaveChangesAsync();
@@ -254,20 +295,20 @@ public partial class DbSeeder(VisitDreznicaDbContext dbContext, IPasswordHasher 
 
         dbContext.Rooms.AddRange(
             CreateRoom("Deluxe dvokrevetna soba s balkonom", types["Dvokrevetna"], 2, 19, 90m,
-                "Prostrana soba s balkonom i pogledom na Neretvu i željeznički most.", amenities,
-                "Balkon", "Klima uređaj", "Vlastito kupatilo", "Pogled na rijeku", "TV", "Kuhalo za vodu", "Besplatan Wi-Fi"),
+                "Prostrana soba s balkonom i vlastitim kupatilom, idealna za parove koji žele više prostora.", amenities,
+                "Balkon", "Klima uređaj", "Vlastito kupatilo", "TV", "Kuhalo za vodu", "Besplatan Wi-Fi"),
             CreateRoom("Dvokrevetna soba s pogledom na jezero", types["Dvokrevetna"], 2, 15, 80m,
                 "Mirna soba s pogledom na jezero, idealna za parove.", amenities,
-                "Klima uređaj", "Pogled na rijeku", "TV", "Besplatan Wi-Fi"),
+                "Balkon", "Klima uređaj", "Pogled na rijeku", "TV", "Kuhalo za vodu", "Besplatan Wi-Fi"),
             CreateRoom("Trokrevetna soba s pogledom na planinu", types["Trokrevetna"], 3, 13, 85m,
                 "Udobna soba za tri osobe s pogledom na okolne planine.", amenities,
-                "Klima uređaj", "Vlastito kupatilo", "TV", "Besplatan Wi-Fi"),
+                "Klima uređaj", "Vlastito kupatilo", "TV", "Kuhalo za vodu", "Besplatan Wi-Fi"),
             CreateRoom("Četverokrevetna soba s balkonom", types["Porodična"], 4, 30, 140m,
                 "Najveća soba u smještaju, s balkonom, pogodna za porodice.", amenities,
                 "Balkon", "Klima uređaj", "Vlastito kupatilo", "Pogled na rijeku", "TV", "Kuhalo za vodu", "Besplatan Wi-Fi"),
             CreateRoom("Jednokrevetna soba", types["Jednokrevetna"], 1, 11, 50m,
-                "Kompaktna soba za jednu osobu.", amenities,
-                "Klima uređaj", "Besplatan Wi-Fi"));
+                "Kompaktna soba za jednu osobu s pogledom na rijeku.", amenities,
+                "Klima uređaj", "Pogled na rijeku", "TV", "Kuhalo za vodu", "Besplatan Wi-Fi"));
 
         await dbContext.SaveChangesAsync();
     }
@@ -372,7 +413,8 @@ public partial class DbSeeder(VisitDreznicaDbContext dbContext, IPasswordHasher 
         dbContext.EquipmentTypes.AddRange(
             new EquipmentType { Name = "Kajak", Description = "Kajaci za jednu ili dvije osobe" },
             new EquipmentType { Name = "Kanu", Description = "Otvoreni kanu za mirnije vode" },
-            new EquipmentType { Name = "SUP daska", Description = "Daska za veslanje stojeći" });
+            new EquipmentType { Name = "SUP daska", Description = "Daska za veslanje stojeći" },
+            new EquipmentType { Name = "Bicikl", Description = "Bicikli za vožnju dolinom Neretve" });
 
         dbContext.ActivityCategories.AddRange(
             new ActivityCategory { Name = "Na vodi", Description = "Splavarenje i vožnje rijekom" },

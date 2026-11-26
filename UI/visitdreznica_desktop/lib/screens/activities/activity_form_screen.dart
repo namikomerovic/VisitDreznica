@@ -143,6 +143,7 @@ class _ActivityFormScreenState extends State<ActivityFormScreen> {
       });
 
       showMessage(context, wasNew ? 'Aktivnost je dodana. Sada možete dodati sliku i termine.' : 'Izmjene su sačuvane.');
+      if (!wasNew) Navigator.pop(context, true);
     } on ApiException catch (e) {
       if (!mounted) return;
 

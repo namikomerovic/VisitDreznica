@@ -13,6 +13,9 @@ public partial class DbSeeder
     private const decimal SeedTouristTaxPerPersonNight = 2m;
     private const string SeedCurrency = "bam";
 
+    // Relativna težina dolazaka po mjesecima (jan–dec): ljeto je glavna sezona.
+    private static readonly int[] SeasonWeights = [1, 1, 2, 3, 4, 6, 8, 8, 5, 3, 1, 2];
+
     private sealed record Persona(string Name, int MinGuests, int MaxGuests, Dictionary<string, int> Affinity);
 
     private sealed record SeedGuest(string FirstName, string LastName, string City, Persona Persona, string? ExistingUsername = null);
@@ -36,10 +39,18 @@ public partial class DbSeeder
         ["Ribolov na Neretvi s vodičem"] = 3,
         ["Historijska tura do Jablanice"] = 1,
         ["Vrelo Drežanke"] = 4,
-        ["Plaža na ušću Drežanke"] = 3,
+        ["Ušće Drežanke"] = 3,
         ["Plaža Grabovica"] = 3,
         ["Željeznički most u Drežnici"] = 2,
-        ["Srušeni most na Neretvi"] = 2
+        ["Srušeni most na Neretvi"] = 2,
+        ["Kupalište Stupina"] = 5,
+        ["Kupalište Brana"] = 5,
+        ["Kupalište Kamen"] = 4,
+        ["Kupalište kod motela"] = 2,
+        ["Italijanski bunkeri"] = 3,
+        ["Natpis Mastana Bubanjića"] = 1,
+        ["SUP daska"] = 4,
+        ["Bicikl"] = 5
     });
 
     private static readonly Persona RiverRelaxers = new("Odmor uz rijeku", 2, 2, new()
@@ -52,11 +63,19 @@ public partial class DbSeeder
         ["Pješačka tura kanjonom Drežanke"] = 1,
         ["Ribolov na Neretvi s vodičem"] = 2,
         ["Historijska tura do Jablanice"] = 2,
-        ["Plaža na ušću Drežanke"] = 5,
+        ["Ušće Drežanke"] = 5,
         ["Plaža Grabovica"] = 5,
         ["Vrelo Drežanke"] = 3,
         ["Željeznički most u Drežnici"] = 3,
-        ["Srušeni most na Neretvi"] = 2
+        ["Srušeni most na Neretvi"] = 2,
+        ["Kupalište Brana"] = 4,
+        ["Kupalište Kamen"] = 5,
+        ["Kupalište kod motela"] = 5,
+        ["Kupalište Stupina"] = 4,
+        ["Italijanski bunkeri"] = 1,
+        ["Natpis Mastana Bubanjića"] = 2,
+        ["SUP daska"] = 5,
+        ["Bicikl"] = 2
     });
 
     private static readonly Persona NatureAndHistory = new("Priroda i historija", 1, 2, new()
@@ -73,8 +92,16 @@ public partial class DbSeeder
         ["Vrelo Drežanke"] = 5,
         ["Željeznički most u Drežnici"] = 5,
         ["Srušeni most na Neretvi"] = 5,
-        ["Plaža na ušću Drežanke"] = 2,
-        ["Plaža Grabovica"] = 2
+        ["Ušće Drežanke"] = 2,
+        ["Plaža Grabovica"] = 2,
+        ["Kupalište Brana"] = 2,
+        ["Kupalište Kamen"] = 2,
+        ["Kupalište kod motela"] = 2,
+        ["Kupalište Stupina"] = 4,
+        ["Italijanski bunkeri"] = 5,
+        ["Natpis Mastana Bubanjića"] = 5,
+        ["SUP daska"] = 2,
+        ["Bicikl"] = 4
     });
 
     private static readonly Persona Families = new("Porodice", 3, 4, new()
@@ -87,11 +114,19 @@ public partial class DbSeeder
         ["Pješačka tura kanjonom Drežanke"] = 2,
         ["Ribolov na Neretvi s vodičem"] = 2,
         ["Historijska tura do Jablanice"] = 3,
-        ["Plaža na ušću Drežanke"] = 5,
+        ["Ušće Drežanke"] = 5,
         ["Plaža Grabovica"] = 4,
         ["Vrelo Drežanke"] = 3,
         ["Željeznički most u Drežnici"] = 3,
-        ["Srušeni most na Neretvi"] = 3
+        ["Srušeni most na Neretvi"] = 3,
+        ["Kupalište Brana"] = 3,
+        ["Kupalište Kamen"] = 4,
+        ["Kupalište kod motela"] = 5,
+        ["Kupalište Stupina"] = 3,
+        ["Italijanski bunkeri"] = 2,
+        ["Natpis Mastana Bubanjića"] = 2,
+        ["SUP daska"] = 3,
+        ["Bicikl"] = 3
     });
 
     private static readonly SeedGuest[] SeedGuests =
@@ -158,8 +193,11 @@ public partial class DbSeeder
         var roomCalendar = rooms.ToDictionary(x => x.Id, _ => today.AddDays(-330));
         var slots = new Dictionary<(int ActivityId, DateTime Day), SlotUsage>();
 
+        var guestIndex = -1;
+
         foreach (var seedGuest in SeedGuests)
         {
+            guestIndex++;
             var guest = await GetOrCreateSeedGuestAsync(seedGuest, cities, guestRole, rng);
 
             if (guest is null)
@@ -180,7 +218,8 @@ public partial class DbSeeder
 
             var room = PickWeighted(rng, roomOptions, x => Math.Pow(Affinity(x.Name), 3));
             var nights = rng.Next(2, 5);
-            var checkIn = roomCalendar[room.Id];
+            var seasonalDate = SeasonalStayDate(today, guestIndex, SeedGuests.Length);
+            var checkIn = roomCalendar[room.Id] > seasonalDate ? roomCalendar[room.Id] : seasonalDate;
             roomCalendar[room.Id] = checkIn.AddDays(nights + rng.Next(1, 7));
 
             var bookedAt = checkIn.AddDays(-rng.Next(5, 40)).AddHours(rng.Next(8, 20));
@@ -457,6 +496,27 @@ public partial class DbSeeder
         }
 
         return items[^1];
+    }
+
+    private static DateTime SeasonalStayDate(DateTime today, int index, int count)
+    {
+        var first = today.AddDays(-335);
+        var days = Enumerable.Range(0, 320).Select(i => first.AddDays(i)).ToList();
+        var total = days.Sum(day => SeasonWeights[day.Month - 1]);
+        var target = (index + 0.5) / count * total;
+        var running = 0.0;
+
+        foreach (var day in days)
+        {
+            running += SeasonWeights[day.Month - 1];
+
+            if (running >= target)
+            {
+                return day;
+            }
+        }
+
+        return days[^1];
     }
 
     private static string ToSeedUsername(string firstName, string lastName) =>

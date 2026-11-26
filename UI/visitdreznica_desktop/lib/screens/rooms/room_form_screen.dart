@@ -137,6 +137,7 @@ class _RoomFormScreenState extends State<RoomFormScreen> {
       });
 
       showMessage(context, wasNew ? 'Soba je dodana. Sada možete dodati slike.' : 'Izmjene su sačuvane.');
+      if (!wasNew) Navigator.pop(context, true);
     } on ApiException catch (e) {
       if (!mounted) return;
 

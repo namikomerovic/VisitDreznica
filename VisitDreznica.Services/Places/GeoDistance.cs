@@ -2,8 +2,8 @@
 
 public static class GeoDistance
 {
-    public const double AccommodationLatitude = 43.5336;
-    public const double AccommodationLongitude = 17.7008;
+    public const double AccommodationLatitude = 43.520101;
+    public const double AccommodationLongitude = 17.737718;
 
     private const double EarthRadiusKm = 6371.0;
 
