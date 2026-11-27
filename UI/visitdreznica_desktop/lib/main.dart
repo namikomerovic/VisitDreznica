@@ -9,7 +9,7 @@ import 'screens/login_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeDateFormatting('bs');
+  await initializeDateFormatting();
 
   const apiUrl = String.fromEnvironment(
     'API_BASE_URL',
@@ -18,6 +18,8 @@ Future<void> main() async {
   final api = ApiClient(baseUrl: apiUrl);
   final themeController = ThemeController();
   await themeController.load();
+  final localeController = LocaleController();
+  await localeController.load();
 
   runApp(
     MultiProvider(
@@ -28,6 +30,7 @@ Future<void> main() async {
         ),
         ChangeNotifierProvider(create: (_) => NotificationProvider(api)),
         ChangeNotifierProvider<ThemeController>.value(value: themeController),
+        ChangeNotifierProvider<LocaleController>.value(value: localeController),
       ],
       child: const VisitDreznicaAdminApp(),
     ),
@@ -45,11 +48,12 @@ class VisitDreznicaAdminApp extends StatelessWidget {
 
     return MaterialApp(
       key: ValueKey(isLoggedIn),
-      title: 'Visit Drežnica – Administracija',
+      onGenerateTitle: (_) => tr.adminTitle,
       debugShowCheckedModeBanner: false,
-      locale: const Locale('bs'),
-      supportedLocales: const [Locale('bs')],
+      locale: context.watch<LocaleController>().locale,
+      supportedLocales: LocaleController.supported,
       localizationsDelegates: const [
+        L10n.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
@@ -57,6 +61,7 @@ class VisitDreznicaAdminApp extends StatelessWidget {
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
       themeMode: context.watch<ThemeController>().mode,
+      builder: (context, child) => LocaleScope(child: child!),
       home: isLoggedIn ? const MasterScreen() : const LoginScreen(),
     );
   }

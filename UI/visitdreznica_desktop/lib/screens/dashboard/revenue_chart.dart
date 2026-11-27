@@ -23,12 +23,12 @@ class RevenueChart extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Wrap(
+        Wrap(
           spacing: 16,
           children: [
-            _Legend(color: AppColors.room, label: 'Smještaj'),
-            _Legend(color: AppColors.equipment, label: 'Oprema'),
-            _Legend(color: AppColors.activity, label: 'Aktivnosti'),
+            _Legend(color: AppColors.room, label: tr.revenueRooms),
+            _Legend(color: AppColors.equipment, label: tr.revenueEquipment),
+            _Legend(color: AppColors.activity, label: tr.revenueActivities),
           ],
         ),
         const SizedBox(height: 16),
@@ -89,10 +89,10 @@ class RevenueChart extends StatelessWidget {
                     final item = data[group.x];
                     return BarTooltipItem(
                       '${Formatters.monthShort(item.month)} ${item.year}\n'
-                      'Smještaj: ${Formatters.money(item.rooms)}\n'
-                      'Oprema: ${Formatters.money(item.equipment)}\n'
-                      'Aktivnosti: ${Formatters.money(item.activities)}\n'
-                      'Ukupno: ${Formatters.money(item.total)}',
+                      '${tr.revenueRooms}: ${Formatters.money(item.rooms)}\n'
+                      '${tr.revenueEquipment}: ${Formatters.money(item.equipment)}\n'
+                      '${tr.revenueActivities}: ${Formatters.money(item.activities)}\n'
+                      '${tr.total}: ${Formatters.money(item.total)}',
                       const TextStyle(color: Colors.white, fontSize: 12),
                     );
                   },

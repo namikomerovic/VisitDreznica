@@ -65,10 +65,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      const Align(alignment: Alignment.centerRight, child: LanguageSelector(compact: true)),
                       const Center(child: AppLogo(size: 140)),
                       const SizedBox(height: 12),
-                      Text('Visit Drežnica', textAlign: TextAlign.center, style: theme.textTheme.headlineSmall),
-                      Text('Administracija', textAlign: TextAlign.center, style: theme.textTheme.bodyMedium),
+                      Text(tr.appName, textAlign: TextAlign.center, style: theme.textTheme.headlineSmall),
+                      Text(tr.administration, textAlign: TextAlign.center, style: theme.textTheme.bodyMedium),
                       const SizedBox(height: 28),
                       if (sessionMessage != null && _error == null) ...[
                         _MessageBox(text: sessionMessage, isError: false),
@@ -83,13 +84,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         enabled: !_loading,
                         autofocus: true,
                         textInputAction: TextInputAction.next,
-                        decoration: const InputDecoration(
-                          labelText: 'Korisničko ime',
-                          prefixIcon: Icon(Icons.person_outline),
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: tr.username,
+                          prefixIcon: const Icon(Icons.person_outline),
+                          border: const OutlineInputBorder(),
                         ),
                         validator: (value) =>
-                            (value == null || value.trim().isEmpty) ? 'Unesite korisničko ime.' : null,
+                            (value == null || value.trim().isEmpty) ? tr.enterUsername : null,
                       ),
                       const SizedBox(height: 16),
                       TextFormField(
@@ -98,16 +99,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         obscureText: _obscurePassword,
                         onFieldSubmitted: (_) => _submit(),
                         decoration: InputDecoration(
-                          labelText: 'Lozinka',
+                          labelText: tr.password,
                           prefixIcon: const Icon(Icons.lock_outline),
                           border: const OutlineInputBorder(),
                           suffixIcon: IconButton(
-                            tooltip: _obscurePassword ? 'Prikaži lozinku' : 'Sakrij lozinku',
+                            tooltip: _obscurePassword ? tr.showPassword : tr.hidePassword,
                             icon: Icon(_obscurePassword ? Icons.visibility_outlined : Icons.visibility_off_outlined),
                             onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                           ),
                         ),
-                        validator: (value) => (value == null || value.isEmpty) ? 'Unesite lozinku.' : null,
+                        validator: (value) => (value == null || value.isEmpty) ? tr.enterPassword : null,
                       ),
                       const SizedBox(height: 24),
                       FilledButton(
@@ -115,7 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(48)),
                         child: _loading
                             ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.5))
-                            : const Text('Prijava'),
+                            : Text(tr.login),
                       ),
                     ],
                   ),

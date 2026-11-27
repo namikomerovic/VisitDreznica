@@ -1,0 +1,217 @@
+{
+  "@@locale": "bs",
+  "appName": "Visit Drežnica",
+  "save": "Sačuvaj",
+  "cancel": "Odustani",
+  "delete": "Obriši",
+  "edit": "Uredi",
+  "add": "Dodaj",
+  "close": "Zatvori",
+  "confirm": "Potvrdi",
+  "back": "Nazad",
+  "retry": "Pokušaj ponovo",
+  "refresh": "Osvježi",
+  "search": "Pretraga",
+  "yes": "Da",
+  "no": "Ne",
+  "all": "Sve",
+  "loadError": "Podatke nije moguće učitati.",
+  "noResults": "Nema rezultata.",
+  "appearance": "Izgled",
+  "themeSystem": "Sistem",
+  "themeLight": "Svijetla",
+  "themeDark": "Tamna",
+  "themeFollowSystem": "Prati sistem",
+  "themeLightLong": "Svijetla tema",
+  "themeDarkLong": "Tamna tema",
+  "language": "Jezik",
+  "languageBosnian": "Bosanski",
+  "languageEnglish": "English",
+  "logout": "Odjava",
+  "logoutQuestion": "Da li se želite odjaviti?",
+  "logoutAction": "Odjavi se",
+  "notifications": "Obavijesti",
+  "menu": "Meni",
+  "errorTimeout": "Server ne odgovara. Pokušajte ponovo.",
+  "errorNoConnection": "Nije moguće povezati se sa serverom. Provjerite da li je API pokrenut.",
+  "errorSessionExpired": "Sesija je istekla. Prijavite se ponovo.",
+  "errorBadRequest": "Podaci nisu ispravni.",
+  "errorForbidden": "Nemate pravo na ovu akciju.",
+  "errorNotFound": "Traženi podatak ne postoji.",
+  "errorConflict": "Podatak je u međuvremenu izmijenjen. Osvježite prikaz.",
+  "errorFileTooLarge": "Fajl je prevelik.",
+  "errorServer": "Došlo je do greške na serveru. Pokušajte ponovo.",
+  "errorAdminOnly": "Ova aplikacija je namijenjena administratorima.",
+  "errorGuestOnly": "Ova aplikacija je namijenjena gostima. Administratori koriste desktop aplikaciju.",
+  "justNow": "upravo",
+  "minutesAgo": "prije {count} min",
+  "@minutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursAgo": "prije {count} h",
+  "@hoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "daysAgo": "prije {count} d",
+  "@daysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "itemRoom": "Soba",
+  "itemEquipment": "Oprema",
+  "itemActivity": "Aktivnost",
+  "itemPlace": "Mjesto",
+  "itemRooms": "Sobe",
+  "itemEquipmentPlural": "Oprema",
+  "itemActivities": "Aktivnosti",
+  "itemPlaces": "Mjesta",
+  "statusPending": "Na čekanju",
+  "statusConfirmed": "Potvrđena",
+  "statusCompleted": "Završena",
+  "statusCancelled": "Otkazana",
+  "statusRejected": "Odbijena",
+  "reservationRoom": "Smještaj",
+  "reservationEquipment": "Najam opreme",
+  "reservationActivity": "Aktivnost",
+  "guestsCount": "Gostiju: {count}",
+  "@guestsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "piecesCount": "Komada: {count}",
+  "@piecesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "participantsCount": "Učesnika: {count}",
+  "@participantsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "validationUsername": "Korisničko ime mora imati 3–50 znakova: slova, brojevi, tačka ili donja crta.",
+  "validationPassword": "Najmanje 8 znakova, uključujući barem jedno slovo i jedan broj.",
+  "validationEmailRequired": "E-mail je obavezan.",
+  "validationEmailLength": "E-mail može imati najviše 100 znakova.",
+  "validationEmail": "Unesite ispravnu e-mail adresu, npr. ime@domena.ba.",
+  "validationPhone": "Unesite ispravan broj, npr. 061 234 567 ili +387 61 234 567.",
+  "navDashboard": "Dashboard",
+  "navReservations": "Rezervacije",
+  "navRooms": "Sobe",
+  "navEquipment": "Oprema",
+  "navActivities": "Aktivnosti",
+  "navPlaces": "Mjesta",
+  "navNews": "Novosti",
+  "navReviews": "Recenzije",
+  "navUsers": "Korisnici",
+  "navLookups": "Šifarnici",
+  "navReports": "Izvještaji",
+  "navRecommendations": "Preporuke (ML)",
+  "adminTitle": "Visit Drežnica – Administracija",
+  "administration": "Administracija",
+  "roleAdministrator": "Administrator",
+  "goodMorning": "Dobro jutro, {name}",
+  "@goodMorning": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "goodAfternoon": "Dobar dan, {name}",
+  "@goodAfternoon": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "goodEvening": "Dobro veče, {name}",
+  "@goodEvening": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "dashboardOverviewFor": "Pregled poslovanja za {period}.",
+  "@dashboardOverviewFor": {
+    "placeholders": {
+      "period": {
+        "type": "String"
+      }
+    }
+  },
+  "exportReport": "Izvezi izvještaj",
+  "kpiRevenueThisMonth": "Prihod ovog mjeseca",
+  "kpiReservationsThisMonth": "Rezervacije ovog mjeseca",
+  "kpiAwaitingConfirmation": "Čeka potvrdu",
+  "kpiAwaitingConfirmationHint": "Plaćene, čekaju vašu potvrdu",
+  "kpiArrivals7Days": "Dolasci (7 dana)",
+  "kpiAverageRating": "Prosječna ocjena",
+  "kpiFromReviews": "Iz {count} recenzija",
+  "@kpiFromReviews": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "kpiGuests": "Gosti",
+  "comparedToLastMonth": "u odnosu na prošli mjesec",
+  "netRevenueByMonth": "Neto prihod po mjesecima",
+  "reservationsByStatus": "Rezervacije po statusu",
+  "latestReservations": "Posljednje rezervacije",
+  "showAll": "Prikaži sve →",
+  "mostBookedYear": "Najtraženije (godina)",
+  "noReservationsYet": "Još nema rezervacija.",
+  "reservationsShort": "{count} rez.",
+  "@reservationsShort": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "revenueRooms": "Smještaj",
+  "revenueEquipment": "Oprema",
+  "revenueActivities": "Aktivnosti",
+  "total": "Ukupno",
+  "tabHome": "Početna",
+  "tabExplore": "Istraži",
+  "tabReservations": "Rezervacije",
+  "tabFavorites": "Favoriti",
+  "tabProfile": "Profil",
+  "titleMyReservations": "Moje rezervacije",
+  "passwordChangedLogin": "Lozinka je promijenjena. Prijavite se novom lozinkom.",
+  "welcomeTitle": "Dobrodošli u Drežnicu",
+  "welcomeSubtitle": "Smještaj, kajaci, avanture i ljepote Neretve",
+  "username": "Korisničko ime",
+  "password": "Lozinka",
+  "enterUsername": "Unesite korisničko ime.",
+  "enterPassword": "Unesite lozinku.",
+  "forgotPassword": "Zaboravili ste lozinku?",
+  "login": "Prijava",
+  "noAccountRegister": "Nemate račun? Registrujte se",
+  "showPassword": "Prikaži lozinku",
+  "hidePassword": "Sakrij lozinku"
+}

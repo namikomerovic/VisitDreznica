@@ -5,6 +5,7 @@ import '../api/api_exception.dart';
 import '../models/login_response.dart';
 import '../models/register_request.dart';
 import 'app_roles.dart';
+import '../l10n/locale_controller.dart';
 
 class AuthProvider extends ChangeNotifier {
   AuthProvider(this._api, {required this.requiredRole}) {
@@ -59,8 +60,8 @@ class AuthProvider extends ChangeNotifier {
 
       throw ApiException(
         requiredRole == AppRoles.admin
-            ? 'Ova aplikacija je namijenjena administratorima.'
-            : 'Ova aplikacija je namijenjena gostima. Administratori koriste desktop aplikaciju.',
+            ? tr.errorAdminOnly
+            : tr.errorGuestOnly,
       );
     }
 
@@ -69,7 +70,7 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _expire() => _clear(message: 'Sesija je istekla. Prijavite se ponovo.');
+  void _expire() => _clear(message: tr.errorSessionExpired);
 
   void _clear({String? message}) {
     _api.token = null;

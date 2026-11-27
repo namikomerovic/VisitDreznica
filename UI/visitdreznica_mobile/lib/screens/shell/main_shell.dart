@@ -22,14 +22,29 @@ class _MainShellState extends State<MainShell> {
   final _exploreType = ValueNotifier<ItemType>(ItemType.room);
   late final NotificationProvider _notifications;
   final _reservationsKey = GlobalKey<ReservationsTabState>();
+  // Čuva stanje tabova kad se pri okretanju ekrana promijeni raspored (traka ↔ bočna navigacija).
+  final _stackKey = GlobalKey();
 
-  static const _titles = [
-    'Visit Drežnica',
-    'Istraži',
-    'Moje rezervacije',
-    'Favoriti',
-    'Profil',
-  ];
+  List<String> get _titles => [
+        tr.appName,
+        tr.tabExplore,
+        tr.titleMyReservations,
+        tr.tabFavorites,
+        tr.tabProfile,
+      ];
+
+  void _select(int index) {
+    setState(() => _index = index);
+    if (index == 2) _reservationsKey.currentState?.reload();
+  }
+
+  List<(IconData, IconData, String)> get _destinations => [
+        (Icons.home_outlined, Icons.home, tr.tabHome),
+        (Icons.explore_outlined, Icons.explore, tr.tabExplore),
+        (Icons.event_note_outlined, Icons.event_note, tr.tabReservations),
+        (Icons.favorite_outline, Icons.favorite, tr.tabFavorites),
+        (Icons.person_outline, Icons.person, tr.tabProfile),
+      ];
 
   @override
   void initState() {
@@ -48,6 +63,8 @@ class _MainShellState extends State<MainShell> {
   @override
   Widget build(BuildContext context) {
     final unread = context.watch<NotificationProvider>().unreadCount;
+    // Na tabletu i u ležećem položaju: bočna navigacija umjesto donje trake.
+    final useRail = MediaQuery.sizeOf(context).width >= Breakpoints.compact;
 
     return Scaffold(
       appBar: AppBar(
@@ -63,7 +80,7 @@ class _MainShellState extends State<MainShell> {
         ),
         actions: [
           IconButton(
-            tooltip: 'Obavijesti',
+            tooltip: tr.notifications,
             onPressed: () async {
               await Navigator.of(context).push(
                 MaterialPageRoute<void>(
@@ -81,7 +98,8 @@ class _MainShellState extends State<MainShell> {
           ),
         ],
       ),
-      body: IndexedStack(
+      body: _wrapWithRail(useRail, IndexedStack(
+        key: _stackKey,
         index: _index,
         children: [
           HomeTab(
@@ -99,41 +117,39 @@ class _MainShellState extends State<MainShell> {
           const FavoritesTab(),
           const ProfileTab(),
         ],
-      ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _index,
-        onDestinationSelected: (index) {
-          setState(() => _index = index);
-          if (index == 2) _reservationsKey.currentState?.reload();
-        },
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
-            label: 'Početna',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.explore_outlined),
-            selectedIcon: Icon(Icons.explore),
-            label: 'Istraži',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.event_note_outlined),
-            selectedIcon: Icon(Icons.event_note),
-            label: 'Rezervacije',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.favorite_outline),
-            selectedIcon: Icon(Icons.favorite),
-            label: 'Favoriti',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
-            label: 'Profil',
-          ),
-        ],
-      ),
+      )),
+      bottomNavigationBar: useRail
+          ? null
+          : NavigationBar(
+              selectedIndex: _index,
+              onDestinationSelected: _select,
+              destinations: [
+                for (final (icon, selectedIcon, label) in _destinations)
+                  NavigationDestination(icon: Icon(icon), selectedIcon: Icon(selectedIcon), label: label),
+              ],
+            ),
+    );
+  }
+
+  Widget _wrapWithRail(bool useRail, Widget body) {
+    if (!useRail) return body;
+
+    return Row(
+      children: [
+        NavigationRail(
+          selectedIndex: _index,
+          onDestinationSelected: _select,
+          labelType: MediaQuery.sizeOf(context).height < 480
+              ? NavigationRailLabelType.none
+              : NavigationRailLabelType.all,
+          destinations: [
+            for (final (icon, selectedIcon, label) in _destinations)
+              NavigationRailDestination(icon: Icon(icon), selectedIcon: Icon(selectedIcon), label: Text(label)),
+          ],
+        ),
+        const VerticalDivider(width: 1),
+        Expanded(child: body),
+      ],
     );
   }
 }

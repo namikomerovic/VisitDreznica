@@ -1,16 +1,22 @@
 import '../utils/formatters.dart';
 import 'reservation_status.dart';
 import 'item_type.dart';
+import '../l10n/locale_controller.dart';
 
 enum ReservationType {
-  room(1, 'Smještaj'),
-  equipment(2, 'Najam opreme'),
-  activity(3, 'Aktivnost');
+  room(1),
+  equipment(2),
+  activity(3);
 
-  const ReservationType(this.value, this.label);
+  const ReservationType(this.value);
 
   final int value;
-  final String label;
+
+  String get label => switch (this) {
+        ReservationType.room => tr.reservationRoom,
+        ReservationType.equipment => tr.reservationEquipment,
+        ReservationType.activity => tr.reservationActivity,
+      };
 
   static ReservationType fromValue(int value) =>
       values.firstWhere((x) => x.value == value);
@@ -97,9 +103,9 @@ class Reservation {
   }
 
   String get quantityLabel => switch (type) {
-    ReservationType.room => 'Gostiju: ${guestCount ?? 0}',
-    ReservationType.equipment => 'Komada: ${quantity ?? 0}',
-    ReservationType.activity => 'Učesnika: ${participantCount ?? 0}',
+    ReservationType.room => tr.guestsCount(guestCount ?? 0),
+    ReservationType.equipment => tr.piecesCount(quantity ?? 0),
+    ReservationType.activity => tr.participantsCount(participantCount ?? 0),
   };
 
   factory Reservation.fromJson(Map<String, dynamic> json) => Reservation(

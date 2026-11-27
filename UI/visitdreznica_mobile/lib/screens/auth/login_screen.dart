@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (changed == true) {
       messenger.showSnackBar(
-        const SnackBar(content: Text('Lozinka je promijenjena. Prijavite se novom lozinkom.')),
+        SnackBar(content: Text(tr.passwordChangedLogin)),
       );
     }
   }
@@ -75,11 +75,12 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  const Align(alignment: Alignment.centerRight, child: LanguageSelector(compact: true)),
                   const Center(child: AppLogo(size: 140)),
                   const SizedBox(height: 16),
-                  Text('Dobrodošli u Drežnicu', textAlign: TextAlign.center, style: theme.textTheme.headlineSmall),
+                  Text(tr.welcomeTitle, textAlign: TextAlign.center, style: theme.textTheme.headlineSmall),
                   const SizedBox(height: 4),
-                  Text('Smještaj, kajaci, avanture i ljepote Neretve',
+                  Text(tr.welcomeSubtitle,
                       textAlign: TextAlign.center, style: theme.textTheme.bodyMedium),
                   const SizedBox(height: 28),
                   if (sessionMessage != null && _error == null) MessageBox(text: sessionMessage),
@@ -89,12 +90,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     enabled: !_loading,
                     textInputAction: TextInputAction.next,
                     autocorrect: false,
-                    decoration: const InputDecoration(
-                      labelText: 'Korisničko ime',
-                      prefixIcon: Icon(Icons.person_outline),
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: tr.username,
+                      prefixIcon: const Icon(Icons.person_outline),
+                      border: const OutlineInputBorder(),
                     ),
-                    validator: (value) => (value == null || value.trim().isEmpty) ? 'Unesite korisničko ime.' : null,
+                    validator: (value) => (value == null || value.trim().isEmpty) ? tr.enterUsername : null,
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
@@ -104,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     textInputAction: TextInputAction.done,
                     onFieldSubmitted: (_) => _submit(),
                     decoration: InputDecoration(
-                      labelText: 'Lozinka',
+                      labelText: tr.password,
                       prefixIcon: const Icon(Icons.lock_outline),
                       border: const OutlineInputBorder(),
                       suffixIcon: IconButton(
@@ -112,13 +113,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: () => setState(() => _obscure = !_obscure),
                       ),
                     ),
-                    validator: (value) => (value == null || value.isEmpty) ? 'Unesite lozinku.' : null,
+                    validator: (value) => (value == null || value.isEmpty) ? tr.enterPassword : null,
                   ),
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: _loading ? null : _openForgotPassword,
-                      child: const Text('Zaboravili ste lozinku?'),
+                      child: Text(tr.forgotPassword),
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -127,14 +128,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52)),
                     child: _loading
                         ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.5))
-                        : const Text('Prijava'),
+                        : Text(tr.login),
                   ),
                   const SizedBox(height: 12),
                   TextButton(
                     onPressed: _loading
                         ? null
                         : () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const RegisterScreen())),
-                    child: const Text('Nemate račun? Registrujte se'),
+                    child: Text(tr.noAccountRegister),
                   ),
                 ],
               ),

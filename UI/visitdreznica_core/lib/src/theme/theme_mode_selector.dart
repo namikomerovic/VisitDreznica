@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'theme_controller.dart';
+import '../l10n/locale_controller.dart';
 
 class ThemeModeSelector extends StatelessWidget {
   const ThemeModeSelector({super.key});
 
-   @override
+  @override
   Widget build(BuildContext context) {
     final controller = context.watch<ThemeController>();
 
@@ -20,17 +21,17 @@ class ThemeModeSelector extends StatelessWidget {
             ButtonSegment(
               value: ThemeMode.system,
               icon: showIcons ? const Icon(Icons.brightness_auto_outlined) : null,
-              label: const Text('Sistem'),
+              label: Text(tr.themeSystem),
             ),
             ButtonSegment(
               value: ThemeMode.light,
               icon: showIcons ? const Icon(Icons.light_mode_outlined) : null,
-              label: const Text('Svijetla'),
+              label: Text(tr.themeLight),
             ),
             ButtonSegment(
               value: ThemeMode.dark,
               icon: showIcons ? const Icon(Icons.dark_mode_outlined) : null,
-              label: const Text('Tamna'),
+              label: Text(tr.themeDark),
             ),
           ],
           selected: {controller.mode},

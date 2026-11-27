@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
+import '../../layout/admin_section.dart';
 import '../../widgets/equal_height_grid.dart';
 import '../../widgets/error_view.dart';
 import '../../widgets/reservation_status_chip.dart';
@@ -11,8 +12,8 @@ import 'status_breakdown.dart';
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key, required this.onOpen});
 
-  /// Otvara drugu sekciju po nazivu (npr. 'Izvještaji', 'Rezervacije').
-  final ValueChanged<String> onOpen;
+  /// Otvara drugu sekciju administracije.
+  final ValueChanged<AdminSection> onOpen;
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -77,12 +78,7 @@ class _DashboardContent extends StatelessWidget {
 
   final _DashboardData data;
   final VoidCallback onRefresh;
-  final ValueChanged<String> onOpen;
-
-  static const _months = [
-    'januar', 'februar', 'mart', 'april', 'maj', 'juni',
-    'juli', 'august', 'septembar', 'oktobar', 'novembar', 'decembar',
-  ];
+  final ValueChanged<AdminSection> onOpen;
 
   @override
   Widget build(BuildContext context) {
@@ -90,85 +86,94 @@ class _DashboardContent extends StatelessWidget {
     final summary = data.summary;
     final firstName = context.watch<AuthProvider>().session?.firstName ?? '';
     final now = DateTime.now();
-    final greeting = now.hour < 12 ? 'Dobro jutro' : (now.hour < 18 ? 'Dobar dan' : 'Dobro veče');
+    final greeting = now.hour < 12
+        ? tr.goodMorning(firstName)
+        : (now.hour < 18 ? tr.goodAfternoon(firstName) : tr.goodEvening(firstName));
+    final narrow = MediaQuery.sizeOf(context).width < 900;
+
+    final heading = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(greeting, style: theme.textTheme.headlineMedium),
+        const SizedBox(height: 4),
+        Text(
+          tr.dashboardOverviewFor(Formatters.monthYear(now)),
+          style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+        ),
+      ],
+    );
+
+    final actions = Wrap(
+      spacing: 12,
+      runSpacing: 8,
+      children: [
+        OutlinedButton.icon(
+          onPressed: onRefresh,
+          icon: const Icon(Icons.refresh, size: 18),
+          label: Text(tr.refresh),
+        ),
+        FilledButton.icon(
+          style: FilledButton.styleFrom(
+            backgroundColor: AppColors.cta(context),
+            foregroundColor: Colors.white,
+          ),
+          onPressed: () => onOpen(AdminSection.reports),
+          icon: const Icon(Icons.file_download_outlined, size: 18),
+          label: Text(tr.exportReport),
+        ),
+      ],
+    );
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(28, 24, 28, 28),
+      padding: EdgeInsets.fromLTRB(narrow ? 16 : 28, 24, narrow ? 16 : 28, 28),
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('$greeting, $firstName', style: theme.textTheme.headlineMedium),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Pregled poslovanja za ${_months[now.month - 1]} ${now.year}.',
-                    style: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-                  ),
-                ],
-              ),
-            ),
-            OutlinedButton.icon(
-              onPressed: onRefresh,
-              icon: const Icon(Icons.refresh, size: 18),
-              label: const Text('Osvježi'),
-            ),
-            const SizedBox(width: 12),
-            FilledButton.icon(
-              style: FilledButton.styleFrom(
-                backgroundColor: AppColors.cta(context),
-                foregroundColor: Colors.white,
-              ),
-              onPressed: () => onOpen('Izvještaji'),
-              icon: const Icon(Icons.file_download_outlined, size: 18),
-              label: const Text('Izvezi izvještaj'),
-            ),
-          ],
-        ),
+        if (narrow) ...[heading, const SizedBox(height: 16), actions]
+        else
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [Expanded(child: heading), actions],
+          ),
         const SizedBox(height: 24),
         EqualHeightGrid(
           children: [
             _KpiCard(
               icon: Icons.payments_outlined,
               color: AppColors.success,
-              title: 'Prihod ovog mjeseca',
+              title: tr.kpiRevenueThisMonth,
               value: Formatters.money(summary.revenueThisMonth),
               trend: _Trend.from(summary.revenueThisMonth, summary.revenueLastMonth),
             ),
             _KpiCard(
               icon: Icons.event_available_outlined,
               color: AppColors.room,
-              title: 'Rezervacije ovog mjeseca',
+              title: tr.kpiReservationsThisMonth,
               value: '${summary.reservationsThisMonth}',
             ),
             _KpiCard(
               icon: Icons.pending_actions_outlined,
               color: AppColors.terracotta,
-              title: 'Čeka potvrdu',
+              title: tr.kpiAwaitingConfirmation,
               value: '${summary.awaitingConfirmation}',
-              subtitle: 'Plaćene, čekaju vašu potvrdu',
-              onTap: summary.awaitingConfirmation > 0 ? () => onOpen('Rezervacije') : null,
+              subtitle: tr.kpiAwaitingConfirmationHint,
+              onTap: summary.awaitingConfirmation > 0 ? () => onOpen(AdminSection.reservations) : null,
             ),
             _KpiCard(
               icon: Icons.luggage_outlined,
               color: AppColors.activity,
-              title: 'Dolasci (7 dana)',
+              title: tr.kpiArrivals7Days,
               value: '${summary.upcomingArrivals}',
             ),
             _KpiCard(
               icon: Icons.star_outline,
               color: AppColors.star,
-              title: 'Prosječna ocjena',
+              title: tr.kpiAverageRating,
               value: summary.averageRating == null ? '–' : Formatters.decimal(summary.averageRating!),
-              subtitle: 'Iz ${summary.reviewCount} recenzija',
+              subtitle: tr.kpiFromReviews(summary.reviewCount),
             ),
             _KpiCard(
               icon: Icons.people_outline,
               color: AppColors.equipment,
-              title: 'Gosti',
+              title: tr.kpiGuests,
               value: '${summary.guestCount}',
             ),
           ],
@@ -177,36 +182,36 @@ class _DashboardContent extends StatelessWidget {
         _TwoColumns(
           height: 400,
           left: _Panel(
-            title: 'Neto prihod po mjesecima',
+            title: tr.netRevenueByMonth,
             expand: true,
             child: RevenueChart(data: summary.revenueByMonth, expand: true),
           ),
           right: _Panel(
-            title: 'Rezervacije po statusu',
+            title: tr.reservationsByStatus,
             expand: true,
             child: StatusBreakdown(data: summary.reservationsByStatus),
           ),
           narrowLeft: _Panel(
-            title: 'Neto prihod po mjesecima',
+            title: tr.netRevenueByMonth,
             child: RevenueChart(data: summary.revenueByMonth),
           ),
           narrowRight: _Panel(
-            title: 'Rezervacije po statusu',
+            title: tr.reservationsByStatus,
             child: StatusBreakdown(data: summary.reservationsByStatus),
           ),
         ),
         const SizedBox(height: 20),
         _TwoColumns(
           left: _Panel(
-            title: 'Posljednje rezervacije',
+            title: tr.latestReservations,
             action: TextButton(
-              onPressed: () => onOpen('Rezervacije'),
-              child: const Text('Prikaži sve →'),
+              onPressed: () => onOpen(AdminSection.reservations),
+              child: Text(tr.showAll),
             ),
             child: _RecentReservations(items: data.recent),
           ),
           right: _Panel(
-            title: 'Najtraženije (godina)',
+            title: tr.mostBookedYear,
             child: _TopItems(items: summary.topItems),
           ),
         ),
@@ -350,7 +355,7 @@ class _KpiCard extends StatelessWidget {
               if (subtitle != null || trend != null) ...[
                 const SizedBox(height: 4),
                 Text(
-                  subtitle ?? 'u odnosu na prošli mjesec',
+                  subtitle ?? tr.comparedToLastMonth,
                   style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
                 ),
               ],
@@ -408,8 +413,10 @@ class _RecentReservations extends StatelessWidget {
     final api = context.read<ApiClient>();
 
     if (items.isEmpty) {
-      return const Text('Još nema rezervacija.');
+      return Text(tr.noReservationsYet);
     }
+
+    final narrow = MediaQuery.sizeOf(context).width < 1000;
 
     return Column(
       children: [
@@ -435,10 +442,11 @@ class _RecentReservations extends StatelessWidget {
                     ],
                   ),
                 ),
-                Expanded(
-                  flex: 3,
-                  child: Text(items[i].periodLabel, style: theme.textTheme.bodySmall),
-                ),
+                if (!narrow)
+                  Expanded(
+                    flex: 3,
+                    child: Text(items[i].periodLabel, style: theme.textTheme.bodySmall),
+                  ),
                 SizedBox(
                   width: 110,
                   child: Text(
@@ -499,7 +507,7 @@ class _TopItems extends StatelessWidget {
     final theme = Theme.of(context);
 
     if (items.isEmpty) {
-      return const Text('Još nema rezervacija.');
+      return Text(tr.noReservationsYet);
     }
 
     return Column(
@@ -528,7 +536,7 @@ class _TopItems extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text('${items[i].reservationCount} rez.', style: theme.textTheme.labelLarge),
+                    Text(tr.reservationsShort(items[i].reservationCount), style: theme.textTheme.labelLarge),
                     Text(Formatters.money(items[i].revenue), style: theme.textTheme.bodySmall),
                   ],
                 ),

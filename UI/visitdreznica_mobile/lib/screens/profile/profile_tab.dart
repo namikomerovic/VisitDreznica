@@ -280,11 +280,18 @@ class _ProfileTabState extends State<ProfileTab> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Izgled', style: theme.textTheme.titleMedium),
+                  Text(tr.appearance, style: theme.textTheme.titleMedium),
                   const SizedBox(height: 12),
                   const SizedBox(
                     width: double.infinity,
                     child: ThemeModeSelector(),
+                  ),
+                  const SizedBox(height: 20),
+                  Text(tr.language, style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 12),
+                  const SizedBox(
+                    width: double.infinity,
+                    child: LanguageSelector(),
                   ),
                 ],
               ),

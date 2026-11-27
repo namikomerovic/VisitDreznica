@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
 import 'api_exception.dart';
+import '../l10n/locale_controller.dart';
 
 class ApiClient {
   ApiClient({required String baseUrl, http.Client? httpClient})
@@ -128,6 +129,7 @@ class ApiClient {
 
   Map<String, String> _headers() => {
     'Accept': 'application/json',
+    'Accept-Language': LocaleController.languageCode,
     ...authHeaders,
   };
 
@@ -136,10 +138,10 @@ class ApiClient {
       final streamed = await _http.send(request).timeout(_timeout);
       return await http.Response.fromStream(streamed).timeout(_timeout);
     } on TimeoutException {
-      throw ApiException('Server ne odgovara. Pokušajte ponovo.');
+      throw ApiException(tr.errorTimeout);
     } on http.ClientException {
       throw ApiException(
-        'Nije moguće povezati se sa serverom. Provjerite da li je API pokrenut.',
+        tr.errorNoConnection,
       );
     }
   }
@@ -183,18 +185,18 @@ class ApiClient {
         onUnauthorized?.call();
       }
       throw ApiException(
-        problem.message ?? 'Sesija je istekla. Prijavite se ponovo.',
+        problem.message ?? tr.errorSessionExpired,
         statusCode: status,
       );
     }
 
     final fallback = switch (status) {
-      400 => 'Podaci nisu ispravni.',
-      403 => 'Nemate pravo na ovu akciju.',
-      404 => 'Traženi podatak ne postoji.',
-      409 => 'Podatak je u međuvremenu izmijenjen. Osvježite prikaz.',
-      413 => 'Fajl je prevelik.',
-      _ => 'Došlo je do greške na serveru. Pokušajte ponovo.',
+      400 => tr.errorBadRequest,
+      403 => tr.errorForbidden,
+      404 => tr.errorNotFound,
+      409 => tr.errorConflict,
+      413 => tr.errorFileTooLarge,
+      _ => tr.errorServer,
     };
 
     throw ApiException(

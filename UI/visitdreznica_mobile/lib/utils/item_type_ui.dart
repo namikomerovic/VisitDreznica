@@ -10,11 +10,4 @@ extension ItemTypeUi on ItemType {
       };
 
   Color get color => AppColors.forItemType(this);
-
-  String get pluralLabel => switch (this) {
-        ItemType.room => 'Sobe',
-        ItemType.equipment => 'Oprema',
-        ItemType.activity => 'Aktivnosti',
-        ItemType.place => 'Mjesta',
-      };
 }

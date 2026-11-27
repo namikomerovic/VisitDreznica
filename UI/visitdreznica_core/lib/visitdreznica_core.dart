@@ -55,3 +55,8 @@ export 'src/theme/app_colors.dart';
 export 'src/theme/app_theme.dart';
 export 'src/theme/theme_controller.dart';
 export 'src/theme/theme_mode_selector.dart';
+export 'src/l10n/app_localizations.dart';
+export 'src/l10n/locale_controller.dart';
+export 'src/l10n/language_selector.dart';
+export 'src/layout/breakpoints.dart';
+export 'src/l10n/locale_scope.dart';
