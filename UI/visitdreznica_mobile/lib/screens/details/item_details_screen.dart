@@ -111,11 +111,15 @@ class _DetailsView extends StatelessWidget {
         slivers: [
           SliverAppBar(
             pinned: true,
-            expandedHeight: 260,
+            expandedHeight: 320,
+            backgroundColor: theme.colorScheme.surface,
             leading: Padding(
               padding: const EdgeInsets.all(8),
-              child: IconButton.filledTonal(
+              child: IconButton(
                 tooltip: 'Nazad',
+                style: IconButton.styleFrom(
+                  backgroundColor: theme.colorScheme.surface.withValues(alpha: 0.85),
+                ),
                 onPressed: () => Navigator.of(context).pop(),
                 icon: const Icon(Icons.arrow_back),
               ),
@@ -147,8 +151,8 @@ class _DetailsView extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 6),
-                  Text(details.title, style: theme.textTheme.headlineSmall),
-                  if (details.priceLabel != null) ...[
+                  Text(details.title, style: theme.textTheme.headlineMedium),
+                  if (details.priceLabel != null && !details.canReserve) ...[
                     const SizedBox(height: 4),
                     Text(
                       details.priceLabel!,
@@ -217,15 +221,40 @@ class _DetailsView extends StatelessWidget {
       ),
       bottomNavigationBar: details.canReserve
           ? SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
-                child: FilledButton.icon(
-                  onPressed: () => startReservation(context, type, details.id),
-                  style: FilledButton.styleFrom(
-                    minimumSize: const Size.fromHeight(52),
-                  ),
-                  icon: const Icon(Icons.event_available),
-                  label: const Text('Rezerviši'),
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 12),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surfaceContainerLowest,
+                  border: Border(top: BorderSide(color: theme.colorScheme.outlineVariant)),
+                ),
+                child: Row(
+                  children: [
+                    if (details.priceLabel != null)
+                      Expanded(
+                        child: Text(
+                          details.priceLabel!,
+                          style: theme.textTheme.titleLarge?.copyWith(fontSize: 20),
+                        ),
+                      )
+                    else
+                      const Spacer(),
+                    FilledButton(
+                      onPressed: () => startReservation(context, type, details.id),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: AppColors.cta(context),
+                        foregroundColor: Colors.white,
+                        minimumSize: const Size(150, 52),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text('Rezerviši'),
+                          SizedBox(width: 6),
+                          Icon(Icons.arrow_forward, size: 18),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
             )
@@ -246,13 +275,13 @@ class _FactChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: scheme.surfaceContainerHighest,
+        color: scheme.primaryContainer.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(fact.icon, size: 18, color: scheme.onSurfaceVariant),
+          Icon(fact.icon, size: 18, color: scheme.primary),
           const SizedBox(width: 6),
           Flexible(child: Text(fact.text)),
         ],

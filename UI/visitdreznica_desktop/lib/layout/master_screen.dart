@@ -22,7 +22,7 @@ class _Section {
   final String label;
   final IconData icon;
   final IconData selectedIcon;
-  final WidgetBuilder builder;
+  final Widget Function(BuildContext context, ValueChanged<String> open) builder;
 }
 
 final _sections = <_Section>[
@@ -30,68 +30,68 @@ final _sections = <_Section>[
     'Dashboard',
     Icons.dashboard_outlined,
     Icons.dashboard,
-    (_) => const DashboardScreen(),
+    (_, open) => DashboardScreen(onOpen: open),
   ),
   _Section(
     'Rezervacije',
     Icons.event_note_outlined,
     Icons.event_note,
-    (_) => const ReservationsScreen(),
+    (_, _) => const ReservationsScreen(),
   ),
-  _Section('Sobe', Icons.bed_outlined, Icons.bed, (_) => const RoomsScreen()),
+  _Section('Sobe', Icons.bed_outlined, Icons.bed, (_, _) => const RoomsScreen()),
   _Section(
     'Oprema',
     Icons.kayaking_outlined,
     Icons.kayaking,
-    (_) => const EquipmentScreen(),
+    (_, _) => const EquipmentScreen(),
   ),
   _Section(
     'Aktivnosti',
     Icons.hiking_outlined,
     Icons.hiking,
-    (_) => const ActivitiesScreen(),
+    (_, _) => const ActivitiesScreen(),
   ),
   _Section(
     'Mjesta',
     Icons.place_outlined,
     Icons.place,
-    (_) => const PlacesScreen(),
+    (_, _) => const PlacesScreen(),
   ),
   _Section(
     'Novosti',
     Icons.newspaper_outlined,
     Icons.newspaper,
-    (_) => const NewsScreen(),
+    (_, _) => const NewsScreen(),
   ),
   _Section(
     'Recenzije',
     Icons.reviews_outlined,
     Icons.reviews,
-    (_) => const ReviewsScreen(),
+    (_, _) => const ReviewsScreen(),
   ),
   _Section(
     'Korisnici',
     Icons.people_outline,
     Icons.people,
-    (_) => const UsersScreen(),
+    (_, _) => const UsersScreen(),
   ),
   _Section(
     'Šifarnici',
     Icons.list_alt_outlined,
     Icons.list_alt,
-    (_) => const LookupsScreen(),
+    (_, _) => const LookupsScreen(),
   ),
   _Section(
     'Izvještaji',
     Icons.picture_as_pdf_outlined,
     Icons.picture_as_pdf,
-    (_) => const ReportsScreen(),
+    (_, _) => const ReportsScreen(),
   ),
   _Section(
     'Preporuke (ML)',
     Icons.auto_awesome_outlined,
     Icons.auto_awesome,
-    (_) => const RecommendationsScreen(),
+    (_, _) => const RecommendationsScreen(),
   ),
 ];
 
@@ -116,6 +116,11 @@ class _MasterScreenState extends State<MasterScreen> {
   void dispose() {
     _notifications.stop();
     super.dispose();
+  }
+
+  void _open(String label) {
+    final index = _sections.indexWhere((x) => x.label == label);
+    if (index >= 0) setState(() => _selectedIndex = index);
   }
 
   Future<void> _confirmLogout() async {
@@ -213,7 +218,7 @@ class _MasterScreenState extends State<MasterScreen> {
                 Expanded(
                   child: KeyedSubtree(
                     key: ValueKey(_selectedIndex),
-                    child: section.builder(context),
+                    child: section.builder(context, _open),
                   ),
                 ),
               ],
