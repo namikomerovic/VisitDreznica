@@ -20,14 +20,14 @@ class GuidesTable extends StatelessWidget {
         await showDialog<bool>(context: context, builder: (_) => _GuideDialog(service: service, guide: guide)) == true;
 
     return SimpleCrudTable<Guide>(
-      searchHint: 'Ime ili prezime',
-      addLabel: 'Dodaj vodiča',
+      searchHint: tr.firstOrLastName,
+      addLabel: tr.addGuide,
       load: (search, page, pageSize) => service.getPage(name: search, page: page, pageSize: pageSize),
       onAdd: () => open(),
       onEdit: (guide) => open(guide),
       columns: [
-        PagedColumn(header: 'Ime i prezime', flex: 3, cell: (guide) => Text(guide.fullName)),
-        PagedColumn(header: 'Telefon', flex: 3, cell: (guide) => Text(guide.phoneNumber ?? '—')),
+        PagedColumn(header: tr.fullName, flex: 3, cell: (guide) => Text(guide.fullName)),
+        PagedColumn(header: tr.phone, flex: 3, cell: (guide) => Text(guide.phoneNumber ?? '—')),
       ],
     );
   }
@@ -61,28 +61,28 @@ class _GuideDialogState extends State<_GuideDialog> {
     final guide = widget.guide;
 
     return EntityFormDialog(
-      title: guide == null ? 'Novi vodič' : 'Vodič',
+      title: guide == null ? tr.newGuide : tr.guide,
       fieldsBuilder: (serverError) => [
         TextFormField(
           controller: _firstName,
           autofocus: true,
           maxLength: 50,
-          decoration: InputDecoration(labelText: 'Ime *', border: const OutlineInputBorder(), errorText: serverError('firstName')),
-          validator: (value) => validateLength(value, 1, 50, 'Unesite ime (najviše 50 znakova).'),
+          decoration: InputDecoration(labelText: tr.firstNameRequiredShort, border: const OutlineInputBorder(), errorText: serverError('firstName')),
+          validator: (value) => validateLength(value, 1, 50, tr.enterFirstName),
         ),
         const SizedBox(height: 8),
         TextFormField(
           controller: _lastName,
           maxLength: 50,
-          decoration: InputDecoration(labelText: 'Prezime *', border: const OutlineInputBorder(), errorText: serverError('lastName')),
-          validator: (value) => validateLength(value, 1, 50, 'Unesite prezime (najviše 50 znakova).'),
+          decoration: InputDecoration(labelText: tr.lastNameRequiredShort, border: const OutlineInputBorder(), errorText: serverError('lastName')),
+          validator: (value) => validateLength(value, 1, 50, tr.enterLastName),
         ),
         const SizedBox(height: 8),
         TextFormField(
           controller: _phone,
           decoration: InputDecoration(
-            labelText: 'Telefon',
-            hintText: 'npr. 061 234 567',
+            labelText: tr.phone,
+            hintText: tr.phoneExample,
             border: const OutlineInputBorder(),
             errorText: serverError('phoneNumber'),
           ),
@@ -90,7 +90,7 @@ class _GuideDialogState extends State<_GuideDialog> {
             final trimmed = value?.trim() ?? '';
             return trimmed.isEmpty || _phonePattern.hasMatch(trimmed)
                 ? null
-                : 'Unesite ispravan broj, npr. 061 234 567 ili +387 61 234 567.';
+                : tr.validationPhone;
           },
         ),
       ],
@@ -107,7 +107,7 @@ class _GuideDialogState extends State<_GuideDialog> {
       onDelete: guide == null ? null : () => widget.service.delete(guide.id),
       deleteMessage: guide == null
           ? null
-          : 'Obrisati vodiča ${guide.fullName}?\n\nAko vodi termine aktivnosti, brisanje nije moguće.',
+          : tr.deleteGuideQuestion(guide.fullName),
     );
   }
 }

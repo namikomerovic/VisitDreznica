@@ -56,21 +56,21 @@ class _SingleImageEditorState extends State<SingleImageEditor> {
     final image = await pickImage(context);
 
     if (image != null && mounted) {
-      await _run(() => widget.onUpload(image.bytes, image.fileName, image.contentType), 'Slika je sačuvana.');
+      await _run(() => widget.onUpload(image.bytes, image.fileName, image.contentType), tr.imageSaved);
     }
   }
 
   Future<void> _delete() async {
     final confirmed = await showConfirmDialog(
       context,
-      title: 'Uklanjanje slike',
-      message: 'Ukloniti sliku?',
-      confirmLabel: 'Ukloni',
+      title: tr.removingImage,
+      message: tr.removeImageQuestion,
+      confirmLabel: tr.remove,
       destructive: true,
     );
 
     if (confirmed) {
-      await _run(widget.onDelete, 'Slika je uklonjena.');
+      await _run(widget.onDelete, tr.imageRemoved);
     }
   }
 
@@ -103,18 +103,18 @@ class _SingleImageEditorState extends State<SingleImageEditor> {
               icon: _busy
                   ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
                   : const Icon(Icons.upload_outlined),
-              label: Text(widget.hasImage ? 'Promijeni sliku' : 'Odaberi sliku'),
+              label: Text(widget.hasImage ? tr.changeImage : tr.chooseImage),
             ),
             if (widget.hasImage) ...[
               const SizedBox(height: 8),
               TextButton.icon(
                 onPressed: _busy ? null : _delete,
                 icon: const Icon(Icons.delete_outline),
-                label: const Text('Ukloni sliku'),
+                label: Text(tr.removeImage),
               ),
             ],
             const SizedBox(height: 8),
-            Text('JPG ili PNG, najviše 5 MB.', style: Theme.of(context).textTheme.bodySmall),
+            Text(tr.imageFormatHint, style: Theme.of(context).textTheme.bodySmall),
           ],
         ),
       ],

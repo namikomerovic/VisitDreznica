@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
+import '../../widgets/filter_bar.dart';
 import '../../widgets/paged_table.dart';
 import 'equipment_form_screen.dart';
 
@@ -64,7 +65,7 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Row(
+              child: FilterBar(
                 children: [
                   SizedBox(
                     width: 260,
@@ -74,10 +75,10 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
                         _debounce?.cancel();
                         _debounce = Timer(const Duration(milliseconds: 400), _filtersChanged);
                       },
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         isDense: true,
                         prefixIcon: Icon(Icons.search),
-                        hintText: 'Naziv opreme',
+                        hintText: tr.equipmentName,
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -89,9 +90,9 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
                       future: _types,
                       builder: (context, snapshot) => DropdownButtonFormField<int?>(
                         initialValue: _typeId,
-                        decoration: const InputDecoration(labelText: 'Tip opreme', isDense: true, border: OutlineInputBorder()),
+                        decoration: InputDecoration(labelText: tr.equipmentType, isDense: true, border: const OutlineInputBorder()),
                         items: [
-                          const DropdownMenuItem(value: null, child: Text('Svi tipovi')),
+                          DropdownMenuItem(value: null, child: Text(tr.allTypesFilter)),
                           for (final type in snapshot.data ?? const <LookupItem>[])
                             DropdownMenuItem(value: type.id, child: Text(type.name)),
                         ],
@@ -107,11 +108,11 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
                     width: 170,
                     child: DropdownButtonFormField<bool?>(
                       initialValue: _isActive,
-                      decoration: const InputDecoration(labelText: 'Status', isDense: true, border: OutlineInputBorder()),
-                      items: const [
-                        DropdownMenuItem(value: null, child: Text('Sve')),
-                        DropdownMenuItem(value: true, child: Text('Aktivna')),
-                        DropdownMenuItem(value: false, child: Text('Neaktivna')),
+                      decoration: InputDecoration(labelText: tr.status, isDense: true, border: const OutlineInputBorder()),
+                      items: [
+                        DropdownMenuItem(value: null, child: Text(tr.all)),
+                        DropdownMenuItem(value: true, child: Text(tr.activeFemale)),
+                        DropdownMenuItem(value: false, child: Text(tr.inactiveFemale)),
                       ],
                       onChanged: (value) {
                         _isActive = value;
@@ -123,7 +124,7 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
                   FilledButton.icon(
                     onPressed: () => _openForm(),
                     icon: const Icon(Icons.add),
-                    label: const Text('Dodaj opremu'),
+                    label: Text(tr.addEquipment),
                   ),
                 ],
               ),
@@ -139,7 +140,7 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
                   pageSize: pageSize,
                 ),
                 onRowTap: (item) => _openForm(id: item.id),
-                emptyText: 'Nema opreme za prikaz.',
+                emptyText: tr.noEquipment,
                 columns: [
                   PagedColumn(
                     header: '',
@@ -156,44 +157,44 @@ class _EquipmentScreenState extends State<EquipmentScreen> {
                             ),
                     ),
                   ),
-                  PagedColumn(header: 'Naziv', flex: 4, cell: (item) => Text(item.name)),
-                  PagedColumn(header: 'Tip', flex: 2, cell: (item) => Text(item.equipmentTypeName)),
+                  PagedColumn(header: tr.name, flex: 4, cell: (item) => Text(item.name)),
+                  PagedColumn(header: tr.typeShort, flex: 2, cell: (item) => Text(item.equipmentTypeName)),
                   PagedColumn(
-                    header: 'Osoba / kom.',
+                    header: tr.peoplePerPieceShort,
                     flex: 2,
                     alignEnd: true,
                     cell: (item) => Text('${item.capacity}'),
                   ),
                   PagedColumn(
-                    header: 'Komada',
+                    header: tr.pieces,
                     flex: 2,
                     alignEnd: true,
                     cell: (item) => Text('${item.totalQuantity}'),
                   ),
                   PagedColumn(
-                    header: 'Prvi sat',
+                    header: tr.firstHour,
                     flex: 2,
                     alignEnd: true,
                     cell: (item) => Text(Formatters.money(item.firstHourPrice)),
                   ),
                   PagedColumn(
-                    header: 'Sljedeći sat',
+                    header: tr.additionalHour,
                     flex: 2,
                     alignEnd: true,
                     cell: (item) => Text(Formatters.money(item.additionalHourPrice)),
                   ),
                   PagedColumn(
-                    header: 'Cijeli dan',
+                    header: tr.fullDay,
                     flex: 2,
                     alignEnd: true,
                     cell: (item) => Text(Formatters.money(item.fullDayPrice)),
                   ),
                   PagedColumn(
-                    header: 'Status',
+                    header: tr.status,
                     flex: 2,
                     alignEnd: true,
                     cell: (item) => Text(
-                      item.isActive ? 'Aktivna' : 'Neaktivna',
+                      item.isActive ? tr.activeFemale : tr.inactiveFemale,
                       style: TextStyle(color: item.isActive ? AppColors.success : scheme.outline),
                     ),
                   ),

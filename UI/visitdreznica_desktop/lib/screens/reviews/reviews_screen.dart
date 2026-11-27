@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
+import '../../widgets/filter_bar.dart';
 import '../../widgets/dialogs.dart';
 import '../../widgets/paged_table.dart';
 
@@ -44,16 +45,16 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
               Text('${review.userFullName} · ${Formatters.dateTime(review.createdAt)}',
                   style: Theme.of(context).textTheme.bodySmall),
               const SizedBox(height: 16),
-              Text(review.comment?.isNotEmpty == true ? review.comment! : 'Bez komentara.'),
+              Text(review.comment?.isNotEmpty == true ? review.comment! : tr.noComment),
             ],
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: Text('Obriši recenziju', style: TextStyle(color: Theme.of(context).colorScheme.error)),
+            child: Text(tr.deleteReview, style: TextStyle(color: Theme.of(context).colorScheme.error)),
           ),
-          FilledButton(onPressed: () => Navigator.pop(context, false), child: const Text('Zatvori')),
+          FilledButton(onPressed: () => Navigator.pop(context, false), child: Text(tr.close)),
         ],
       ),
     );
@@ -62,9 +63,9 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
 
     final confirmed = await showConfirmDialog(
       context,
-      title: 'Brisanje recenzije',
-      message: 'Obrisati recenziju gosta ${review.userFullName}? Recenzija nestaje i iz prosječne ocjene.',
-      confirmLabel: 'Obriši',
+      title: tr.deletingReview,
+      message: tr.deleteGuestReviewQuestion(review.userFullName),
+      confirmLabel: tr.delete,
       destructive: true,
     );
 
@@ -73,7 +74,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
     try {
       await _service.delete(review.id);
       if (!mounted) return;
-      showMessage(context, 'Recenzija je obrisana.');
+      showMessage(context, tr.reviewDeleted);
       _tableKey.currentState?.reload();
     } on ApiException catch (e) {
       if (mounted) showMessage(context, e.message, isError: true);
@@ -90,15 +91,15 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Row(
+              child: FilterBar(
                 children: [
                   SizedBox(
                     width: 200,
                     child: DropdownButtonFormField<ItemType?>(
                       initialValue: _itemType,
-                      decoration: const InputDecoration(labelText: 'Vrsta', isDense: true, border: OutlineInputBorder()),
+                      decoration: InputDecoration(labelText: tr.type, isDense: true, border: const OutlineInputBorder()),
                       items: [
-                        const DropdownMenuItem(value: null, child: Text('Sve')),
+                        DropdownMenuItem(value: null, child: Text(tr.all)),
                         for (final type in ItemType.values) DropdownMenuItem(value: type, child: Text(type.label)),
                       ],
                       onChanged: (value) {
@@ -108,7 +109,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                     ),
                   ),
                   const SizedBox(width: 24),
-                  Text('Ocjena: ${_ratings.start.round()}–${_ratings.end.round()} ★'),
+                  Text(tr.ratingRange(_ratings.start.round(), _ratings.end.round())),
                   SizedBox(
                     width: 240,
                     child: RangeSlider(
@@ -128,7 +129,7 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                       _filtersChanged();
                     },
                     icon: const Icon(Icons.report_outlined),
-                    label: const Text('Samo loše (1–2★)'),
+                    label: Text(tr.onlyBad),
                   ),
                 ],
               ),
@@ -146,17 +147,17 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                   pageSize: pageSize,
                 ),
                 onRowTap: _open,
-                emptyText: 'Nema recenzija za odabrane filtere.',
+                emptyText: tr.noReviewsForFilters,
                 columns: [
-                  PagedColumn(header: 'Ocjena', flex: 2, cell: (r) => _Stars(rating: r.rating)),
-                  PagedColumn(header: 'Vrsta', flex: 2, cell: (r) => Text(r.itemType.label)),
+                  PagedColumn(header: tr.rating, flex: 2, cell: (r) => _Stars(rating: r.rating)),
+                  PagedColumn(header: tr.type, flex: 2, cell: (r) => Text(r.itemType.label)),
                   PagedColumn(
-                    header: 'Stavka',
+                    header: tr.item,
                     flex: 4,
                     cell: (r) => Text(r.itemName, overflow: TextOverflow.ellipsis),
                   ),
                   PagedColumn(
-                    header: 'Komentar',
+                    header: tr.comment,
                     flex: 6,
                     cell: (r) => Text(
                       r.comment?.isNotEmpty == true ? r.comment! : '—',
@@ -164,9 +165,9 @@ class _ReviewsScreenState extends State<ReviewsScreen> {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  PagedColumn(header: 'Gost', flex: 3, cell: (r) => Text(r.userFullName)),
+                  PagedColumn(header: tr.guest, flex: 3, cell: (r) => Text(r.userFullName)),
                   PagedColumn(
-                    header: 'Datum',
+                    header: tr.date,
                     flex: 2,
                     alignEnd: true,
                     cell: (r) => Text(Formatters.date(r.createdAt)),

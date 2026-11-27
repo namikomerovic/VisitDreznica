@@ -120,8 +120,8 @@ class _NewsFormScreenState extends State<NewsFormScreen> {
         _fill(saved);
       });
 
-      final status = saved.isPublished ? 'objavljena' : 'zakazana za ${Formatters.dateTime(saved.publishedAt)}';
-      showMessage(context, wasNew ? 'Novost je $status. Sada možete dodati sliku.' : 'Izmjene su sačuvane.');
+      final created = saved.isPublished ? tr.newsPublished : tr.newsScheduled(Formatters.dateTime(saved.publishedAt));
+      showMessage(context, wasNew ? created : tr.changesSaved);
       if (!wasNew) Navigator.pop(context, true);
     } on ApiException catch (e) {
       if (!mounted) return;
@@ -139,9 +139,9 @@ class _NewsFormScreenState extends State<NewsFormScreen> {
   Future<void> _delete() async {
     final confirmed = await showConfirmDialog(
       context,
-      title: 'Brisanje novosti',
-      message: 'Obrisati "${_item!.title}"? Ovo se ne može poništiti.',
-      confirmLabel: 'Obriši',
+      title: tr.deletingNews,
+      message: tr.deleteNewsQuestion(_item!.title),
+      confirmLabel: tr.delete,
       destructive: true,
     );
 
@@ -164,17 +164,17 @@ class _NewsFormScreenState extends State<NewsFormScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          tooltip: 'Nazad',
+          tooltip: tr.back,
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context, _changed),
         ),
-        title: Text(_isEdit ? 'Novost' : 'Nova novost'),
+        title: Text(_isEdit ? tr.newsItem : tr.newNews),
         actions: [
           if (_isEdit)
             TextButton.icon(
               onPressed: _saving ? null : _delete,
               icon: Icon(Icons.delete_outline, color: scheme.error),
-              label: Text('Obriši', style: TextStyle(color: scheme.error)),
+              label: Text(tr.delete, style: TextStyle(color: scheme.error)),
             ),
           const SizedBox(width: 16),
         ],
@@ -210,12 +210,12 @@ class _NewsFormScreenState extends State<NewsFormScreen> {
                           controller: _titleController,
                           maxLength: 150,
                           decoration: InputDecoration(
-                            labelText: 'Naslov *',
+                            labelText: tr.titleRequired,
                             border: const OutlineInputBorder(),
                             errorText: _serverError('title'),
                           ),
                           validator: (value) =>
-                              validateLength(value, 3, 150, 'Naslov mora imati između 3 i 150 znakova.'),
+                              validateLength(value, 3, 150, tr.titleLength),
                         ),
                         const SizedBox(height: 4),
                         TextFormField(
@@ -224,13 +224,13 @@ class _NewsFormScreenState extends State<NewsFormScreen> {
                           maxLines: 16,
                           maxLength: 4000,
                           decoration: InputDecoration(
-                            labelText: 'Tekst *',
+                            labelText: tr.textRequired,
                             alignLabelWithHint: true,
                             border: const OutlineInputBorder(),
                             errorText: _serverError('content'),
                           ),
                           validator: (value) =>
-                              validateLength(value, 10, 4000, 'Tekst mora imati između 10 i 4000 znakova.'),
+                              validateLength(value, 10, 4000, tr.textLength),
                         ),
                         const SizedBox(height: 8),
                         Row(
@@ -238,19 +238,19 @@ class _NewsFormScreenState extends State<NewsFormScreen> {
                             OutlinedButton.icon(
                               onPressed: _saving ? null : _pickDateTime,
                               icon: const Icon(Icons.event),
-                              label: Text('Objava: ${Formatters.dateTime(_publishedAt)}'),
+                              label: Text(tr.publishedAtLabel(Formatters.dateTime(_publishedAt))),
                             ),
                             const SizedBox(width: 8),
                             TextButton(
                               onPressed: _saving ? null : () => setState(() => _publishedAt = DateTime.now()),
-                              child: const Text('Odmah'),
+                              child: Text(tr.now),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
                               child: Text(
                                 _isScheduled
-                                    ? 'Zakazano: gosti će novost vidjeti tek od odabranog trenutka.'
-                                    : 'Gosti vide novost odmah nakon čuvanja.',
+                                    ? tr.scheduledHint
+                                    : tr.immediateHint,
                                 style: theme.textTheme.bodySmall?.copyWith(
                                   color: _isScheduled ? AppColors.warning : theme.colorScheme.onSurfaceVariant,
                                 ),
@@ -261,7 +261,7 @@ class _NewsFormScreenState extends State<NewsFormScreen> {
                         if (item != null)
                           Padding(
                             padding: const EdgeInsets.only(top: 12),
-                            child: Text('Autor: ${item.createdByFullName}', style: theme.textTheme.bodySmall),
+                            child: Text(tr.authorLabel(item.createdByFullName), style: theme.textTheme.bodySmall),
                           ),
                         const SizedBox(height: 16),
                         Align(
@@ -271,7 +271,7 @@ class _NewsFormScreenState extends State<NewsFormScreen> {
                             icon: _saving
                                 ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
                                 : Icon(_isScheduled ? Icons.schedule_send_outlined : Icons.send_outlined),
-                            label: Text(_isEdit ? 'Sačuvaj izmjene' : (_isScheduled ? 'Zakaži' : 'Objavi')),
+                            label: Text(_isEdit ? tr.saveChanges : (_isScheduled ? tr.schedule : tr.publish)),
                             style: FilledButton.styleFrom(minimumSize: const Size(180, 48)),
                           ),
                         ),
@@ -287,7 +287,7 @@ class _NewsFormScreenState extends State<NewsFormScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Slika', style: theme.textTheme.titleMedium),
+                      Text(tr.image, style: theme.textTheme.titleMedium),
                       const SizedBox(height: 16),
                       if (item != null)
                         SingleImageEditor(
@@ -306,7 +306,7 @@ class _NewsFormScreenState extends State<NewsFormScreen> {
                           },
                         )
                       else
-                        const Text('Sliku možete dodati nakon što sačuvate novost.'),
+                        Text(tr.imageAfterSaveNews),
                     ],
                   ),
                 ),

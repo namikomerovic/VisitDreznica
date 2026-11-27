@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:visitdreznica_core/visitdreznica_core.dart';
 
 Future<bool> showConfirmDialog(
   BuildContext context, {
   required String title,
   required String message,
-  String confirmLabel = 'Potvrdi',
+  String? confirmLabel,
   bool destructive = false,
 }) async {
   final scheme = Theme.of(context).colorScheme;
@@ -15,11 +16,11 @@ Future<bool> showConfirmDialog(
       title: Text(title),
       content: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 420), child: Text(message)),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Odustani')),
+        TextButton(onPressed: () => Navigator.pop(context, false), child: Text(tr.cancel)),
         FilledButton(
           style: destructive ? FilledButton.styleFrom(backgroundColor: scheme.error, foregroundColor: scheme.onError) : null,
           onPressed: () => Navigator.pop(context, true),
-          child: Text(confirmLabel),
+          child: Text(confirmLabel ?? tr.confirm),
         ),
       ],
     ),

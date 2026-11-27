@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:visitdreznica_core/visitdreznica_core.dart';
 
 class ErrorView extends StatelessWidget {
   const ErrorView({super.key, required this.message, required this.onRetry});
@@ -21,7 +22,7 @@ class ErrorView extends StatelessWidget {
           FilledButton.tonalIcon(
             onPressed: onRetry,
             icon: const Icon(Icons.refresh),
-            label: const Text('Pokušaj ponovo'),
+            label: Text(tr.retry),
           ),
         ],
       ),

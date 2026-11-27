@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
+import '../../widgets/filter_bar.dart';
 import '../../widgets/paged_table.dart';
 import 'activity_form_screen.dart';
 
@@ -64,7 +65,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Row(
+              child: FilterBar(
                 children: [
                   SizedBox(
                     width: 260,
@@ -77,10 +78,10 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                           _filtersChanged,
                         );
                       },
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         isDense: true,
                         prefixIcon: Icon(Icons.search),
-                        hintText: 'Naziv aktivnosti',
+                        hintText: tr.activityName,
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -93,15 +94,15 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                       builder: (context, snapshot) =>
                           DropdownButtonFormField<int?>(
                             initialValue: _categoryId,
-                            decoration: const InputDecoration(
-                              labelText: 'Kategorija',
+                            decoration: InputDecoration(
+                              labelText: tr.category,
                               isDense: true,
                               border: OutlineInputBorder(),
                             ),
                             items: [
-                              const DropdownMenuItem(
+                              DropdownMenuItem(
                                 value: null,
-                                child: Text('Sve kategorije'),
+                                child: Text(tr.allCategories),
                               ),
                               for (final category
                                   in snapshot.data ?? const <LookupItem>[])
@@ -122,17 +123,17 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                     width: 170,
                     child: DropdownButtonFormField<bool?>(
                       initialValue: _isActive,
-                      decoration: const InputDecoration(
-                        labelText: 'Status',
+                      decoration: InputDecoration(
+                        labelText: tr.status,
                         isDense: true,
                         border: OutlineInputBorder(),
                       ),
-                      items: const [
-                        DropdownMenuItem(value: null, child: Text('Sve')),
-                        DropdownMenuItem(value: true, child: Text('Aktivne')),
+                      items: [
+                        DropdownMenuItem(value: null, child: Text(tr.all)),
+                        DropdownMenuItem(value: true, child: Text(tr.activePlural)),
                         DropdownMenuItem(
                           value: false,
-                          child: Text('Neaktivne'),
+                          child: Text(tr.inactivePlural),
                         ),
                       ],
                       onChanged: (value) {
@@ -145,7 +146,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                   FilledButton.icon(
                     onPressed: () => _openForm(),
                     icon: const Icon(Icons.add),
-                    label: const Text('Dodaj aktivnost'),
+                    label: Text(tr.addActivity),
                   ),
                 ],
               ),
@@ -165,7 +166,7 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                   pageSize: pageSize,
                 ),
                 onRowTap: (item) => _openForm(id: item.id),
-                emptyText: 'Nema aktivnosti za prikaz.',
+                emptyText: tr.noActivities,
                 columns: [
                   PagedColumn(
                     header: '',
@@ -190,41 +191,41 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                     ),
                   ),
                   PagedColumn(
-                    header: 'Naziv',
+                    header: tr.name,
                     flex: 5,
                     cell: (item) => Text(item.name),
                   ),
                   PagedColumn(
-                    header: 'Kategorija',
+                    header: tr.category,
                     flex: 2,
                     cell: (item) => Text(item.activityCategoryName),
                   ),
                   PagedColumn(
-                    header: 'Trajanje',
+                    header: tr.duration,
                     flex: 2,
                     alignEnd: true,
                     cell: (item) =>
                         Text(Formatters.duration(item.durationMinutes)),
                   ),
                   PagedColumn(
-                    header: 'Max osoba',
+                    header: tr.maxPeople,
                     flex: 2,
                     alignEnd: true,
                     cell: (item) => Text('${item.maxParticipants}'),
                   ),
                   PagedColumn(
-                    header: 'Cijena / osobi',
+                    header: tr.pricePerPersonHeader,
                     flex: 2,
                     alignEnd: true,
                     cell: (item) => Text(Formatters.money(item.pricePerPerson)),
                   ),
                   PagedColumn(
-                    header: 'Sljedeći termin',
+                    header: tr.nextSlotHeader,
                     flex: 3,
                     alignEnd: true,
                     cell: (item) => Text(
                       item.nextSlotStart == null
-                          ? 'Nema termina'
+                          ? tr.noSlots
                           : Formatters.dateTime(item.nextSlotStart!),
                       style: item.nextSlotStart == null
                           ? TextStyle(color: scheme.error)
@@ -232,11 +233,11 @@ class _ActivitiesScreenState extends State<ActivitiesScreen> {
                     ),
                   ),
                   PagedColumn(
-                    header: 'Status',
+                    header: tr.status,
                     flex: 2,
                     alignEnd: true,
                     cell: (item) => Text(
-                      item.isActive ? 'Aktivna' : 'Neaktivna',
+                      item.isActive ? tr.activeFemale : tr.inactiveFemale,
                       style: TextStyle(
                         color: item.isActive
                             ? AppColors.success

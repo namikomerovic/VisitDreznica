@@ -43,14 +43,14 @@ class PagedTable<T> extends StatefulWidget {
     required this.load,
     this.onRowTap,
     this.query,
-    this.emptyText = 'Nema podataka za prikaz.',
+    this.emptyText,
   });
 
   final List<PagedColumn<T>> columns;
   final Future<PageResult<T>> Function(int page, int pageSize) load;
   final void Function(T item)? onRowTap;
   final Object? query;
-  final String emptyText;
+  final String? emptyText;
 
   @override
   State<PagedTable<T>> createState() => PagedTableState<T>();
@@ -149,7 +149,9 @@ class PagedTableState<T> extends State<PagedTable<T>> {
             if (column.hideBelow == null || constraints.maxWidth >= column.hideBelow!) column,
         ];
 
-        return Column(
+        // Na uskom prozoru tabela zadrži razumnu širinu i skroluje se vodoravno.
+        final minWidth = columns.fold<double>(0, (sum, c) => sum + (c.width ?? 140.0 * c.flex)) + 20;
+        final table = Column(
           children: [
             SizedBox(height: 3, child: _loading ? const LinearProgressIndicator() : null),
             Container(
@@ -161,6 +163,13 @@ class PagedTableState<T> extends State<PagedTable<T>> {
             const Divider(height: 1),
             _buildFooter(theme),
           ],
+        );
+
+        if (constraints.maxWidth >= minWidth) return table;
+
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: SizedBox(width: minWidth, height: constraints.maxHeight, child: table),
         );
       },
     );
@@ -178,7 +187,7 @@ class PagedTableState<T> extends State<PagedTable<T>> {
     }
 
     if (result.items.isEmpty) {
-      return Center(child: Text(widget.emptyText, style: theme.textTheme.bodyLarge));
+      return Center(child: Text(widget.emptyText ?? tr.noData, style: theme.textTheme.bodyLarge));
     }
 
     return ListView.separated(
@@ -208,10 +217,12 @@ class PagedTableState<T> extends State<PagedTable<T>> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       child: Row(
         children: [
-          Flexible(child: Text('Prikazano $first–$last od $total', overflow: TextOverflow.ellipsis)),
+          Flexible(child: Text(tr.shownRange(first, last, total), overflow: TextOverflow.ellipsis)),
           const Spacer(),
-          const Text('Redova po stranici:'),
-          const SizedBox(width: 8),
+          if (MediaQuery.sizeOf(context).width >= 900) ...[
+            Text(tr.rowsPerPage),
+            const SizedBox(width: 8),
+          ],
           DropdownButton<int>(
             value: _pageSize,
             underline: const SizedBox.shrink(),
@@ -224,13 +235,13 @@ class PagedTableState<T> extends State<PagedTable<T>> {
           ),
           const SizedBox(width: 16),
           IconButton(
-            tooltip: 'Prethodna stranica',
+            tooltip: tr.previousPage,
             onPressed: result != null && result.hasPrevious && !_loading ? () => _goTo(_page - 1) : null,
             icon: const Icon(Icons.chevron_left),
           ),
-          Text('Stranica $_page od ${result?.totalPages ?? 1}'),
+          Text(tr.pageOf(_page, result?.totalPages ?? 1)),
           IconButton(
-            tooltip: 'Sljedeća stranica',
+            tooltip: tr.nextPage,
             onPressed: result != null && result.hasNext && !_loading ? () => _goTo(_page + 1) : null,
             icon: const Icon(Icons.chevron_right),
           ),

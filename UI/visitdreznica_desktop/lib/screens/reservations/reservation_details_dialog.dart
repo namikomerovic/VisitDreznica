@@ -72,8 +72,8 @@ class _ReservationDetailsDialogState extends State<ReservationDetailsDialog> {
         title: Text(title),
         content: Text(message),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Odustani')),
-          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('Potvrdi')),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(tr.cancel)),
+          FilledButton(onPressed: () => Navigator.pop(context, true), child: Text(tr.confirm)),
         ],
       ),
     );
@@ -99,25 +99,25 @@ class _ReservationDetailsDialogState extends State<ReservationDetailsDialog> {
               maxLines: 3,
               maxLength: 500,
               decoration: InputDecoration(
-                labelText: 'Razlog',
+                labelText: tr.reason,
                 hintText: hint,
-                helperText: 'Gost će vidjeti razlog u obavijesti i emailu.',
+                helperText: tr.reasonVisibleToGuest,
                 border: const OutlineInputBorder(),
               ),
               validator: (value) =>
-                  (value == null || value.trim().length < 3) ? 'Unesite razlog (najmanje 3 znaka).' : null,
+                  (value == null || value.trim().length < 3) ? tr.enterReason : null,
             ),
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Odustani')),
+          TextButton(onPressed: () => Navigator.pop(context), child: Text(tr.cancel)),
           FilledButton(
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 Navigator.pop(context, controller.text.trim());
               }
             },
-            child: const Text('Potvrdi'),
+            child: Text(tr.confirm),
           ),
         ],
       ),
@@ -125,28 +125,27 @@ class _ReservationDetailsDialogState extends State<ReservationDetailsDialog> {
   }
 
   Future<void> _confirmReservation(Reservation r) async {
-    if (!await _confirm('Potvrda rezervacije', 'Potvrditi rezervaciju gosta ${r.userFullName} (${r.itemName})? Gost će dobiti obavijest.')) return;
-    await _perform('Rezervacija je potvrđena.', () => _service.confirm(r.id));
+    if (!await _confirm(tr.confirmReservationTitle, tr.confirmReservationQuestion(r.userFullName, r.itemName))) return;
+    await _perform(tr.reservationConfirmed, () => _service.confirm(r.id));
   }
 
   Future<void> _rejectReservation(Reservation r) async {
-    final reason = await _askReason('Odbijanje rezervacije', 'npr. Soba nije dostupna zbog radova.');
+    final reason = await _askReason(tr.rejectReservationTitle, tr.rejectReasonExample);
     if (reason == null) return;
-    await _perform('Rezervacija je odbijena.', () => _service.reject(r.id, comment: reason));
+    await _perform(tr.reservationRejected, () => _service.reject(r.id, comment: reason));
   }
 
   Future<void> _completeReservation(Reservation r) async {
-    if (!await _confirm('Završetak rezervacije', 'Označiti rezervaciju gosta ${r.userFullName} kao završenu? '
-        'Gost će dobiti poziv da ostavi recenziju.')) {
+    if (!await _confirm(tr.completeReservationTitle, tr.completeReservationQuestion(r.userFullName))) {
       return;
     }
-    await _perform('Rezervacija je označena kao završena.', () => _service.complete(r.id));
+    await _perform(tr.reservationCompleted, () => _service.complete(r.id));
   }
 
   Future<void> _cancelReservation(Reservation r) async {
-    final reason = await _askReason('Otkazivanje rezervacije', 'npr. Loši vremenski uslovi.');
+    final reason = await _askReason(tr.cancelReservationTitle, tr.cancelReasonExample);
     if (reason == null) return;
-    await _perform('Rezervacija je otkazana.', () => _service.cancel(r.id, comment: reason));
+    await _perform(tr.cancelledNoRefund, () => _service.cancel(r.id, comment: reason));
   }
 
   @override
@@ -168,7 +167,7 @@ class _ReservationDetailsDialogState extends State<ReservationDetailsDialog> {
           children: [
             Text(_loadError!),
             const SizedBox(height: 16),
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Zatvori')),
+            TextButton(onPressed: () => Navigator.pop(context), child: Text(tr.close)),
           ],
         ),
       );
@@ -181,7 +180,7 @@ class _ReservationDetailsDialogState extends State<ReservationDetailsDialog> {
     }
 
     final theme = Theme.of(context);
-    final refundNote = r.isPaid ? ' Uplaćeni iznos se automatski vraća gostu.' : '';
+    final refundNote = r.isPaid ? tr.refundAutomatic : '';
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -191,12 +190,12 @@ class _ReservationDetailsDialogState extends State<ReservationDetailsDialog> {
           padding: const EdgeInsets.fromLTRB(24, 16, 8, 8),
           child: Row(
             children: [
-              Text('Detalji rezervacije', style: theme.textTheme.titleLarge),
+              Text(tr.reservationDetails, style: theme.textTheme.titleLarge),
               const SizedBox(width: 12),
               ReservationStatusChip(status: r.status),
               const Spacer(),
               IconButton(
-                tooltip: 'Zatvori',
+                tooltip: tr.close,
                 onPressed: _busy ? null : () => Navigator.pop(context),
                 icon: const Icon(Icons.close),
               ),
@@ -210,17 +209,17 @@ class _ReservationDetailsDialogState extends State<ReservationDetailsDialog> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _InfoRow('Gost', r.userFullName),
-                _InfoRow('Vrsta', r.type.label),
-                _InfoRow('Stavka', r.itemName),
-                _InfoRow('Termin', r.periodLabel),
-                _InfoRow('Količina', r.quantityLabel),
-                _InfoRow('Iznos', Formatters.money(r.totalPrice)),
-                _InfoRow('Plaćanje', r.isPaid ? 'Plaćeno karticom' : 'Nije plaćeno'),
-                _InfoRow('Kreirana', Formatters.dateTime(r.createdAt)),
-                if (r.note != null && r.note!.trim().isNotEmpty) _InfoRow('Napomena gosta', r.note!),
+                _InfoRow(tr.guest, r.userFullName),
+                _InfoRow(tr.type, r.type.label),
+                _InfoRow(tr.item, r.itemName),
+                _InfoRow(tr.period, r.periodLabel),
+                _InfoRow(tr.quantity, r.quantityLabel),
+                _InfoRow(tr.amount, Formatters.money(r.totalPrice)),
+                _InfoRow(tr.payment, r.isPaid ? tr.paidByCard : tr.notPaid),
+                _InfoRow(tr.created, Formatters.dateTime(r.createdAt)),
+                if (r.note != null && r.note!.trim().isNotEmpty) _InfoRow(tr.guestNote, r.note!),
                 const SizedBox(height: 20),
-                Text('Historija statusa', style: theme.textTheme.titleMedium),
+                Text(tr.statusHistory, style: theme.textTheme.titleMedium),
                 const SizedBox(height: 8),
                 for (final change in r.statusHistory) _HistoryEntry(change: change),
               ],
@@ -257,14 +256,14 @@ class _ReservationDetailsDialogState extends State<ReservationDetailsDialog> {
       actions.add(OutlinedButton.icon(
         onPressed: () => _rejectReservation(r),
         icon: const Icon(Icons.block),
-        label: const Text('Odbij'),
+        label: Text(tr.reject),
       ));
       actions.add(Tooltip(
-        message: r.isPaid ? '' : 'Gost još nije platio rezervaciju.',
+        message: r.isPaid ? '' : tr.guestNotPaid,
         child: FilledButton.icon(
           onPressed: r.isPaid ? () => _confirmReservation(r) : null,
           icon: const Icon(Icons.check),
-          label: const Text('Potvrdi'),
+          label: Text(tr.confirm),
         ),
       ));
     }
@@ -273,18 +272,18 @@ class _ReservationDetailsDialogState extends State<ReservationDetailsDialog> {
       actions.add(OutlinedButton.icon(
         onPressed: () => _cancelReservation(r),
         icon: const Icon(Icons.event_busy),
-        label: const Text('Otkaži'),
+        label: Text(tr.cancelAction),
       ));
       actions.add(FilledButton.icon(
         onPressed: () => _completeReservation(r),
         icon: const Icon(Icons.task_alt),
-        label: const Text('Označi kao završenu'),
+        label: Text(tr.markCompleted),
       ));
     }
 
     if (actions.isEmpty) {
       return Text(
-        'Za rezervaciju sa statusom "${r.status.label}" nema dostupnih akcija.',
+        tr.noActionsForStatus(r.status.label),
         textAlign: TextAlign.center,
         style: Theme.of(context).textTheme.bodySmall,
       );
@@ -297,7 +296,7 @@ class _ReservationDetailsDialogState extends State<ReservationDetailsDialog> {
           Padding(
             padding: const EdgeInsets.only(bottom: 8),
             child: Text(
-              'Odbijanje ili otkazivanje šalje gostu obavijest i email.$refundNote',
+              '${tr.rejectCancelNotifies} $refundNote',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
@@ -350,7 +349,7 @@ class _HistoryEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final title = change.fromStatus == null
-        ? 'Kreirana (${change.toStatus.label})'
+        ? tr.createdWithStatus(change.toStatus.label)
         : '${change.fromStatus!.label} → ${change.toStatus.label}';
 
     return Padding(

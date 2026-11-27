@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
+import '../../widgets/adaptive_row.dart';
 import '../../widgets/dialogs.dart';
 import '../../widgets/error_view.dart';
 
@@ -131,7 +132,7 @@ class _UserFormScreenState extends State<UserFormScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     if (_roleIds.isEmpty) {
-      showMessage(context, 'Odaberite barem jednu ulogu.', isError: true);
+      showMessage(context, tr.selectAtLeastOneRole, isError: true);
       return;
     }
 
@@ -164,11 +165,11 @@ class _UserFormScreenState extends State<UserFormScreen> {
       });
 
       final sessionNote = !wasNew && (!saved.isActive || password != null)
-          ? ' Korisnik je odjavljen sa svih uređaja.'
+          ? ' ${tr.userLoggedOutEverywhere}'
           : '';
       showMessage(
         context,
-        wasNew ? 'Korisnik je dodan.' : 'Izmjene su sačuvane.$sessionNote',
+        wasNew ? tr.userAdded : '${tr.changesSaved}$sessionNote',
       );
       Navigator.pop(context, true);
     } on ApiException catch (e) {
@@ -187,12 +188,9 @@ class _UserFormScreenState extends State<UserFormScreen> {
   Future<void> _delete() async {
     final confirmed = await showConfirmDialog(
       context,
-      title: 'Brisanje korisnika',
-      message:
-          'Obrisati korisnika ${_user!.fullName}? Ovo se ne može poništiti.\n\n'
-          'Ako korisnik ima rezervacije, recenzije ili plaćanja, brisanje nije moguće. '
-          'Tada ga umjesto toga deaktivirajte.',
-      confirmLabel: 'Obriši',
+      title: tr.deletingUser,
+      message: tr.deleteUserQuestion(_user!.fullName),
+      confirmLabel: tr.delete,
       destructive: true,
     );
 
@@ -209,8 +207,8 @@ class _UserFormScreenState extends State<UserFormScreen> {
   String? _serverError(String field) => _serverErrors[field.toLowerCase()];
 
   static String _roleLabel(String role) => switch (role) {
-    AppRoles.admin => 'Administrator',
-    AppRoles.guest => 'Gost',
+    AppRoles.admin => tr.roleAdministrator,
+    AppRoles.guest => tr.roleGuest,
     _ => role,
   };
 
@@ -221,17 +219,17 @@ class _UserFormScreenState extends State<UserFormScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          tooltip: 'Nazad',
+          tooltip: tr.back,
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context, _changed),
         ),
-        title: Text(_user?.fullName ?? 'Novi korisnik'),
+        title: Text(_user?.fullName ?? tr.newUser),
         actions: [
           if (_isEdit && !_isSelf)
             TextButton.icon(
               onPressed: _saving ? null : _delete,
               icon: Icon(Icons.delete_outline, color: scheme.error),
-              label: Text('Obriši', style: TextStyle(color: scheme.error)),
+              label: Text(tr.delete, style: TextStyle(color: scheme.error)),
             ),
           const SizedBox(width: 16),
         ],
@@ -283,24 +281,24 @@ class _UserFormScreenState extends State<UserFormScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Lični podaci',
+                          tr.personalData,
                           style: theme.textTheme.titleMedium,
                         ),
                         const SizedBox(height: 16),
-                        Row(
+                        AdaptiveRow(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
                               child: field(
                                 _firstName,
-                                'Ime *',
+                                tr.firstNameRequiredShort,
                                 'firstName',
                                 maxLength: 50,
                                 validator: (v) => validateLength(
                                   v,
                                   1,
                                   50,
-                                  'Unesite ime (najviše 50 znakova).',
+                                  tr.enterFirstName,
                                 ),
                               ),
                             ),
@@ -308,26 +306,26 @@ class _UserFormScreenState extends State<UserFormScreen> {
                             Expanded(
                               child: field(
                                 _lastName,
-                                'Prezime *',
+                                tr.lastNameRequiredShort,
                                 'lastName',
                                 maxLength: 50,
                                 validator: (v) => validateLength(
                                   v,
                                   1,
                                   50,
-                                  'Unesite prezime (najviše 50 znakova).',
+                                  tr.enterLastName,
                                 ),
                               ),
                             ),
                           ],
                         ),
-                        Row(
+                        AdaptiveRow(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
                               child: field(
                                 _email,
-                                'E-mail *',
+                                tr.emailRequiredLabel,
                                 'email',
                                 validator: validateEmail,
                               ),
@@ -336,9 +334,9 @@ class _UserFormScreenState extends State<UserFormScreen> {
                             Expanded(
                               child: field(
                                 _phone,
-                                'Telefon',
+                                tr.phone,
                                 'phoneNumber',
-                                hint: 'npr. 061 234 567',
+                                hint: tr.phoneExample,
                                 validator: validateOptionalPhone,
                               ),
                             ),
@@ -348,7 +346,7 @@ class _UserFormScreenState extends State<UserFormScreen> {
                         DropdownButtonFormField<int>(
                           initialValue: _cityId,
                           decoration: InputDecoration(
-                            labelText: 'Grad *',
+                            labelText: tr.cityRequiredLabel,
                             border: const OutlineInputBorder(),
                             errorText: _serverError('cityId'),
                           ),
@@ -363,7 +361,7 @@ class _UserFormScreenState extends State<UserFormScreen> {
                           ],
                           onChanged: (value) => setState(() => _cityId = value),
                           validator: (value) =>
-                              value == null ? 'Odaberite grad.' : null,
+                              value == null ? tr.selectCity : null,
                         ),
                       ],
                     ),
@@ -376,16 +374,16 @@ class _UserFormScreenState extends State<UserFormScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Pristup', style: theme.textTheme.titleMedium),
+                        Text(tr.access, style: theme.textTheme.titleMedium),
                         const SizedBox(height: 16),
                         field(
                           _username,
-                          'Korisničko ime *',
+                          tr.usernameRequiredLabel,
                           'username',
                           validator: validateUsername,
                         ),
                         const SizedBox(height: 16),
-                        Row(
+                        AdaptiveRow(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
@@ -394,10 +392,10 @@ class _UserFormScreenState extends State<UserFormScreen> {
                                 obscureText: _obscure,
                                 decoration: InputDecoration(
                                   labelText: _isEdit
-                                      ? 'Nova lozinka'
-                                      : 'Lozinka *',
+                                      ? tr.newPassword
+                                      : tr.passwordRequiredLabel,
                                   helperText: _isEdit
-                                      ? 'Ostavite prazno ako ne mijenjate lozinku.'
+                                      ? tr.leaveEmptyPassword
                                       : null,
                                   border: const OutlineInputBorder(),
                                   errorText: _serverError(
@@ -405,8 +403,8 @@ class _UserFormScreenState extends State<UserFormScreen> {
                                   ),
                                   suffixIcon: IconButton(
                                     tooltip: _obscure
-                                        ? 'Prikaži lozinku'
-                                        : 'Sakrij lozinku',
+                                        ? tr.showPassword
+                                        : tr.hidePassword,
                                     icon: Icon(
                                       _obscure
                                           ? Icons.visibility_outlined
@@ -427,19 +425,19 @@ class _UserFormScreenState extends State<UserFormScreen> {
                                 obscureText: _obscure,
                                 decoration: InputDecoration(
                                   labelText: _isEdit
-                                      ? 'Potvrda nove lozinke'
-                                      : 'Potvrda lozinke *',
+                                      ? tr.confirmNewPasswordOptional
+                                      : tr.confirmPassword,
                                   border: const OutlineInputBorder(),
                                 ),
                                 validator: (value) => value == _password.text
                                     ? null
-                                    : 'Lozinke se ne podudaraju.',
+                                    : tr.passwordsDoNotMatch,
                               ),
                             ),
                           ],
                         ),
                         const SizedBox(height: 20),
-                        Text('Uloge *', style: theme.textTheme.titleSmall),
+                        Text(tr.rolesRequired, style: theme.textTheme.titleSmall),
                         const SizedBox(height: 8),
                         Wrap(
                           spacing: 8,
@@ -461,9 +459,9 @@ class _UserFormScreenState extends State<UserFormScreen> {
                         ),
                         SwitchListTile(
                           contentPadding: EdgeInsets.zero,
-                          title: const Text('Aktivan'),
+                          title: Text(tr.activeMasculine),
                           subtitle: Text(
-                            _isSelf ? 'Ne možete deaktivirati vlastiti račun.' : 'Neaktivan korisnik se ne može prijaviti, a postojeće sesije se odmah prekidaju.',
+                            _isSelf ? tr.cannotDeactivateSelf : tr.inactiveUserHint,
                           ),
                           value: _isActive,
                           onChanged: _isSelf
@@ -472,7 +470,7 @@ class _UserFormScreenState extends State<UserFormScreen> {
                         ),
                         if (user != null)
                           Text(
-                            'Registrovan: ${Formatters.dateTime(user.createdAt)}',
+                            tr.registeredAt(Formatters.dateTime(user.createdAt)),
                             style: theme.textTheme.bodySmall,
                           ),
                       ],
@@ -492,7 +490,7 @@ class _UserFormScreenState extends State<UserFormScreen> {
                           )
                         : const Icon(Icons.save_outlined),
                     label: Text(
-                      _isEdit ? 'Sačuvaj izmjene' : 'Dodaj korisnika',
+                      _isEdit ? tr.saveChanges : tr.addUser,
                     ),
                     style: FilledButton.styleFrom(
                       minimumSize: const Size(180, 48),

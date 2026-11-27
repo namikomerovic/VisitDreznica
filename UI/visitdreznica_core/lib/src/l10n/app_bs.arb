@@ -674,5 +674,635 @@
   "phoneNotEntered": "Telefon nije unesen",
   "markAllRead": "Označi sve kao pročitano",
   "noNotifications": "Nemate obavijesti.",
-  "showOlder": "Prikaži starije"
+  "showOlder": "Prikaži starije",
+  "deleting": "Brisanje",
+  "deleteThisRecord": "Obrisati ovaj zapis?",
+  "imageAdded": "Slika je dodana.",
+  "deletingImage": "Brisanje slike",
+  "deleteCoverImageQuestion": "Obrisati naslovnu sliku? Sljedeća slika će automatski postati naslovna.",
+  "deleteImageQuestion": "Obrisati ovu sliku?",
+  "imageDeleted": "Slika je obrisana.",
+  "cover": "Naslovna",
+  "imageOptions": "Opcije slike",
+  "coverChanged": "Naslovna slika je promijenjena.",
+  "setAsCover": "Postavi kao naslovnu",
+  "addImage": "Dodaj sliku",
+  "imageMax5Mb": "Slika može imati najviše 5 MB.",
+  "clickMapToSetLocation": "Kliknite na kartu da postavite lokaciju",
+  "markAllReadShort": "Označi sve pročitano",
+  "onlyUnread": "Samo nepročitane",
+  "noUnreadNotifications": "Nema nepročitanih obavijesti.",
+  "noNotificationsShort": "Nema obavijesti.",
+  "loadMore": "Učitaj još",
+  "noData": "Nema podataka za prikaz.",
+  "shownRange": "Prikazano {first}–{last} od {total}",
+  "@shownRange": {
+    "placeholders": {
+      "first": {
+        "type": "int"
+      },
+      "last": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "rowsPerPage": "Redova po stranici:",
+  "previousPage": "Prethodna stranica",
+  "pageOf": "Stranica {page} od {pages}",
+  "@pageOf": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "pages": {
+        "type": "int"
+      }
+    }
+  },
+  "nextPage": "Sljedeća stranica",
+  "imageSaved": "Slika je sačuvana.",
+  "removingImage": "Uklanjanje slike",
+  "removeImageQuestion": "Ukloniti sliku?",
+  "remove": "Ukloni",
+  "imageRemoved": "Slika je uklonjena.",
+  "changeImage": "Promijeni sliku",
+  "chooseImage": "Odaberi sliku",
+  "removeImage": "Ukloni sliku",
+  "imageFormatHint": "JPG ili PNG, najviše 5 MB.",
+  "cityName": "Naziv grada",
+  "addCity": "Dodaj grad",
+  "city": "Grad",
+  "postalCode": "Poštanski broj",
+  "country": "Država",
+  "newCity": "Novi grad",
+  "nameRequired": "Naziv *",
+  "nameLength2to100": "Naziv mora imati između 2 i 100 znakova.",
+  "postalCodeExample": "npr. 88000",
+  "postalCodeInvalid": "Poštanski broj ima 4 do 6 cifara.",
+  "countryRequired": "Država *",
+  "selectCountry": "Odaberite državu.",
+  "deleteCityQuestion": "Obrisati grad {name}?\n\nAko ga koriste korisnici, brisanje nije moguće.",
+  "@deleteCityQuestion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "firstOrLastName": "Ime ili prezime",
+  "addGuide": "Dodaj vodiča",
+  "fullName": "Ime i prezime",
+  "newGuide": "Novi vodič",
+  "guide": "Vodič",
+  "firstNameRequiredShort": "Ime *",
+  "lastNameRequiredShort": "Prezime *",
+  "phoneExample": "npr. 061 234 567",
+  "deleteGuideQuestion": "Obrisati vodiča {name}?\n\nAko vodi termine aktivnosti, brisanje nije moguće.",
+  "@deleteGuideQuestion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "searchByName": "Pretraga po nazivu",
+  "name": "Naziv",
+  "newLookup": "Novo: {name}",
+  "@newLookup": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteLookupQuestion": "Obrisati \"{name}\"?\n\nAko se koristi ({usage}), brisanje nije moguće.",
+  "@deleteLookupQuestion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "usage": {
+        "type": "String"
+      }
+    }
+  },
+  "tabRoomTypes": "Tipovi soba",
+  "tabRoomAmenities": "Sadržaji soba",
+  "tabEquipmentTypes": "Tipovi opreme",
+  "tabActivityCategories": "Kategorije aktivnosti",
+  "tabPlaceTypes": "Tipovi mjesta",
+  "tabGuides": "Vodiči",
+  "tabCountries": "Države",
+  "tabCities": "Gradovi",
+  "roomType": "Tip sobe",
+  "roomTypeUsage": "sobe ovog tipa",
+  "roomAmenity": "Sadržaj sobe",
+  "roomAmenityUsage": "sobe s ovim sadržajem",
+  "equipmentType": "Tip opreme",
+  "equipmentTypeUsage": "oprema ovog tipa",
+  "activityCategory": "Kategorija aktivnosti",
+  "activityCategoryUsage": "aktivnosti u ovoj kategoriji",
+  "placeType": "Tip mjesta",
+  "placeTypeUsage": "mjesta ovog tipa",
+  "countryUsage": "gradovi u ovoj državi",
+  "newsPublished": "Novost je objavljena. Sada možete dodati sliku.",
+  "newsScheduled": "Novost je zakazana za {date}. Sada možete dodati sliku.",
+  "@newsScheduled": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "changesSaved": "Izmjene su sačuvane.",
+  "deletingNews": "Brisanje novosti",
+  "deleteNewsQuestion": "Obrisati \"{title}\"? Ovo se ne može poništiti.",
+  "@deleteNewsQuestion": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "newNews": "Nova novost",
+  "titleRequired": "Naslov *",
+  "titleLength": "Naslov mora imati između 3 i 150 znakova.",
+  "textRequired": "Tekst *",
+  "textLength": "Tekst mora imati između 10 i 4000 znakova.",
+  "publishedAtLabel": "Objava: {date}",
+  "@publishedAtLabel": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "now": "Odmah",
+  "scheduledHint": "Zakazano: gosti će novost vidjeti tek od odabranog trenutka.",
+  "immediateHint": "Gosti vide novost odmah nakon čuvanja.",
+  "authorLabel": "Autor: {name}",
+  "@authorLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "saveChanges": "Sačuvaj izmjene",
+  "schedule": "Zakaži",
+  "publish": "Objavi",
+  "image": "Slika",
+  "imageAfterSaveNews": "Sliku možete dodati nakon što sačuvate novost.",
+  "title": "Naslov",
+  "author": "Autor",
+  "publishDate": "Datum objave",
+  "status": "Status",
+  "published": "Objavljeno",
+  "scheduled": "Zakazano",
+  "noComment": "Bez komentara.",
+  "deleteReview": "Obriši recenziju",
+  "deletingReview": "Brisanje recenzije",
+  "deleteGuestReviewQuestion": "Obrisati recenziju gosta {name}? Recenzija nestaje i iz prosječne ocjene.",
+  "@deleteGuestReviewQuestion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "type": "Vrsta",
+  "ratingRange": "Ocjena: {from}–{to} ★",
+  "@ratingRange": {
+    "placeholders": {
+      "from": {
+        "type": "int"
+      },
+      "to": {
+        "type": "int"
+      }
+    }
+  },
+  "onlyBad": "Samo loše (1–2★)",
+  "noReviewsForFilters": "Nema recenzija za odabrane filtere.",
+  "rating": "Ocjena",
+  "item": "Stavka",
+  "comment": "Komentar",
+  "guest": "Gost",
+  "date": "Datum",
+  "noNewsShort": "Nema novosti.",
+  "reportPeriod": "Period izvještaja",
+  "reportPeriodMax": "Period izvještaja može biti najviše godinu dana.",
+  "saveReport": "Sačuvaj izvještaj",
+  "reportSaved": "Izvještaj je sačuvan: {path}",
+  "@reportSaved": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "open": "Otvori",
+  "periodLabel": "Period:",
+  "reportPeriodHint": "Najviše godinu dana. Isti period se koristi za sva tri izvještaja.",
+  "financialReport": "Finansijski izvještaj",
+  "financialReportDescription": "Uplate, povrati i neto prihod po vrsti (smještaj, oprema, aktivnosti) i po mjesecima.",
+  "occupancyReport": "Zauzetost smještaja",
+  "occupancyReportDescription": "Po sobi: zauzete od mogućih noći, popunjenost u %, broj rezervacija, prosječan boravak i prihod.",
+  "activitiesReport": "Aktivnosti i ocjene",
+  "activitiesReportDescription": "Termini, popunjenost i prihod po aktivnosti, te ocjene, favoriti i pregledi mjesta.",
+  "downloadPdf": "Preuzmi PDF",
+  "reportsLanguageNote": "PDF izvještaji se generišu na bosanskom jeziku.",
+  "modelRetrained": "Model je ponovo istreniran.",
+  "tooLittleData": "Premalo podataka za treniranje modela.",
+  "modelTrained": "Model je istreniran i koristi se za preporuke",
+  "modelNotTrained": "Model nije istreniran",
+  "lastTraining": "Zadnje treniranje: {date}. Model se automatski ponovo trenira svakih 6 sati.",
+  "@lastTraining": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "retrain": "Ponovo treniraj",
+  "interactions": "Interakcija",
+  "positiveChoices": "Izbora (pozitivnih)",
+  "guests": "Gostiju",
+  "items": "Stavki",
+  "recommendationQuality": "Kvalitet preporuka (HitRate@{k})",
+  "@recommendationQuality": {
+    "placeholders": {
+      "k": {
+        "type": "int"
+      }
+    }
+  },
+  "hitRateExplanation": "Koliko često je stvarno izabrana (sakrivena) stavka među top {k} preporuka. Evaluirano na {count} izbora",
+  "@hitRateExplanation": {
+    "placeholders": {
+      "k": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "ourModel": "Naš model (Matrix Factorization)",
+  "popularityBaseline": "Popularnost (svima isto)",
+  "randomBaseline": "Slučajan izbor",
+  "selectedParameters": "Izabrani parametri: rank {rank}, λ {lambda}, α {alpha}",
+  "@selectedParameters": {
+    "placeholders": {
+      "rank": {
+        "type": "String"
+      },
+      "lambda": {
+        "type": "String"
+      },
+      "alpha": {
+        "type": "String"
+      }
+    }
+  },
+  "recommenderExplanation": "Preporuke koriste one-class Matrix Factorization (ML.NET) nad interakcijama gostiju: recenzijama, favoritima, rezervacijama i pregledima. Gosti bez dovoljno interakcija dobijaju popularne stavke. Detalji su u dokumentu recommender-dokumentacija.md.",
+  "reason": "Razlog",
+  "reasonVisibleToGuest": "Gost će vidjeti razlog u obavijesti i emailu.",
+  "enterReason": "Unesite razlog (najmanje 3 znaka).",
+  "confirmReservationTitle": "Potvrda rezervacije",
+  "confirmReservationQuestion": "Potvrditi rezervaciju gosta {guest} ({item})? Gost će dobiti obavijest.",
+  "@confirmReservationQuestion": {
+    "placeholders": {
+      "guest": {
+        "type": "String"
+      },
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "reservationConfirmed": "Rezervacija je potvrđena.",
+  "rejectReservationTitle": "Odbijanje rezervacije",
+  "rejectReasonExample": "npr. Soba nije dostupna zbog radova.",
+  "reservationRejected": "Rezervacija je odbijena.",
+  "completeReservationTitle": "Završetak rezervacije",
+  "completeReservationQuestion": "Označiti rezervaciju gosta {guest} kao završenu? Gost će dobiti poziv da ostavi recenziju.",
+  "@completeReservationQuestion": {
+    "placeholders": {
+      "guest": {
+        "type": "String"
+      }
+    }
+  },
+  "reservationCompleted": "Rezervacija je označena kao završena.",
+  "cancelReservationTitle": "Otkazivanje rezervacije",
+  "cancelReasonExample": "npr. Loši vremenski uslovi.",
+  "refundAutomatic": "Uplaćeni iznos se automatski vraća gostu.",
+  "quantity": "Količina",
+  "guestNote": "Napomena gosta",
+  "statusHistory": "Historija statusa",
+  "reject": "Odbij",
+  "guestNotPaid": "Gost još nije platio rezervaciju.",
+  "cancelAction": "Otkaži",
+  "markCompleted": "Označi kao završenu",
+  "noActionsForStatus": "Za rezervaciju sa statusom \"{status}\" nema dostupnih akcija.",
+  "@noActionsForStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "rejectCancelNotifies": "Odbijanje ili otkazivanje šalje gostu obavijest i email.",
+  "createdWithStatus": "Kreirana ({status})",
+  "@createdWithStatus": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "selectPeriod": "Odaberite period",
+  "noReservationsForFilters": "Nema rezervacija za odabrane filtere.",
+  "paid": "Plaćeno",
+  "guestNameHint": "Ime ili prezime gosta",
+  "allTypes": "Sve vrste",
+  "periodFilter": "Period",
+  "clearFilters": "Očisti filtere",
+  "roomAddedAddImages": "Soba je dodana. Sada možete dodati slike.",
+  "deletingRoom": "Brisanje sobe",
+  "deleteRoomQuestion": "Obrisati sobu \"{name}\"? Ovo se ne može poništiti.\n\nAko soba ima rezervacije, brisanje nije moguće. Tada je umjesto toga označite kao neaktivnu.",
+  "@deleteRoomQuestion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "newRoom": "Nova soba",
+  "images": "Slike",
+  "imagesHint": "JPG ili PNG, najviše 5 MB. Naslovna slika se prikazuje u listi i na mobilnoj aplikaciji.",
+  "imagesAfterSaveRoom": "Slike možete dodati nakon što sačuvate sobu.",
+  "addRoom": "Dodaj sobu",
+  "nameLength3to100": "Naziv mora imati između 3 i 100 znakova.",
+  "nameLength3to150": "Naziv mora imati između 3 i 150 znakova.",
+  "roomTypeRequired": "Tip sobe *",
+  "selectRoomType": "Odaberite tip sobe.",
+  "capacityPeopleRequired": "Kapacitet (osoba) *",
+  "between1and10People": "Između 1 i 10 osoba.",
+  "areaRequired": "Površina (m²) *",
+  "between5and200m2": "Između 5 i 200 m².",
+  "pricePerNightRequired": "Cijena po noći (KM) *",
+  "priceExample": "npr. 90,50",
+  "priceNightRange": "Između 1 i 10.000 KM, npr. 90,50.",
+  "roomAmenities": "Sadržaji sobe",
+  "activeFemale": "Aktivna",
+  "inactiveRoomsHint": "Neaktivne sobe gosti ne vide i ne mogu ih rezervisati.",
+  "roomName": "Naziv sobe",
+  "allTypesFilter": "Svi tipovi",
+  "activePlural": "Aktivne",
+  "inactivePlural": "Neaktivne",
+  "noRooms": "Nema soba za prikaz.",
+  "typeShort": "Tip",
+  "capacity": "Kapacitet",
+  "area": "Površina",
+  "pricePerNightHeader": "Cijena / noć",
+  "inactiveFemale": "Neaktivna",
+  "equipmentAddedAddImage": "Oprema je dodana. Sada možete dodati sliku.",
+  "deletingEquipment": "Brisanje opreme",
+  "deleteEquipmentQuestion": "Obrisati \"{name}\"? Ovo se ne može poništiti.\n\nAko oprema ima rezervacije, brisanje nije moguće. Tada je umjesto toga označite kao neaktivnu.",
+  "@deleteEquipmentQuestion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "newEquipment": "Nova oprema",
+  "equipmentTypeRequired": "Tip opreme *",
+  "selectEquipmentType": "Odaberite tip opreme.",
+  "peoplePerPieceRequired": "Osoba po komadu *",
+  "peoplePerPieceHint": "npr. 2 za kajak dvosjed",
+  "between1and4": "Između 1 i 4.",
+  "totalPiecesRequired": "Ukupno komada *",
+  "totalPiecesHint": "koliko ih imate na raspolaganju",
+  "between1and100": "Između 1 i 100.",
+  "firstHourKmRequired": "Prvi sat (KM) *",
+  "additionalHourKmRequired": "Svaki sljedeći sat (KM) *",
+  "fullDayKmRequired": "Cijeli dan (KM) *",
+  "inactiveEquipmentHint": "Neaktivnu opremu gosti ne vide i ne mogu je rezervisati.",
+  "imageAfterSaveEquipment": "Sliku možete dodati nakon što sačuvate opremu.",
+  "addEquipment": "Dodaj opremu",
+  "between1and1000Km": "Između 1 i 1.000 KM.",
+  "fullDayShort": "cijeli dan: {price}",
+  "@fullDayShort": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "guestPaysPerPiece": "Gost plaća po komadu: {prices}",
+  "@guestPaysPerPiece": {
+    "placeholders": {
+      "prices": {
+        "type": "String"
+      }
+    }
+  },
+  "equipmentName": "Naziv opreme",
+  "noEquipment": "Nema opreme za prikaz.",
+  "peoplePerPieceShort": "Osoba / kom.",
+  "pieces": "Komada",
+  "firstHour": "Prvi sat",
+  "additionalHour": "Sljedeći sat",
+  "fullDay": "Cijeli dan",
+  "placeAdded": "Mjesto je dodano ({km} km od smještaja). Sada možete dodati slike.",
+  "@placeAdded": {
+    "placeholders": {
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "deletingPlace": "Brisanje mjesta",
+  "deletePlaceQuestion": "Obrisati \"{name}\"? Ovo se ne može poništiti.\n\nAko mjesto ima recenzije ili je u favoritima gostiju, brisanje nije moguće. Tada ga označite kao neaktivno.",
+  "@deletePlaceQuestion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "newPlace": "Novo mjesto",
+  "placeTypeRequired": "Tip mjesta *",
+  "selectPlaceType": "Odaberite tip mjesta.",
+  "addressSettlement": "Adresa / naselje",
+  "addressExample": "npr. Donja Drežnica",
+  "latitudeRequired": "Geografska širina *",
+  "longitudeRequired": "Geografska dužina *",
+  "selectLocationOnMap": "Odaberite lokaciju na karti.",
+  "distanceFromAccommodation": "Udaljenost od smještaja: {km} km",
+  "@distanceFromAccommodation": {
+    "placeholders": {
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "activeNeuter": "Aktivno",
+  "inactivePlacesHint": "Neaktivna mjesta gosti ne vide.",
+  "imagesAfterSavePlace": "Slike možete dodati nakon što sačuvate mjesto.",
+  "addPlace": "Dodaj mjesto",
+  "placeName": "Naziv mjesta",
+  "allNeuter": "Sva",
+  "noPlaces": "Nema mjesta za prikaz.",
+  "address": "Adresa",
+  "distance": "Udaljenost",
+  "inactiveNeuter": "Neaktivno",
+  "activityName": "Naziv aktivnosti",
+  "category": "Kategorija",
+  "allCategories": "Sve kategorije",
+  "addActivity": "Dodaj aktivnost",
+  "noActivities": "Nema aktivnosti za prikaz.",
+  "duration": "Trajanje",
+  "maxPeople": "Max osoba",
+  "pricePerPersonHeader": "Cijena / osobi",
+  "nextSlotHeader": "Sljedeći termin",
+  "noSlots": "Nema termina",
+  "activityAdded": "Aktivnost je dodana. Sada možete dodati sliku i termine.",
+  "deletingActivity": "Brisanje aktivnosti",
+  "deleteActivityQuestion": "Obrisati \"{name}\"? Ovo se ne može poništiti.\n\nAko aktivnost ima termine ili rezervacije, brisanje nije moguće. Tada je umjesto toga označite kao neaktivnu.",
+  "@deleteActivityQuestion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "newActivity": "Nova aktivnost",
+  "categoryRequired": "Kategorija *",
+  "selectCategory": "Odaberite kategoriju.",
+  "durationMinutesRequired": "Trajanje (minuta) *",
+  "durationHint": "npr. 180 = 3 sata",
+  "between30and720Minutes": "Između 30 i 720 minuta.",
+  "maxParticipantsRequired": "Max učesnika *",
+  "between1and50": "Između 1 i 50.",
+  "pricePerPersonRequired": "Cijena po osobi (KM) *",
+  "meetingPoint": "Mjesto okupljanja",
+  "meetingPointExample": "npr. Plaža ispred smještaja",
+  "inactiveActivityHint": "Neaktivnu aktivnost gosti ne vide i ne mogu je rezervisati.",
+  "imageAfterSaveActivity": "Sliku možete dodati nakon što sačuvate aktivnost.",
+  "slotsAfterSaveActivity": "Termine možete dodati nakon što sačuvate aktivnost.",
+  "slots": "Termini",
+  "onlyUpcoming": "Samo budući",
+  "addSlot": "Dodaj termin",
+  "addGuideFirst": "Prvo dodajte bar jednog vodiča (Šifarnici → Vodiči).",
+  "noUpcomingSlots": "Nema budućih termina.",
+  "noSlotsShort": "Nema termina.",
+  "start": "Početak",
+  "end": "Kraj",
+  "booked": "Zauzeto",
+  "available": "Slobodno",
+  "selectStartDateTime": "Odaberite datum i vrijeme početka.",
+  "slotMustBeFuture": "Termin mora biti u budućnosti.",
+  "deletingSlot": "Brisanje termina",
+  "deleteSlotQuestion": "Obrisati termin {date}?",
+  "@deleteSlotQuestion": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "slot": "Termin",
+  "newSlot": "Novi termin",
+  "slotStartedCannotChange": "Termin je već počeo ili završio i ne može se mijenjati.",
+  "slotHasBookings": "Termin ima {count} rezervisanih mjesta. Vrijeme se ne može mijenjati, a kapacitet ne može biti manji od {count}.",
+  "@slotHasBookings": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dateRequired": "Datum *",
+  "timeRequired": "Vrijeme *",
+  "endsAt": "Završava u {time} (trajanje {duration}).",
+  "@endsAt": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "capacityRequired": "Kapacitet *",
+  "capacityMaxHint": "Najviše {max} (maksimum aktivnosti)",
+  "@capacityMaxHint": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "betweenRange": "Između {min} i {max}.",
+  "@betweenRange": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "guideRequired": "Vodič *",
+  "selectGuide": "Odaberite vodiča.",
+  "selectAtLeastOneRole": "Odaberite barem jednu ulogu.",
+  "userLoggedOutEverywhere": "Korisnik je odjavljen sa svih uređaja.",
+  "userAdded": "Korisnik je dodan.",
+  "deletingUser": "Brisanje korisnika",
+  "deleteUserQuestion": "Obrisati korisnika {name}? Ovo se ne može poništiti.\n\nAko korisnik ima rezervacije, recenzije ili plaćanja, brisanje nije moguće. Tada ga umjesto toga deaktivirajte.",
+  "@deleteUserQuestion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "roleGuest": "Gost",
+  "newUser": "Novi korisnik",
+  "personalData": "Lični podaci",
+  "access": "Pristup",
+  "leaveEmptyPassword": "Ostavite prazno ako ne mijenjate lozinku.",
+  "confirmPassword": "Potvrda lozinke *",
+  "confirmNewPasswordOptional": "Potvrda nove lozinke",
+  "rolesRequired": "Uloge *",
+  "activeMasculine": "Aktivan",
+  "cannotDeactivateSelf": "Ne možete deaktivirati vlastiti račun.",
+  "inactiveUserHint": "Neaktivan korisnik se ne može prijaviti, a postojeće sesije se odmah prekidaju.",
+  "registeredAt": "Registrovan: {date}",
+  "@registeredAt": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "addUser": "Dodaj korisnika",
+  "userSearchHint": "Ime, korisničko ime ili e-mail",
+  "role": "Uloga",
+  "allRoles": "Sve uloge",
+  "allMasculine": "Svi",
+  "activeMasculinePlural": "Aktivni",
+  "inactiveMasculinePlural": "Neaktivni",
+  "noUsers": "Nema korisnika za prikaz.",
+  "roles": "Uloge",
+  "inactiveMasculine": "Neaktivan"
 }

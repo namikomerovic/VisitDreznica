@@ -37,13 +37,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
       firstDate: DateTime(now.year - 3),
       lastDate: DateTime(now.year + 1, 12, 31),
       initialDateRange: _range,
-      helpText: 'Period izvještaja',
+      helpText: tr.reportPeriod,
     );
 
     if (picked == null || !mounted) return;
 
     if (picked.duration.inDays + 1 > _maxDays) {
-      showMessage(context, 'Period izvještaja može biti najviše godinu dana.', isError: true);
+      showMessage(context, tr.reportPeriodMax, isError: true);
       return;
     }
 
@@ -58,7 +58,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
       final fileName = '${kind.filePrefix}_${_fileDate(_range.start)}_${_fileDate(_range.end)}.pdf';
 
       final target = await FilePicker.saveFile(
-        dialogTitle: 'Sačuvaj izvještaj',
+        dialogTitle: tr.saveReport,
         fileName: fileName,
         bytes: bytes,
       );
@@ -75,8 +75,8 @@ class _ReportsScreenState extends State<ReportsScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Izvještaj je sačuvan: ${file.path}'),
-          action: SnackBarAction(label: 'Otvori', onPressed: () => Process.run('explorer', [file.path])),
+          content: Text(tr.reportSaved(file.path)),
+          action: SnackBarAction(label: tr.open, onPressed: () => Process.run('explorer', [file.path])),
         ),
       );
     } on ApiException catch (e) {
@@ -103,7 +103,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
               children: [
                 const Icon(Icons.date_range),
                 const SizedBox(width: 12),
-                Text('Period:', style: theme.textTheme.titleMedium),
+                Text(tr.periodLabel, style: theme.textTheme.titleMedium),
                 const SizedBox(width: 12),
                 OutlinedButton(
                   onPressed: _pickRange,
@@ -112,7 +112,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 const SizedBox(width: 16),
                 Expanded(
                   child: Text(
-                    'Najviše godinu dana. Isti period se koristi za sva tri izvještaja.',
+                    '${tr.reportPeriodHint} ${tr.reportsLanguageNote}',
                     style: theme.textTheme.bodySmall,
                   ),
                 ),
@@ -127,24 +127,24 @@ class _ReportsScreenState extends State<ReportsScreen> {
           children: [
             _ReportCard(
               icon: Icons.payments_outlined,
-              title: 'Finansijski izvještaj',
-              description: 'Uplate, povrati i neto prihod po vrsti (smještaj, oprema, aktivnosti) i po mjesecima.',
+              title: tr.financialReport,
+              description: tr.financialReportDescription,
               loading: _downloading == ReportKind.financial,
               enabled: _downloading == null,
               onDownload: () => _download(ReportKind.financial),
             ),
             _ReportCard(
               icon: Icons.bed_outlined,
-              title: 'Zauzetost smještaja',
-              description: 'Po sobi: zauzete od mogućih noći, popunjenost u %, broj rezervacija, prosječan boravak i prihod.',
+              title: tr.occupancyReport,
+              description: tr.occupancyReportDescription,
               loading: _downloading == ReportKind.occupancy,
               enabled: _downloading == null,
               onDownload: () => _download(ReportKind.occupancy),
             ),
             _ReportCard(
               icon: Icons.hiking_outlined,
-              title: 'Aktivnosti i ocjene',
-              description: 'Termini, popunjenost i prihod po aktivnosti, te ocjene, favoriti i pregledi mjesta.',
+              title: tr.activitiesReport,
+              description: tr.activitiesReportDescription,
               loading: _downloading == ReportKind.activities,
               enabled: _downloading == null,
               onDownload: () => _download(ReportKind.activities),
@@ -196,7 +196,7 @@ class _ReportCard extends StatelessWidget {
                 icon: loading
                     ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
                     : const Icon(Icons.picture_as_pdf_outlined),
-                label: const Text('Preuzmi PDF'),
+                label: Text(tr.downloadPdf),
               ),
             ],
           ),

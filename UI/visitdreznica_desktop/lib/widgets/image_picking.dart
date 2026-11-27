@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:visitdreznica_core/visitdreznica_core.dart';
 
 import 'dialogs.dart';
 
@@ -23,7 +24,7 @@ Future<PickedImage?> pickImage(BuildContext context) async {
 
   if (bytes.length > maxImageBytes) {
     if (context.mounted) {
-      showMessage(context, 'Slika može imati najviše 5 MB.', isError: true);
+      showMessage(context, tr.imageMax5Mb, isError: true);
     }
     return null;
   }

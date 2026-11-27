@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
+import '../../widgets/filter_bar.dart';
 import '../../widgets/paged_table.dart';
 import 'news_form_screen.dart';
 
@@ -57,7 +58,7 @@ class _NewsScreenState extends State<NewsScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Row(
+              child: FilterBar(
                 children: [
                   SizedBox(
                     width: 320,
@@ -70,10 +71,10 @@ class _NewsScreenState extends State<NewsScreen> {
                           () => setState(() => _queryVersion++),
                         );
                       },
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         isDense: true,
                         prefixIcon: Icon(Icons.search),
-                        hintText: 'Naslov',
+                        hintText: tr.title,
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -82,7 +83,7 @@ class _NewsScreenState extends State<NewsScreen> {
                   FilledButton.icon(
                     onPressed: () => _openForm(),
                     icon: const Icon(Icons.add),
-                    label: const Text('Nova novost'),
+                    label: Text(tr.newNews),
                   ),
                 ],
               ),
@@ -98,7 +99,7 @@ class _NewsScreenState extends State<NewsScreen> {
                   pageSize: pageSize,
                 ),
                 onRowTap: (item) => _openForm(id: item.id),
-                emptyText: 'Nema novosti.',
+                emptyText: tr.noNewsShort,
                 columns: [
                   PagedColumn(
                     header: '',
@@ -123,28 +124,28 @@ class _NewsScreenState extends State<NewsScreen> {
                     ),
                   ),
                   PagedColumn(
-                    header: 'Naslov',
+                    header: tr.title,
                     flex: 6,
                     cell: (item) =>
                         Text(item.title, overflow: TextOverflow.ellipsis),
                   ),
                   PagedColumn(
-                    header: 'Autor',
+                    header: tr.author,
                     flex: 2,
                     cell: (item) => Text(item.createdByFullName),
                   ),
                   PagedColumn(
-                    header: 'Datum objave',
+                    header: tr.publishDate,
                     flex: 3,
                     alignEnd: true,
                     cell: (item) => Text(Formatters.dateTime(item.publishedAt)),
                   ),
                   PagedColumn(
-                    header: 'Status',
+                    header: tr.status,
                     flex: 2,
                     alignEnd: true,
                     cell: (item) => Text(
-                      item.isPublished ? 'Objavljeno' : 'Zakazano',
+                      item.isPublished ? tr.published : tr.scheduled,
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: item.isPublished

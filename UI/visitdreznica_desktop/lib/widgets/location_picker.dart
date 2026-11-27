@@ -59,7 +59,7 @@ class LocationPickerState extends State<LocationPicker> {
                       width: 36,
                       height: 36,
                       child: Tooltip(
-                        message: 'Smještaj',
+                        message: tr.accommodation,
                         child: Icon(
                           Icons.house_rounded,
                           color: scheme.primary,
@@ -95,9 +95,9 @@ class LocationPickerState extends State<LocationPicker> {
                   color: Colors.white.withValues(alpha: 0.9),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Text(
-                  'Kliknite na kartu da postavite lokaciju',
-                  style: TextStyle(color: Colors.black87),
+                child: Text(
+                  tr.clickMapToSetLocation,
+                  style: const TextStyle(color: Colors.black87),
                 ),
               ),
             ),

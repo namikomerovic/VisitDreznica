@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
+import '../../widgets/filter_bar.dart';
 import '../../widgets/paged_table.dart';
 import 'place_form_screen.dart';
 
@@ -64,7 +65,7 @@ class _PlacesScreenState extends State<PlacesScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Row(
+              child: FilterBar(
                 children: [
                   SizedBox(
                     width: 260,
@@ -77,10 +78,10 @@ class _PlacesScreenState extends State<PlacesScreen> {
                           _filtersChanged,
                         );
                       },
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         isDense: true,
                         prefixIcon: Icon(Icons.search),
-                        hintText: 'Naziv mjesta',
+                        hintText: tr.placeName,
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -93,15 +94,15 @@ class _PlacesScreenState extends State<PlacesScreen> {
                       builder: (context, snapshot) =>
                           DropdownButtonFormField<int?>(
                             initialValue: _typeId,
-                            decoration: const InputDecoration(
-                              labelText: 'Tip mjesta',
+                            decoration: InputDecoration(
+                              labelText: tr.placeType,
                               isDense: true,
                               border: OutlineInputBorder(),
                             ),
                             items: [
-                              const DropdownMenuItem(
+                              DropdownMenuItem(
                                 value: null,
-                                child: Text('Svi tipovi'),
+                                child: Text(tr.allTypesFilter),
                               ),
                               for (final type
                                   in snapshot.data ?? const <LookupItem>[])
@@ -122,17 +123,17 @@ class _PlacesScreenState extends State<PlacesScreen> {
                     width: 170,
                     child: DropdownButtonFormField<bool?>(
                       initialValue: _isActive,
-                      decoration: const InputDecoration(
-                        labelText: 'Status',
+                      decoration: InputDecoration(
+                        labelText: tr.status,
                         isDense: true,
                         border: OutlineInputBorder(),
                       ),
-                      items: const [
-                        DropdownMenuItem(value: null, child: Text('Sva')),
-                        DropdownMenuItem(value: true, child: Text('Aktivna')),
+                      items: [
+                        DropdownMenuItem(value: null, child: Text(tr.allNeuter)),
+                        DropdownMenuItem(value: true, child: Text(tr.activeNeuter)),
                         DropdownMenuItem(
                           value: false,
-                          child: Text('Neaktivna'),
+                          child: Text(tr.inactiveNeuter),
                         ),
                       ],
                       onChanged: (value) {
@@ -145,7 +146,7 @@ class _PlacesScreenState extends State<PlacesScreen> {
                   FilledButton.icon(
                     onPressed: () => _openForm(),
                     icon: const Icon(Icons.add),
-                    label: const Text('Dodaj mjesto'),
+                    label: Text(tr.addPlace),
                   ),
                 ],
               ),
@@ -165,7 +166,7 @@ class _PlacesScreenState extends State<PlacesScreen> {
                   pageSize: pageSize,
                 ),
                 onRowTap: (place) => _openForm(id: place.id),
-                emptyText: 'Nema mjesta za prikaz.',
+                emptyText: tr.noPlaces,
                 columns: [
                   PagedColumn(
                     header: '',
@@ -190,17 +191,17 @@ class _PlacesScreenState extends State<PlacesScreen> {
                     ),
                   ),
                   PagedColumn(
-                    header: 'Naziv',
+                    header: tr.name,
                     flex: 4,
                     cell: (place) => Text(place.name),
                   ),
                   PagedColumn(
-                    header: 'Tip',
+                    header: tr.typeShort,
                     flex: 2,
                     cell: (place) => Text(place.placeTypeName),
                   ),
                   PagedColumn(
-                    header: 'Adresa',
+                    header: tr.address,
                     flex: 3,
                     cell: (place) => Text(
                       place.address ?? '—',
@@ -208,18 +209,18 @@ class _PlacesScreenState extends State<PlacesScreen> {
                     ),
                   ),
                   PagedColumn(
-                    header: 'Udaljenost',
+                    header: tr.distance,
                     flex: 2,
                     alignEnd: true,
                     cell: (place) =>
                         Text('${Formatters.decimal(place.distanceKm)} km'),
                   ),
                   PagedColumn(
-                    header: 'Status',
+                    header: tr.status,
                     flex: 2,
                     alignEnd: true,
                     cell: (place) => Text(
-                      place.isActive ? 'Aktivno' : 'Neaktivno',
+                      place.isActive ? tr.activeNeuter : tr.inactiveNeuter,
                       style: TextStyle(
                         color: place.isActive
                             ? AppColors.success

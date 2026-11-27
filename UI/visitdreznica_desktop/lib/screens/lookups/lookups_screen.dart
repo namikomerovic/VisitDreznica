@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:visitdreznica_core/visitdreznica_core.dart';
 
 import 'cities_table.dart';
 import 'guides_table.dart';
@@ -7,23 +8,23 @@ import 'lookup_table.dart';
 class LookupsScreen extends StatelessWidget {
   const LookupsScreen({super.key});
 
-  static const _tabs = [
-    'Tipovi soba',
-    'Sadržaji soba',
-    'Tipovi opreme',
-    'Kategorije aktivnosti',
-    'Tipovi mjesta',
-    'Vodiči',
-    'Države',
-    'Gradovi',
-  ];
+  List<String> get _tabs => [
+        tr.tabRoomTypes,
+        tr.tabRoomAmenities,
+        tr.tabEquipmentTypes,
+        tr.tabActivityCategories,
+        tr.tabPlaceTypes,
+        tr.tabGuides,
+        tr.tabCountries,
+        tr.tabCities,
+      ];
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: _tabs.length,
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(MediaQuery.sizeOf(context).width < 900 ? 12 : 24),
         child: Card(
           clipBehavior: Clip.antiAlias,
           child: Column(
@@ -34,26 +35,26 @@ class LookupsScreen extends StatelessWidget {
                 tabs: [for (final tab in _tabs) Tab(text: tab)],
               ),
               const Divider(height: 1),
-              const Expanded(
+              Expanded(
                 child: TabBarView(
                   children: [
-                    LookupTable(resource: 'RoomTypes', singular: 'Tip sobe', usageHint: 'sobe ovog tipa'),
-                    LookupTable(resource: 'Amenities', singular: 'Sadržaj sobe', usageHint: 'sobe s ovim sadržajem'),
-                    LookupTable(resource: 'EquipmentTypes', singular: 'Tip opreme', usageHint: 'oprema ovog tipa'),
+                    LookupTable(resource: 'RoomTypes', singular: tr.roomType, usageHint: tr.roomTypeUsage),
+                    LookupTable(resource: 'Amenities', singular: tr.roomAmenity, usageHint: tr.roomAmenityUsage),
+                    LookupTable(resource: 'EquipmentTypes', singular: tr.equipmentType, usageHint: tr.equipmentTypeUsage),
                     LookupTable(
                       resource: 'ActivityCategories',
-                      singular: 'Kategorija aktivnosti',
-                      usageHint: 'aktivnosti u ovoj kategoriji',
+                      singular: tr.activityCategory,
+                      usageHint: tr.activityCategoryUsage,
                     ),
-                    LookupTable(resource: 'PlaceTypes', singular: 'Tip mjesta', usageHint: 'mjesta ovog tipa'),
-                    GuidesTable(),
+                    LookupTable(resource: 'PlaceTypes', singular: tr.placeType, usageHint: tr.placeTypeUsage),
+                    const GuidesTable(),
                     LookupTable(
                       resource: 'Countries',
-                      singular: 'Država',
-                      usageHint: 'gradovi u ovoj državi',
+                      singular: tr.country,
+                      usageHint: tr.countryUsage,
                       hasDescription: false,
                     ),
-                    CitiesTable(),
+                    const CitiesTable(),
                   ],
                 ),
               ),

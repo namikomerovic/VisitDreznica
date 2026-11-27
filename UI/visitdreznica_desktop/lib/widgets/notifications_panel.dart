@@ -154,15 +154,15 @@ class _NotificationsPanelState extends State<NotificationsPanel> {
           padding: const EdgeInsets.fromLTRB(20, 16, 8, 0),
           child: Row(
             children: [
-              Text('Obavijesti', style: theme.textTheme.titleLarge),
+              Text(tr.notifications, style: theme.textTheme.titleLarge),
               const Spacer(),
               TextButton.icon(
                 onPressed: _items.any((x) => !x.isRead) ? _markAll : null,
                 icon: const Icon(Icons.done_all, size: 18),
-                label: const Text('Označi sve pročitano'),
+                label: Text(tr.markAllReadShort),
               ),
               IconButton(
-                tooltip: 'Zatvori',
+                tooltip: tr.close,
                 onPressed: () => Navigator.pop(context),
                 icon: const Icon(Icons.close),
               ),
@@ -172,7 +172,7 @@ class _NotificationsPanelState extends State<NotificationsPanel> {
         CheckboxListTile(
           dense: true,
           controlAffinity: ListTileControlAffinity.leading,
-          title: const Text('Samo nepročitane'),
+          title: Text(tr.onlyUnread),
           value: _onlyUnread,
           onChanged: (value) {
             _onlyUnread = value ?? false;
@@ -195,7 +195,7 @@ class _NotificationsPanelState extends State<NotificationsPanel> {
             const SizedBox(height: 12),
             OutlinedButton(
               onPressed: _reload,
-              child: const Text('Pokušaj ponovo'),
+              child: Text(tr.retry),
             ),
           ],
         ),
@@ -219,8 +219,8 @@ class _NotificationsPanelState extends State<NotificationsPanel> {
             const SizedBox(height: 8),
             Text(
               _onlyUnread
-                  ? 'Nema nepročitanih obavijesti.'
-                  : 'Nema obavijesti.',
+                  ? tr.noUnreadNotifications
+                  : tr.noNotificationsShort,
             ),
           ],
         ),
@@ -239,7 +239,7 @@ class _NotificationsPanelState extends State<NotificationsPanel> {
                   ? const CircularProgressIndicator()
                   : OutlinedButton(
                       onPressed: _loadMore,
-                      child: const Text('Učitaj još'),
+                      child: Text(tr.loadMore),
                     ),
             ),
           );
@@ -323,7 +323,7 @@ class _NotificationTile extends StatelessWidget {
                   ),
                 ),
               IconButton(
-                tooltip: 'Obriši',
+                tooltip: tr.delete,
                 iconSize: 18,
                 onPressed: onDelete,
                 icon: const Icon(Icons.close),

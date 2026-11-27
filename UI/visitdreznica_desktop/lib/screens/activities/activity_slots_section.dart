@@ -45,10 +45,10 @@ class _ActivitySlotsSectionState extends State<ActivitySlotsSection> {
       children: [
         Row(
           children: [
-            Text('Termini', style: theme.textTheme.titleMedium),
+            Text(tr.slots, style: theme.textTheme.titleMedium),
             const Spacer(),
             FilterChip(
-              label: const Text('Samo budući'),
+              label: Text(tr.onlyUpcoming),
               selected: _onlyUpcoming,
               onSelected: (value) => setState(() => _onlyUpcoming = value),
             ),
@@ -56,14 +56,14 @@ class _ActivitySlotsSectionState extends State<ActivitySlotsSection> {
             FilledButton.tonalIcon(
               onPressed: widget.guides.isEmpty ? null : () => _open(),
               icon: const Icon(Icons.add),
-              label: const Text('Dodaj termin'),
+              label: Text(tr.addSlot),
             ),
           ],
         ),
         if (widget.guides.isEmpty)
           Padding(
             padding: const EdgeInsets.only(top: 8),
-            child: Text('Prvo dodajte bar jednog vodiča (Šifarnici → Vodiči).', style: theme.textTheme.bodySmall),
+            child: Text(tr.addGuideFirst, style: theme.textTheme.bodySmall),
           ),
         const SizedBox(height: 12),
         SizedBox(
@@ -78,19 +78,19 @@ class _ActivitySlotsSectionState extends State<ActivitySlotsSection> {
               pageSize: pageSize,
             ),
             onRowTap: (slot) => _open(slot: slot),
-            emptyText: _onlyUpcoming ? 'Nema budućih termina.' : 'Nema termina.',
+            emptyText: _onlyUpcoming ? tr.noUpcomingSlots : tr.noSlotsShort,
             columns: [
-              PagedColumn(header: 'Početak', flex: 3, cell: (slot) => Text(Formatters.dateTime(slot.startTime))),
-              PagedColumn(header: 'Kraj', flex: 2, cell: (slot) => Text(Formatters.time(slot.endTime))),
-              PagedColumn(header: 'Vodič', flex: 3, cell: (slot) => Text(slot.guideFullName)),
+              PagedColumn(header: tr.start, flex: 3, cell: (slot) => Text(Formatters.dateTime(slot.startTime))),
+              PagedColumn(header: tr.end, flex: 2, cell: (slot) => Text(Formatters.time(slot.endTime))),
+              PagedColumn(header: tr.guide, flex: 3, cell: (slot) => Text(slot.guideFullName)),
               PagedColumn(
-                header: 'Zauzeto',
+                header: tr.booked,
                 flex: 2,
                 alignEnd: true,
                 cell: (slot) => Text('${slot.bookedCount} / ${slot.capacity}'),
               ),
               PagedColumn(
-                header: 'Slobodno',
+                header: tr.available,
                 flex: 2,
                 alignEnd: true,
                 cell: (slot) => Text(

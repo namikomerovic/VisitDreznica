@@ -28,15 +28,15 @@ class CitiesTable extends StatelessWidget {
     }
 
     return SimpleCrudTable<City>(
-      searchHint: 'Naziv grada',
-      addLabel: 'Dodaj grad',
+      searchHint: tr.cityName,
+      addLabel: tr.addCity,
       load: (search, page, pageSize) => service.getPage(name: search, page: page, pageSize: pageSize),
       onAdd: () => open(),
       onEdit: (city) => open(city),
       columns: [
-        PagedColumn(header: 'Grad', flex: 3, cell: (city) => Text(city.name)),
-        PagedColumn(header: 'Poštanski broj', flex: 2, cell: (city) => Text(city.postalCode ?? '—')),
-        PagedColumn(header: 'Država', flex: 3, cell: (city) => Text(city.countryName)),
+        PagedColumn(header: tr.city, flex: 3, cell: (city) => Text(city.name)),
+        PagedColumn(header: tr.postalCode, flex: 2, cell: (city) => Text(city.postalCode ?? '—')),
+        PagedColumn(header: tr.country, flex: 3, cell: (city) => Text(city.countryName)),
       ],
     );
   }
@@ -70,37 +70,37 @@ class _CityDialogState extends State<_CityDialog> {
     final city = widget.city;
 
     return EntityFormDialog(
-      title: city == null ? 'Novi grad' : 'Grad',
+      title: city == null ? tr.newCity : tr.city,
       fieldsBuilder: (serverError) => [
         TextFormField(
           controller: _name,
           autofocus: true,
           maxLength: 100,
-          decoration: InputDecoration(labelText: 'Naziv *', border: const OutlineInputBorder(), errorText: serverError('name')),
-          validator: (value) => validateLength(value, 2, 100, 'Naziv mora imati između 2 i 100 znakova.'),
+          decoration: InputDecoration(labelText: tr.nameRequired, border: const OutlineInputBorder(), errorText: serverError('name')),
+          validator: (value) => validateLength(value, 2, 100, tr.nameLength2to100),
         ),
         const SizedBox(height: 8),
         TextFormField(
           controller: _postalCode,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly, LengthLimitingTextInputFormatter(6)],
           decoration: InputDecoration(
-            labelText: 'Poštanski broj',
-            hintText: 'npr. 88000',
+            labelText: tr.postalCode,
+            hintText: tr.postalCodeExample,
             border: const OutlineInputBorder(),
             errorText: serverError('postalCode'),
           ),
           validator: (value) {
             final length = value?.trim().length ?? 0;
-            return length == 0 || (length >= 4 && length <= 6) ? null : 'Poštanski broj ima 4 do 6 cifara.';
+            return length == 0 || (length >= 4 && length <= 6) ? null : tr.postalCodeInvalid;
           },
         ),
         const SizedBox(height: 16),
         DropdownButtonFormField<int>(
           initialValue: _countryId,
-          decoration: InputDecoration(labelText: 'Država *', border: const OutlineInputBorder(), errorText: serverError('countryId')),
+          decoration: InputDecoration(labelText: tr.countryRequired, border: const OutlineInputBorder(), errorText: serverError('countryId')),
           items: [for (final country in widget.countries) DropdownMenuItem(value: country.id, child: Text(country.name))],
           onChanged: (value) => _countryId = value,
-          validator: (value) => value == null ? 'Odaberite državu.' : null,
+          validator: (value) => value == null ? tr.selectCountry : null,
         ),
       ],
       onSave: () async {
@@ -113,7 +113,7 @@ class _CityDialogState extends State<_CityDialog> {
         }
       },
       onDelete: city == null ? null : () => widget.service.delete(city.id),
-      deleteMessage: city == null ? null : 'Obrisati grad ${city.name}?\n\nAko ga koriste korisnici, brisanje nije moguće.',
+      deleteMessage: city == null ? null : tr.deleteCityQuestion(city.name),
     );
   }
 }

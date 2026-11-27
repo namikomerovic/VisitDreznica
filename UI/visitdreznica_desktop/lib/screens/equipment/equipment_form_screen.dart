@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
 
+import '../../widgets/adaptive_row.dart';
 import '../../widgets/dialogs.dart';
 import '../../widgets/error_view.dart';
 import '../../widgets/single_image_editor.dart';
@@ -140,7 +141,7 @@ class _EquipmentFormScreenState extends State<EquipmentFormScreen> {
         _fill(saved);
       });
 
-      showMessage(context, wasNew ? 'Oprema je dodana. Sada možete dodati sliku.' : 'Izmjene su sačuvane.');
+      showMessage(context, wasNew ? tr.equipmentAddedAddImage : tr.changesSaved);
       if (!wasNew) Navigator.pop(context, true);
     } on ApiException catch (e) {
       if (!mounted) return;
@@ -158,10 +159,9 @@ class _EquipmentFormScreenState extends State<EquipmentFormScreen> {
   Future<void> _delete() async {
     final confirmed = await showConfirmDialog(
       context,
-      title: 'Brisanje opreme',
-      message: 'Obrisati "${_nameController.text}"? Ovo se ne može poništiti.\n\n'
-          'Ako oprema ima rezervacije, brisanje nije moguće. Tada je umjesto toga označite kao neaktivnu.',
-      confirmLabel: 'Obriši',
+      title: tr.deletingEquipment,
+      message: tr.deleteEquipmentQuestion(_nameController.text),
+      confirmLabel: tr.delete,
       destructive: true,
     );
 
@@ -184,17 +184,17 @@ class _EquipmentFormScreenState extends State<EquipmentFormScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          tooltip: 'Nazad',
+          tooltip: tr.back,
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context, _changed),
         ),
-        title: Text(_isEdit ? _nameController.text : 'Nova oprema'),
+        title: Text(_isEdit ? _nameController.text : tr.newEquipment),
         actions: [
           if (_isEdit)
             TextButton.icon(
               onPressed: _saving ? null : _delete,
               icon: Icon(Icons.delete_outline, color: scheme.error),
-              label: Text('Obriši', style: TextStyle(color: scheme.error)),
+              label: Text(tr.delete, style: TextStyle(color: scheme.error)),
             ),
           const SizedBox(width: 16),
         ],
@@ -230,7 +230,7 @@ class _EquipmentFormScreenState extends State<EquipmentFormScreen> {
                     padding: const EdgeInsets.all(24),
                     child: Column(
                       children: [
-                        Row(
+                        AdaptiveRow(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
@@ -239,12 +239,12 @@ class _EquipmentFormScreenState extends State<EquipmentFormScreen> {
                                 controller: _nameController,
                                 maxLength: 100,
                                 decoration: InputDecoration(
-                                  labelText: 'Naziv *',
+                                  labelText: tr.nameRequired,
                                   border: const OutlineInputBorder(),
                                   errorText: _serverError('name'),
                                 ),
                                 validator: (value) =>
-                                    validateLength(value, 3, 100, 'Naziv mora imati između 3 i 100 znakova.'),
+                                    validateLength(value, 3, 100, tr.nameLength3to100),
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -253,7 +253,7 @@ class _EquipmentFormScreenState extends State<EquipmentFormScreen> {
                               child: DropdownButtonFormField<int>(
                                 initialValue: _typeId,
                                 decoration: InputDecoration(
-                                  labelText: 'Tip opreme *',
+                                  labelText: tr.equipmentTypeRequired,
                                   border: const OutlineInputBorder(),
                                   errorText: _serverError('equipmentTypeId'),
                                 ),
@@ -261,13 +261,13 @@ class _EquipmentFormScreenState extends State<EquipmentFormScreen> {
                                   for (final type in _types) DropdownMenuItem(value: type.id, child: Text(type.name)),
                                 ],
                                 onChanged: (value) => setState(() => _typeId = value),
-                                validator: (value) => value == null ? 'Odaberite tip opreme.' : null,
+                                validator: (value) => value == null ? tr.selectEquipmentType : null,
                               ),
                             ),
                           ],
                         ),
                         const SizedBox(height: 4),
-                        Row(
+                        AdaptiveRow(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
@@ -275,12 +275,12 @@ class _EquipmentFormScreenState extends State<EquipmentFormScreen> {
                                 controller: _capacityController,
                                 inputFormatters: digitsOnly,
                                 decoration: InputDecoration(
-                                  labelText: 'Osoba po komadu *',
-                                  helperText: 'npr. 2 za kajak dvosjed',
+                                  labelText: tr.peoplePerPieceRequired,
+                                  helperText: tr.peoplePerPieceHint,
                                   border: const OutlineInputBorder(),
                                   errorText: _serverError('capacity'),
                                 ),
-                                validator: (value) => validateIntRange(value, 1, 4, 'Između 1 i 4.'),
+                                validator: (value) => validateIntRange(value, 1, 4, tr.between1and4),
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -289,27 +289,27 @@ class _EquipmentFormScreenState extends State<EquipmentFormScreen> {
                                 controller: _quantityController,
                                 inputFormatters: digitsOnly,
                                 decoration: InputDecoration(
-                                  labelText: 'Ukupno komada *',
-                                  helperText: 'koliko ih imate na raspolaganju',
+                                  labelText: tr.totalPiecesRequired,
+                                  helperText: tr.totalPiecesHint,
                                   border: const OutlineInputBorder(),
                                   errorText: _serverError('totalQuantity'),
                                 ),
-                                validator: (value) => validateIntRange(value, 1, 100, 'Između 1 i 100.'),
+                                validator: (value) => validateIntRange(value, 1, 100, tr.between1and100),
                               ),
                             ),
                           ],
                         ),
                         const SizedBox(height: 16),
-                        Row(
+                        AdaptiveRow(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(child: _priceField(_firstHourController, 'Prvi sat (KM) *', 'firstHourPrice')),
+                            Expanded(child: _priceField(_firstHourController, tr.firstHourKmRequired, 'firstHourPrice')),
                             const SizedBox(width: 12),
                             Expanded(
-                              child: _priceField(_additionalHourController, 'Svaki sljedeći sat (KM) *', 'additionalHourPrice'),
+                              child: _priceField(_additionalHourController, tr.additionalHourKmRequired, 'additionalHourPrice'),
                             ),
                             const SizedBox(width: 12),
-                            Expanded(child: _priceField(_fullDayController, 'Cijeli dan (KM) *', 'fullDayPrice')),
+                            Expanded(child: _priceField(_fullDayController, tr.fullDayKmRequired, 'fullDayPrice')),
                           ],
                         ),
                         const SizedBox(height: 8),
@@ -324,7 +324,7 @@ class _EquipmentFormScreenState extends State<EquipmentFormScreen> {
                           maxLines: 3,
                           maxLength: 1000,
                           decoration: InputDecoration(
-                            labelText: 'Opis',
+                            labelText: tr.description,
                             alignLabelWithHint: true,
                             border: const OutlineInputBorder(),
                             errorText: _serverError('description'),
@@ -332,8 +332,8 @@ class _EquipmentFormScreenState extends State<EquipmentFormScreen> {
                         ),
                         SwitchListTile(
                           contentPadding: EdgeInsets.zero,
-                          title: const Text('Aktivna'),
-                          subtitle: const Text('Neaktivnu opremu gosti ne vide i ne mogu je rezervisati.'),
+                          title: Text(tr.activeFemale),
+                          subtitle: Text(tr.inactiveEquipmentHint),
                           value: _isActive,
                           onChanged: (value) => setState(() => _isActive = value),
                         ),
@@ -348,7 +348,7 @@ class _EquipmentFormScreenState extends State<EquipmentFormScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Slika', style: theme.textTheme.titleMedium),
+                        Text(tr.image, style: theme.textTheme.titleMedium),
                         const SizedBox(height: 16),
                         if (_isEdit)
                           SingleImageEditor(
@@ -371,7 +371,7 @@ class _EquipmentFormScreenState extends State<EquipmentFormScreen> {
                             },
                           )
                         else
-                          const Text('Sliku možete dodati nakon što sačuvate opremu.'),
+                          Text(tr.imageAfterSaveEquipment),
                       ],
                     ),
                   ),
@@ -384,7 +384,7 @@ class _EquipmentFormScreenState extends State<EquipmentFormScreen> {
                     icon: _saving
                         ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
                         : const Icon(Icons.save_outlined),
-                    label: Text(_isEdit ? 'Sačuvaj izmjene' : 'Dodaj opremu'),
+                    label: Text(_isEdit ? tr.saveChanges : tr.addEquipment),
                     style: FilledButton.styleFrom(minimumSize: const Size(180, 48)),
                   ),
                 ),
@@ -406,7 +406,7 @@ class _EquipmentFormScreenState extends State<EquipmentFormScreen> {
         border: const OutlineInputBorder(),
         errorText: _serverError(field),
       ),
-      validator: (value) => validateDecimalRange(value, 1, 1000, 'Između 1 i 1.000 KM.'),
+      validator: (value) => validateDecimalRange(value, 1, 1000, tr.between1and1000Km),
     );
   }
 }
@@ -429,7 +429,7 @@ class _PricePreview extends StatelessWidget {
     final parts = [
       for (final hours in [1, 2, 3, 4])
         '$hours h: ${Formatters.money(EquipmentPricing.priceFor(hours, firstHour: firstHour!, additionalHour: additionalHour!, fullDay: fullDay!))}',
-      'cijeli dan: ${Formatters.money(fullDay!)}',
+      tr.fullDayShort(Formatters.money(fullDay!)),
     ];
 
     return Container(
@@ -439,7 +439,7 @@ class _PricePreview extends StatelessWidget {
         color: theme.colorScheme.secondaryContainer.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Text('Gost plaća po komadu: ${parts.join('  ·  ')}', style: theme.textTheme.bodyMedium),
+      child: Text(tr.guestPaysPerPiece(parts.join('  ·  ')), style: theme.textTheme.bodyMedium),
     );
   }
 }

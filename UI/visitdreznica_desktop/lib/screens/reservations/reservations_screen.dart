@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
+import '../../widgets/filter_bar.dart';
 import '../../widgets/paged_table.dart';
 import '../../widgets/reservation_status_chip.dart';
 import 'reservation_details_dialog.dart';
@@ -64,7 +65,7 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
       firstDate: DateTime(now.year - 2),
       lastDate: DateTime(now.year + 2),
       initialDateRange: _range,
-      helpText: 'Odaberite period',
+      helpText: tr.selectPeriod,
     );
 
     if (picked != null) {
@@ -104,26 +105,26 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                 query: _queryVersion,
                 load: (page, pageSize) => _service.getPage(_search, page: page, pageSize: pageSize),
                 onRowTap: _openDetails,
-                emptyText: _hasFilters ? 'Nema rezervacija za odabrane filtere.' : 'Još nema rezervacija.',
+                emptyText: _hasFilters ? tr.noReservationsForFilters : tr.noReservationsYet,
                 columns: [
-                  PagedColumn(header: 'Gost', flex: 3, cell: (r) => Text(r.userFullName)),
-                  PagedColumn(header: 'Vrsta', flex: 2, hideBelow: 1000, cell: (r) => Text(r.type.label)),
+                  PagedColumn(header: tr.guest, flex: 3, cell: (r) => Text(r.userFullName)),
+                  PagedColumn(header: tr.type, flex: 2, hideBelow: 1000, cell: (r) => Text(r.type.label)),
                   PagedColumn(
-                    header: 'Stavka',
+                    header: tr.item,
                     flex: 4,
                     cell: (r) => Text(r.itemName, overflow: TextOverflow.ellipsis),
                   ),
-                  PagedColumn(header: 'Termin', flex: 4, cell: (r) => Text(r.periodLabel)),
+                  PagedColumn(header: tr.period, flex: 4, cell: (r) => Text(r.periodLabel)),
                   PagedColumn(
-                    header: 'Iznos',
+                    header: tr.amount,
                     width: 110, alignEnd: true,
                     cell: (r) => Text(Formatters.money(r.totalPrice)),
                   ),
                   PagedColumn(
-                    header: 'Plaćeno',
+                    header: tr.paid,
                     width: 80, center: true,
                     cell: (r) => Tooltip(
-                      message: r.isPaid ? 'Plaćeno' : 'Nije plaćeno',
+                      message: r.isPaid ? tr.paid : tr.notPaid,
                       child: Icon(
                         r.isPaid ? Icons.check_circle : Icons.radio_button_unchecked,
                         size: 20,
@@ -132,7 +133,7 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                     ),
                   ),
                   PagedColumn(
-                    header: 'Status',
+                    header: tr.status,
                     width: 130, alignEnd: true,
                     cell: (r) => ReservationStatusChip(status: r.status),
                   ),
@@ -151,17 +152,17 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          FilterBar(
             children: [
               SizedBox(
                 width: 280,
                 child: TextField(
                   controller: _guestController,
                   onChanged: _onGuestChanged,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     isDense: true,
                     prefixIcon: Icon(Icons.search),
-                    hintText: 'Ime ili prezime gosta',
+                    hintText: tr.guestNameHint,
                     border: OutlineInputBorder(),
                   ),
                 ),
@@ -172,13 +173,13 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                 child: DropdownButtonFormField<ReservationType?>(
                   initialValue: _type,
                   isDense: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Vrsta',
+                  decoration: InputDecoration(
+                    labelText: tr.type,
                     isDense: true,
                     border: OutlineInputBorder(),
                   ),
                   items: [
-                    const DropdownMenuItem(value: null, child: Text('Sve vrste')),
+                    DropdownMenuItem(value: null, child: Text(tr.allTypes)),
                     for (final type in ReservationType.values) DropdownMenuItem(value: type, child: Text(type.label)),
                   ],
                   onChanged: (value) {
@@ -192,7 +193,7 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                 onPressed: _pickRange,
                 icon: const Icon(Icons.date_range),
                 label: Text(_range == null
-                    ? 'Period'
+                    ? tr.periodFilter
                     : '${Formatters.date(_range!.start)} – ${Formatters.date(_range!.end)}'),
               ),
               const Spacer(),
@@ -200,10 +201,10 @@ class _ReservationsScreenState extends State<ReservationsScreen> {
                 TextButton.icon(
                   onPressed: _clearFilters,
                   icon: const Icon(Icons.filter_alt_off_outlined),
-                  label: const Text('Očisti filtere'),
+                  label: Text(tr.clearFilters),
                 ),
               IconButton(
-                tooltip: 'Osvježi',
+                tooltip: tr.refresh,
                 onPressed: () => _tableKey.currentState?.reload(),
                 icon: const Icon(Icons.refresh),
               ),

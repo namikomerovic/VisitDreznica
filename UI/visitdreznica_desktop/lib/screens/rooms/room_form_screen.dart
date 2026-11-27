@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
+import '../../widgets/adaptive_row.dart';
 import '../../widgets/dialogs.dart';
 import '../../widgets/error_view.dart';
 import '../../widgets/image_gallery.dart';
@@ -136,7 +137,7 @@ class _RoomFormScreenState extends State<RoomFormScreen> {
         _fill(saved);
       });
 
-      showMessage(context, wasNew ? 'Soba je dodana. Sada možete dodati slike.' : 'Izmjene su sačuvane.');
+      showMessage(context, wasNew ? tr.roomAddedAddImages : tr.changesSaved);
       if (!wasNew) Navigator.pop(context, true);
     } on ApiException catch (e) {
       if (!mounted) return;
@@ -157,10 +158,9 @@ class _RoomFormScreenState extends State<RoomFormScreen> {
   Future<void> _delete() async {
     final confirmed = await showConfirmDialog(
       context,
-      title: 'Brisanje sobe',
-      message: 'Obrisati sobu "${_nameController.text}"? Ovo se ne može poništiti.\n\n'
-          'Ako soba ima rezervacije, brisanje nije moguće. Tada je umjesto toga označite kao neaktivnu.',
-      confirmLabel: 'Obriši',
+      title: tr.deletingRoom,
+      message: tr.deleteRoomQuestion(_nameController.text),
+      confirmLabel: tr.delete,
       destructive: true,
     );
 
@@ -198,17 +198,17 @@ class _RoomFormScreenState extends State<RoomFormScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          tooltip: 'Nazad',
+          tooltip: tr.back,
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context, _changed),
         ),
-        title: Text(_isEdit ? _nameController.text : 'Nova soba'),
+        title: Text(_isEdit ? _nameController.text : tr.newRoom),
         actions: [
           if (_isEdit)
             TextButton.icon(
               onPressed: _saving ? null : _delete,
               icon: Icon(Icons.delete_outline, color: Theme.of(context).colorScheme.error),
-              label: Text('Obriši', style: TextStyle(color: Theme.of(context).colorScheme.error)),
+              label: Text(tr.delete, style: TextStyle(color: Theme.of(context).colorScheme.error)),
             ),
           const SizedBox(width: 16),
         ],
@@ -241,7 +241,8 @@ class _RoomFormScreenState extends State<RoomFormScreen> {
                 Card(
                   child: Padding(
                     padding: const EdgeInsets.all(24),
-                    child: Row(
+                    child: AdaptiveRow(
+                      breakpoint: 800,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(flex: 3, child: _buildFields()),
@@ -258,9 +259,9 @@ class _RoomFormScreenState extends State<RoomFormScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Slike', style: theme.textTheme.titleMedium),
+                        Text(tr.images, style: theme.textTheme.titleMedium),
                         const SizedBox(height: 4),
-                        Text('JPG ili PNG, najviše 5 MB. Naslovna slika se prikazuje u listi i na mobilnoj aplikaciji.',
+                        Text(tr.imagesHint,
                             style: theme.textTheme.bodySmall),
                         const SizedBox(height: 16),
                         if (_isEdit)
@@ -281,7 +282,7 @@ class _RoomFormScreenState extends State<RoomFormScreen> {
                             },
                           )
                         else
-                          const Text('Slike možete dodati nakon što sačuvate sobu.'),
+                          Text(tr.imagesAfterSaveRoom),
                       ],
                     ),
                   ),
@@ -294,7 +295,7 @@ class _RoomFormScreenState extends State<RoomFormScreen> {
                     icon: _saving
                         ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
                         : const Icon(Icons.save_outlined),
-                    label: Text(_isEdit ? 'Sačuvaj izmjene' : 'Dodaj sobu'),
+                    label: Text(_isEdit ? tr.saveChanges : tr.addRoom),
                     style: FilledButton.styleFrom(minimumSize: const Size(180, 48)),
                   ),
                 ),
@@ -315,29 +316,29 @@ class _RoomFormScreenState extends State<RoomFormScreen> {
           controller: _nameController,
           maxLength: 100,
           decoration: InputDecoration(
-            labelText: 'Naziv *',
+            labelText: tr.nameRequired,
             border: const OutlineInputBorder(),
             errorText: _serverError('name'),
           ),
           validator: (value) {
             final length = value?.trim().length ?? 0;
-            return length < 3 || length > 100 ? 'Naziv mora imati između 3 i 100 znakova.' : null;
+            return length < 3 || length > 100 ? tr.nameLength3to100 : null;
           },
         ),
         const SizedBox(height: 12),
         DropdownButtonFormField<int>(
           initialValue: _roomTypeId,
           decoration: InputDecoration(
-            labelText: 'Tip sobe *',
+            labelText: tr.roomTypeRequired,
             border: const OutlineInputBorder(),
             errorText: _serverError('roomTypeId'),
           ),
           items: [for (final type in _roomTypes) DropdownMenuItem(value: type.id, child: Text(type.name))],
           onChanged: (value) => setState(() => _roomTypeId = value),
-          validator: (value) => value == null ? 'Odaberite tip sobe.' : null,
+          validator: (value) => value == null ? tr.selectRoomType : null,
         ),
         const SizedBox(height: 16),
-        Row(
+        AdaptiveRow(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
@@ -345,11 +346,11 @@ class _RoomFormScreenState extends State<RoomFormScreen> {
                 controller: _capacityController,
                 inputFormatters: digitsOnly,
                 decoration: InputDecoration(
-                  labelText: 'Kapacitet (osoba) *',
+                  labelText: tr.capacityPeopleRequired,
                   border: const OutlineInputBorder(),
                   errorText: _serverError('capacity'),
                 ),
-                validator: (value) => _intInRange(value, 1, 10, 'Između 1 i 10 osoba.'),
+                validator: (value) => _intInRange(value, 1, 10, tr.between1and10People),
               ),
             ),
             const SizedBox(width: 12),
@@ -358,11 +359,11 @@ class _RoomFormScreenState extends State<RoomFormScreen> {
                 controller: _areaController,
                 inputFormatters: digitsOnly,
                 decoration: InputDecoration(
-                  labelText: 'Površina (m²) *',
+                  labelText: tr.areaRequired,
                   border: const OutlineInputBorder(),
                   errorText: _serverError('areaSquareMeters'),
                 ),
-                validator: (value) => _intInRange(value, 5, 200, 'Između 5 i 200 m².'),
+                validator: (value) => _intInRange(value, 5, 200, tr.between5and200m2),
               ),
             ),
             const SizedBox(width: 12),
@@ -371,14 +372,14 @@ class _RoomFormScreenState extends State<RoomFormScreen> {
                 controller: _priceController,
                 inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))],
                 decoration: InputDecoration(
-                  labelText: 'Cijena po noći (KM) *',
-                  hintText: 'npr. 90,50',
+                  labelText: tr.pricePerNightRequired,
+                  hintText: tr.priceExample,
                   border: const OutlineInputBorder(),
                   errorText: _serverError('pricePerNight'),
                 ),
                 validator: (value) {
                   final price = _parseDecimal(value);
-                  return price == null || price < 1 || price > 10000 ? 'Između 1 i 10.000 KM, npr. 90,50.' : null;
+                  return price == null || price < 1 || price > 10000 ? tr.priceNightRange : null;
                 },
               ),
             ),
@@ -390,7 +391,7 @@ class _RoomFormScreenState extends State<RoomFormScreen> {
           maxLines: 4,
           maxLength: 1000,
           decoration: InputDecoration(
-            labelText: 'Opis',
+            labelText: tr.description,
             alignLabelWithHint: true,
             border: const OutlineInputBorder(),
             errorText: _serverError('description'),
@@ -404,7 +405,7 @@ class _RoomFormScreenState extends State<RoomFormScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Sadržaji sobe', style: theme.textTheme.titleMedium),
+        Text(tr.roomAmenities, style: theme.textTheme.titleMedium),
         const SizedBox(height: 12),
         Wrap(
           spacing: 8,
@@ -423,8 +424,8 @@ class _RoomFormScreenState extends State<RoomFormScreen> {
         const SizedBox(height: 24),
         SwitchListTile(
           contentPadding: EdgeInsets.zero,
-          title: const Text('Aktivna'),
-          subtitle: const Text('Neaktivne sobe gosti ne vide i ne mogu ih rezervisati.'),
+          title: Text(tr.activeFemale),
+          subtitle: Text(tr.inactiveRoomsHint),
           value: _isActive,
           onChanged: (value) => setState(() => _isActive = value),
         ),

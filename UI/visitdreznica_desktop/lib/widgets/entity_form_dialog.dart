@@ -48,9 +48,9 @@ class _EntityFormDialogState extends State<EntityFormDialog> {
   Future<void> _delete() async {
     final confirmed = await showConfirmDialog(
       context,
-      title: 'Brisanje',
-      message: widget.deleteMessage ?? 'Obrisati ovaj zapis?',
-      confirmLabel: 'Obriši',
+      title: tr.deleting,
+      message: widget.deleteMessage ?? tr.deleteThisRecord,
+      confirmLabel: tr.delete,
       destructive: true,
     );
 
@@ -110,14 +110,14 @@ class _EntityFormDialogState extends State<EntityFormDialog> {
         if (widget.onDelete != null)
           TextButton(
             onPressed: _busy ? null : _delete,
-            child: Text('Obriši', style: TextStyle(color: scheme.error)),
+            child: Text(tr.delete, style: TextStyle(color: scheme.error)),
           ),
-        TextButton(onPressed: _busy ? null : () => Navigator.pop(context, false), child: const Text('Odustani')),
+        TextButton(onPressed: _busy ? null : () => Navigator.pop(context, false), child: Text(tr.cancel)),
         FilledButton(
           onPressed: _busy ? null : _save,
           child: _busy
               ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
-              : const Text('Sačuvaj'),
+              : Text(tr.save),
         ),
       ],
     );

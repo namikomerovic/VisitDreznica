@@ -40,16 +40,16 @@ class LookupTable extends StatelessWidget {
     }
 
     return SimpleCrudTable<LookupItem>(
-      searchHint: 'Pretraga po nazivu',
-      addLabel: 'Dodaj',
+      searchHint: tr.searchByName,
+      addLabel: tr.add,
       load: (search, page, pageSize) => service.getPage(name: search, page: page, pageSize: pageSize),
       onAdd: () => open(),
       onEdit: (item) => open(item),
       columns: [
-        PagedColumn(header: 'Naziv', flex: 3, cell: (item) => Text(item.name)),
+        PagedColumn(header: tr.name, flex: 3, cell: (item) => Text(item.name)),
         if (hasDescription)
           PagedColumn(
-            header: 'Opis',
+            header: tr.description,
             flex: 6,
             cell: (item) => Text(item.description ?? '—', overflow: TextOverflow.ellipsis),
           ),
@@ -93,14 +93,14 @@ class _LookupDialogState extends State<_LookupDialog> {
     final item = widget.item;
 
     return EntityFormDialog(
-      title: item == null ? 'Novo: ${widget.singular}' : widget.singular,
+      title: item == null ? tr.newLookup(widget.singular) : widget.singular,
       fieldsBuilder: (serverError) => [
         TextFormField(
           controller: _name,
           autofocus: true,
           maxLength: 100,
-          decoration: InputDecoration(labelText: 'Naziv *', border: const OutlineInputBorder(), errorText: serverError('name')),
-          validator: (value) => validateLength(value, 2, 100, 'Naziv mora imati između 2 i 100 znakova.'),
+          decoration: InputDecoration(labelText: tr.nameRequired, border: const OutlineInputBorder(), errorText: serverError('name')),
+          validator: (value) => validateLength(value, 2, 100, tr.nameLength2to100),
         ),
         if (widget.hasDescription) ...[
           const SizedBox(height: 8),
@@ -109,7 +109,7 @@ class _LookupDialogState extends State<_LookupDialog> {
             maxLines: 3,
             maxLength: 300,
             decoration: InputDecoration(
-              labelText: 'Opis',
+              labelText: tr.description,
               border: const OutlineInputBorder(),
               errorText: serverError('description'),
             ),
@@ -129,7 +129,7 @@ class _LookupDialogState extends State<_LookupDialog> {
       onDelete: item == null ? null : () => widget.service.delete(item.id),
       deleteMessage: item == null
           ? null
-          : 'Obrisati "${item.name}"?\n\nAko se koristi (${widget.usageHint}), brisanje nije moguće.',
+          : tr.deleteLookupQuestion(item.name, widget.usageHint),
     );
   }
 }

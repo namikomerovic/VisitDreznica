@@ -106,12 +106,12 @@ class _SlotDialogState extends State<SlotDialog> {
     final start = _start;
 
     if (start == null) {
-      setState(() => _error = 'Odaberite datum i vrijeme početka.');
+      setState(() => _error = tr.selectStartDateTime);
       return;
     }
 
     if (_canChangeTime && !start.isAfter(DateTime.now())) {
-      setState(() => _error = 'Termin mora biti u budućnosti.');
+      setState(() => _error = tr.slotMustBeFuture);
       return;
     }
 
@@ -141,9 +141,9 @@ class _SlotDialogState extends State<SlotDialog> {
   Future<void> _delete() async {
     final confirmed = await showConfirmDialog(
       context,
-      title: 'Brisanje termina',
-      message: 'Obrisati termin ${Formatters.dateTime(_slot!.startTime)}?',
-      confirmLabel: 'Obriši',
+      title: tr.deletingSlot,
+      message: tr.deleteSlotQuestion(Formatters.dateTime(_slot!.startTime)),
+      confirmLabel: tr.delete,
       destructive: true,
     );
 
@@ -168,7 +168,7 @@ class _SlotDialogState extends State<SlotDialog> {
     final end = start?.add(Duration(minutes: widget.activity.durationMinutes));
 
     return AlertDialog(
-      title: Text(_isEdit ? 'Termin' : 'Novi termin'),
+      title: Text(_isEdit ? tr.slot : tr.newSlot),
       content: SizedBox(
         width: 440,
         child: Form(
@@ -180,17 +180,16 @@ class _SlotDialogState extends State<SlotDialog> {
               Text(widget.activity.name, style: theme.textTheme.titleSmall),
               const SizedBox(height: 12),
               if (_started)
-                const _Info('Termin je već počeo ili završio i ne može se mijenjati.')
+                _Info(tr.slotStartedCannotChange)
               else if (_booked > 0)
-                _Info('Termin ima $_booked rezervisanih mjesta. Vrijeme se ne može mijenjati, '
-                    'a kapacitet ne može biti manji od $_booked.'),
+                _Info(tr.slotHasBookings(_booked)),
               Row(
                 children: [
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: _canChangeTime && !_saving ? _pickDate : null,
                       icon: const Icon(Icons.calendar_today_outlined),
-                      label: Text(_date == null ? 'Datum *' : Formatters.date(_date!)),
+                      label: Text(_date == null ? tr.dateRequired : Formatters.date(_date!)),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -198,7 +197,7 @@ class _SlotDialogState extends State<SlotDialog> {
                     child: OutlinedButton.icon(
                       onPressed: _canChangeTime && !_saving ? _pickTime : null,
                       icon: const Icon(Icons.schedule),
-                      label: Text(_time == null ? 'Vrijeme *' : _time!.format(context)),
+                      label: Text(_time == null ? tr.timeRequired : _time!.format(context)),
                     ),
                   ),
                 ],
@@ -206,7 +205,7 @@ class _SlotDialogState extends State<SlotDialog> {
               if (end != null) ...[
                 const SizedBox(height: 8),
                 Text(
-                  'Završava u ${Formatters.time(end)} (trajanje ${Formatters.duration(widget.activity.durationMinutes)}).',
+                  tr.endsAt(Formatters.time(end), Formatters.duration(widget.activity.durationMinutes)),
                   style: theme.textTheme.bodySmall,
                 ),
               ],
@@ -216,23 +215,23 @@ class _SlotDialogState extends State<SlotDialog> {
                 enabled: !_started && !_saving,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 decoration: InputDecoration(
-                  labelText: 'Kapacitet *',
-                  helperText: 'Najviše ${widget.activity.maxParticipants} (maksimum aktivnosti)',
+                  labelText: tr.capacityRequired,
+                  helperText: tr.capacityMaxHint(widget.activity.maxParticipants),
                   border: const OutlineInputBorder(),
                 ),
                 validator: (value) {
                   final min = _booked > 0 ? _booked : 1;
                   return validateIntRange(value, min, widget.activity.maxParticipants,
-                      'Između $min i ${widget.activity.maxParticipants}.');
+                      tr.betweenRange(min, widget.activity.maxParticipants));
                 },
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<int>(
                 initialValue: _guideId,
-                decoration: const InputDecoration(labelText: 'Vodič *', border: OutlineInputBorder()),
+                decoration: InputDecoration(labelText: tr.guideRequired, border: const OutlineInputBorder()),
                 items: [for (final guide in widget.guides) DropdownMenuItem(value: guide.id, child: Text(guide.fullName))],
                 onChanged: _started || _saving ? null : (value) => setState(() => _guideId = value),
-                validator: (value) => value == null ? 'Odaberite vodiča.' : null,
+                validator: (value) => value == null ? tr.selectGuide : null,
               ),
               if (_error != null) ...[
                 const SizedBox(height: 12),
@@ -253,14 +252,14 @@ class _SlotDialogState extends State<SlotDialog> {
         if (_isEdit && !_started && _booked == 0)
           TextButton(
             onPressed: _saving ? null : _delete,
-            child: Text('Obriši', style: TextStyle(color: theme.colorScheme.error)),
+            child: Text(tr.delete, style: TextStyle(color: theme.colorScheme.error)),
           ),
-        TextButton(onPressed: _saving ? null : () => Navigator.pop(context, false), child: const Text('Odustani')),
+        TextButton(onPressed: _saving ? null : () => Navigator.pop(context, false), child: Text(tr.cancel)),
         FilledButton(
           onPressed: _started || _saving ? null : _save,
           child: _saving
               ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
-              : const Text('Sačuvaj'),
+              : Text(tr.save),
         ),
       ],
     );

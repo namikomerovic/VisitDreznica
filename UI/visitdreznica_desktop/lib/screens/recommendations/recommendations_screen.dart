@@ -43,7 +43,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
       final info = await _service.train();
       if (!mounted) return;
       setState(() => _info = info);
-      showMessage(context, info.isModelTrained ? 'Model je ponovo istreniran.' : 'Premalo podataka za treniranje modela.');
+      showMessage(context, info.isModelTrained ? tr.modelRetrained : tr.tooLittleData);
     } on ApiException catch (e) {
       if (mounted) showMessage(context, e.message, isError: true);
     } finally {
@@ -80,14 +80,13 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        info.isModelTrained ? 'Model je istreniran i koristi se za preporuke' : 'Model nije istreniran',
+                        info.isModelTrained ? tr.modelTrained : tr.modelNotTrained,
                         style: theme.textTheme.titleMedium,
                       ),
                       const SizedBox(height: 4),
                       Text(
                         info.note ??
-                            'Zadnje treniranje: ${info.trainedAt == null ? '—' : Formatters.dateTime(info.trainedAt!)}. '
-                                'Model se automatski ponovo trenira svakih 6 sati.',
+                            tr.lastTraining(info.trainedAt == null ? '—' : Formatters.dateTime(info.trainedAt!)),
                         style: theme.textTheme.bodySmall,
                       ),
                     ],
@@ -98,7 +97,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
                   icon: _training
                       ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
                       : const Icon(Icons.model_training),
-                  label: const Text('Ponovo treniraj'),
+                  label: Text(tr.retrain),
                 ),
               ],
             ),
@@ -109,10 +108,10 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
           spacing: 16,
           runSpacing: 16,
           children: [
-            _Stat(label: 'Interakcija', value: '${info.interactionCount}'),
-            _Stat(label: 'Izbora (pozitivnih)', value: '${info.positiveCount}'),
-            _Stat(label: 'Gostiju', value: '${info.userCount}'),
-            _Stat(label: 'Stavki', value: '${info.itemCount}'),
+            _Stat(label: tr.interactions, value: '${info.interactionCount}'),
+            _Stat(label: tr.positiveChoices, value: '${info.positiveCount}'),
+            _Stat(label: tr.guests, value: '${info.userCount}'),
+            _Stat(label: tr.items, value: '${info.itemCount}'),
           ],
         ),
         if (info.isModelTrained) ...[
@@ -123,20 +122,19 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Kvalitet preporuka (HitRate@$k)', style: theme.textTheme.titleMedium),
+                  Text(tr.recommendationQuality(k), style: theme.textTheme.titleMedium),
                   const SizedBox(height: 4),
                   Text(
-                    'Koliko često je stvarno izabrana (sakrivena) stavka među top $k preporuka. '
-                    'Evaluirano na ${info.evaluatedCount} izbora · ${info.evaluationMethod ?? ''}',
+                    '${tr.hitRateExplanation(k, info.evaluatedCount)} · ${info.evaluationMethod ?? ''}',
                     style: theme.textTheme.bodySmall,
                   ),
                   const SizedBox(height: 20),
-                  _MetricBar(label: 'Naš model (Matrix Factorization)', value: info.hitRate ?? 0, highlight: true),
-                  _MetricBar(label: 'Popularnost (svima isto)', value: info.popularityHitRate ?? 0),
-                  _MetricBar(label: 'Slučajan izbor', value: info.randomHitRate ?? 0),
+                  _MetricBar(label: tr.ourModel, value: info.hitRate ?? 0, highlight: true),
+                  _MetricBar(label: tr.popularityBaseline, value: info.popularityHitRate ?? 0),
+                  _MetricBar(label: tr.randomBaseline, value: info.randomHitRate ?? 0),
                   const SizedBox(height: 12),
                   Text(
-                    'Izabrani parametri: rank ${info.selectedRank}, λ ${info.selectedLambda}, α ${info.selectedAlpha}',
+                    tr.selectedParameters('${info.selectedRank}', '${info.selectedLambda}', '${info.selectedAlpha}'),
                     style: theme.textTheme.bodySmall,
                   ),
                 ],
@@ -149,9 +147,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen> {
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Text(
-              'Preporuke koriste one-class Matrix Factorization (ML.NET) nad interakcijama gostiju: '
-              'recenzijama, favoritima, rezervacijama i pregledima. Gosti bez dovoljno interakcija dobijaju '
-              'popularne stavke. Detalji su u dokumentu recommender-dokumentacija.md.',
+              tr.recommenderExplanation,
               style: theme.textTheme.bodyMedium,
             ),
           ),

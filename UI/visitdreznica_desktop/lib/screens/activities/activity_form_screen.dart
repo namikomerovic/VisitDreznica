@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
 
+import '../../widgets/adaptive_row.dart';
 import '../../widgets/dialogs.dart';
 import '../../widgets/error_view.dart';
 import '../../widgets/single_image_editor.dart';
@@ -142,7 +143,7 @@ class _ActivityFormScreenState extends State<ActivityFormScreen> {
         _fill(saved);
       });
 
-      showMessage(context, wasNew ? 'Aktivnost je dodana. Sada možete dodati sliku i termine.' : 'Izmjene su sačuvane.');
+      showMessage(context, wasNew ? tr.activityAdded : tr.changesSaved);
       if (!wasNew) Navigator.pop(context, true);
     } on ApiException catch (e) {
       if (!mounted) return;
@@ -160,10 +161,9 @@ class _ActivityFormScreenState extends State<ActivityFormScreen> {
   Future<void> _delete() async {
     final confirmed = await showConfirmDialog(
       context,
-      title: 'Brisanje aktivnosti',
-      message: 'Obrisati "${_activity!.name}"? Ovo se ne može poništiti.\n\n'
-          'Ako aktivnost ima termine ili rezervacije, brisanje nije moguće. Tada je umjesto toga označite kao neaktivnu.',
-      confirmLabel: 'Obriši',
+      title: tr.deletingActivity,
+      message: tr.deleteActivityQuestion(_activity!.name),
+      confirmLabel: tr.delete,
       destructive: true,
     );
 
@@ -186,17 +186,17 @@ class _ActivityFormScreenState extends State<ActivityFormScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          tooltip: 'Nazad',
+          tooltip: tr.back,
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context, _changed),
         ),
-        title: Text(_activity?.name ?? 'Nova aktivnost'),
+        title: Text(_activity?.name ?? tr.newActivity),
         actions: [
           if (_isEdit)
             TextButton.icon(
               onPressed: _saving ? null : _delete,
               icon: Icon(Icons.delete_outline, color: scheme.error),
-              label: Text('Obriši', style: TextStyle(color: scheme.error)),
+              label: Text(tr.delete, style: TextStyle(color: scheme.error)),
             ),
           const SizedBox(width: 16),
         ],
@@ -228,7 +228,7 @@ class _ActivityFormScreenState extends State<ActivityFormScreen> {
                     key: _formKey,
                     child: Column(
                       children: [
-                        Row(
+                        AdaptiveRow(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
@@ -237,12 +237,12 @@ class _ActivityFormScreenState extends State<ActivityFormScreen> {
                                 controller: _nameController,
                                 maxLength: 150,
                                 decoration: InputDecoration(
-                                  labelText: 'Naziv *',
+                                  labelText: tr.nameRequired,
                                   border: const OutlineInputBorder(),
                                   errorText: _serverError('name'),
                                 ),
                                 validator: (value) =>
-                                    validateLength(value, 3, 150, 'Naziv mora imati između 3 i 150 znakova.'),
+                                    validateLength(value, 3, 150, tr.nameLength3to150),
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -251,7 +251,7 @@ class _ActivityFormScreenState extends State<ActivityFormScreen> {
                               child: DropdownButtonFormField<int>(
                                 initialValue: _categoryId,
                                 decoration: InputDecoration(
-                                  labelText: 'Kategorija *',
+                                  labelText: tr.categoryRequired,
                                   border: const OutlineInputBorder(),
                                   errorText: _serverError('activityCategoryId'),
                                 ),
@@ -260,13 +260,13 @@ class _ActivityFormScreenState extends State<ActivityFormScreen> {
                                     DropdownMenuItem(value: category.id, child: Text(category.name)),
                                 ],
                                 onChanged: (value) => setState(() => _categoryId = value),
-                                validator: (value) => value == null ? 'Odaberite kategoriju.' : null,
+                                validator: (value) => value == null ? tr.selectCategory : null,
                               ),
                             ),
                           ],
                         ),
                         const SizedBox(height: 4),
-                        Row(
+                        AdaptiveRow(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
@@ -274,12 +274,12 @@ class _ActivityFormScreenState extends State<ActivityFormScreen> {
                                 controller: _durationController,
                                 inputFormatters: digitsOnly,
                                 decoration: InputDecoration(
-                                  labelText: 'Trajanje (minuta) *',
-                                  helperText: 'npr. 180 = 3 sata',
+                                  labelText: tr.durationMinutesRequired,
+                                  helperText: tr.durationHint,
                                   border: const OutlineInputBorder(),
                                   errorText: _serverError('durationMinutes'),
                                 ),
-                                validator: (value) => validateIntRange(value, 30, 720, 'Između 30 i 720 minuta.'),
+                                validator: (value) => validateIntRange(value, 30, 720, tr.between30and720Minutes),
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -288,11 +288,11 @@ class _ActivityFormScreenState extends State<ActivityFormScreen> {
                                 controller: _maxParticipantsController,
                                 inputFormatters: digitsOnly,
                                 decoration: InputDecoration(
-                                  labelText: 'Max učesnika *',
+                                  labelText: tr.maxParticipantsRequired,
                                   border: const OutlineInputBorder(),
                                   errorText: _serverError('maxParticipants'),
                                 ),
-                                validator: (value) => validateIntRange(value, 1, 50, 'Između 1 i 50.'),
+                                validator: (value) => validateIntRange(value, 1, 50, tr.between1and50),
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -301,11 +301,11 @@ class _ActivityFormScreenState extends State<ActivityFormScreen> {
                                 controller: _priceController,
                                 inputFormatters: [decimalInputFormatter],
                                 decoration: InputDecoration(
-                                  labelText: 'Cijena po osobi (KM) *',
+                                  labelText: tr.pricePerPersonRequired,
                                   border: const OutlineInputBorder(),
                                   errorText: _serverError('pricePerPerson'),
                                 ),
-                                validator: (value) => validateDecimalRange(value, 1, 1000, 'Između 1 i 1.000 KM.'),
+                                validator: (value) => validateDecimalRange(value, 1, 1000, tr.between1and1000Km),
                               ),
                             ),
                           ],
@@ -315,8 +315,8 @@ class _ActivityFormScreenState extends State<ActivityFormScreen> {
                           controller: _meetingPointController,
                           maxLength: 200,
                           decoration: InputDecoration(
-                            labelText: 'Mjesto okupljanja',
-                            hintText: 'npr. Plaža ispred smještaja',
+                            labelText: tr.meetingPoint,
+                            hintText: tr.meetingPointExample,
                             border: const OutlineInputBorder(),
                             errorText: _serverError('meetingPoint'),
                           ),
@@ -327,7 +327,7 @@ class _ActivityFormScreenState extends State<ActivityFormScreen> {
                           maxLines: 4,
                           maxLength: 2000,
                           decoration: InputDecoration(
-                            labelText: 'Opis',
+                            labelText: tr.description,
                             alignLabelWithHint: true,
                             border: const OutlineInputBorder(),
                             errorText: _serverError('description'),
@@ -335,8 +335,8 @@ class _ActivityFormScreenState extends State<ActivityFormScreen> {
                         ),
                         SwitchListTile(
                           contentPadding: EdgeInsets.zero,
-                          title: const Text('Aktivna'),
-                          subtitle: const Text('Neaktivnu aktivnost gosti ne vide i ne mogu je rezervisati.'),
+                          title: Text(tr.activeFemale),
+                          subtitle: Text(tr.inactiveActivityHint),
                           value: _isActive,
                           onChanged: (value) => setState(() => _isActive = value),
                         ),
@@ -347,7 +347,7 @@ class _ActivityFormScreenState extends State<ActivityFormScreen> {
                             icon: _saving
                                 ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
                                 : const Icon(Icons.save_outlined),
-                            label: Text(_isEdit ? 'Sačuvaj izmjene' : 'Dodaj aktivnost'),
+                            label: Text(_isEdit ? tr.saveChanges : tr.addActivity),
                             style: FilledButton.styleFrom(minimumSize: const Size(180, 48)),
                           ),
                         ),
@@ -363,7 +363,7 @@ class _ActivityFormScreenState extends State<ActivityFormScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Slika', style: theme.textTheme.titleMedium),
+                      Text(tr.image, style: theme.textTheme.titleMedium),
                       const SizedBox(height: 16),
                       if (activity != null)
                         SingleImageEditor(
@@ -382,7 +382,7 @@ class _ActivityFormScreenState extends State<ActivityFormScreen> {
                           },
                         )
                       else
-                        const Text('Sliku možete dodati nakon što sačuvate aktivnost.'),
+                        Text(tr.imageAfterSaveActivity),
                     ],
                   ),
                 ),
@@ -392,7 +392,7 @@ class _ActivityFormScreenState extends State<ActivityFormScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(24),
                   child: activity == null
-                      ? const Text('Termine možete dodati nakon što sačuvate aktivnost.')
+                      ? Text(tr.slotsAfterSaveActivity)
                       : ActivitySlotsSection(
                           key: ValueKey('slots-${activity.id}-${activity.durationMinutes}-${activity.maxParticipants}'),
                           activity: activity,

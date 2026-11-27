@@ -50,21 +50,21 @@ class _ImageGalleryState extends State<ImageGallery> {
       return;
     }
 
-    await _run(() => widget.onUpload(image.bytes, image.fileName, image.contentType), 'Slika je dodana.');
+    await _run(() => widget.onUpload(image.bytes, image.fileName, image.contentType), tr.imageAdded);
   }
   Future<void> _delete(GalleryImage image) async {
     final confirmed = await showConfirmDialog(
       context,
-      title: 'Brisanje slike',
+      title: tr.deletingImage,
       message: image.isCover
-          ? 'Obrisati naslovnu sliku? Sljedeća slika će automatski postati naslovna.'
-          : 'Obrisati ovu sliku?',
-      confirmLabel: 'Obriši',
+          ? tr.deleteCoverImageQuestion
+          : tr.deleteImageQuestion,
+      confirmLabel: tr.delete,
       destructive: true,
     );
 
     if (confirmed) {
-      await _run(() => widget.onDelete(image.id), 'Slika je obrisana.');
+      await _run(() => widget.onDelete(image.id), tr.imageDeleted);
     }
   }
 
@@ -94,7 +94,7 @@ class _ImageGalleryState extends State<ImageGallery> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(color: scheme.primary, borderRadius: BorderRadius.circular(8)),
-                      child: Text('Naslovna', style: TextStyle(color: scheme.onPrimary, fontSize: 12)),
+                      child: Text(tr.cover, style: TextStyle(color: scheme.onPrimary, fontSize: 12)),
                     ),
                   ),
                 Positioned(
@@ -105,18 +105,18 @@ class _ImageGalleryState extends State<ImageGallery> {
                     shape: const CircleBorder(),
                     child: PopupMenuButton<String>(
                       enabled: !_busy,
-                      tooltip: 'Opcije slike',
+                      tooltip: tr.imageOptions,
                       iconColor: Colors.white,
                       onSelected: (value) => value == 'cover'
-                          ? _run(() => widget.onSetCover(image.id), 'Naslovna slika je promijenjena.')
+                          ? _run(() => widget.onSetCover(image.id), tr.coverChanged)
                           : _delete(image),
                       itemBuilder: (_) => [
                         PopupMenuItem(
                           value: 'cover',
                           enabled: !image.isCover,
-                          child: const Text('Postavi kao naslovnu'),
+                          child: Text(tr.setAsCover),
                         ),
-                        const PopupMenuItem(value: 'delete', child: Text('Obriši')),
+                        PopupMenuItem(value: 'delete', child: Text(tr.delete)),
                       ],
                     ),
                   ),
@@ -132,9 +132,9 @@ class _ImageGalleryState extends State<ImageGallery> {
             style: OutlinedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
             child: _busy
                 ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2))
-                : const Column(
+                : Column(
                     mainAxisSize: MainAxisSize.min,
-                    children: [Icon(Icons.add_photo_alternate_outlined), SizedBox(height: 6), Text('Dodaj sliku')],
+                    children: [const Icon(Icons.add_photo_alternate_outlined), const SizedBox(height: 6), Text(tr.addImage)],
                   ),
           ),
         ),

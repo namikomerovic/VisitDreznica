@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
+import '../../widgets/filter_bar.dart';
 import '../../widgets/paged_table.dart';
 import 'user_form_screen.dart';
 
@@ -51,8 +52,8 @@ class _UsersScreenState extends State<UsersScreen> {
   }
 
   static String _roleLabel(String role) => switch (role) {
-        AppRoles.admin => 'Administrator',
-        AppRoles.guest => 'Gost',
+        AppRoles.admin => tr.roleAdministrator,
+        AppRoles.guest => tr.roleGuest,
         _ => role,
       };
 
@@ -68,7 +69,7 @@ class _UsersScreenState extends State<UsersScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Row(
+              child: FilterBar(
                 children: [
                   SizedBox(
                     width: 300,
@@ -78,10 +79,10 @@ class _UsersScreenState extends State<UsersScreen> {
                         _debounce?.cancel();
                         _debounce = Timer(const Duration(milliseconds: 400), _filtersChanged);
                       },
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         isDense: true,
                         prefixIcon: Icon(Icons.search),
-                        hintText: 'Ime, korisničko ime ili e-mail',
+                        hintText: tr.userSearchHint,
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -93,9 +94,9 @@ class _UsersScreenState extends State<UsersScreen> {
                       future: _roles,
                       builder: (context, snapshot) => DropdownButtonFormField<int?>(
                         initialValue: _roleId,
-                        decoration: const InputDecoration(labelText: 'Uloga', isDense: true, border: OutlineInputBorder()),
+                        decoration: InputDecoration(labelText: tr.role, isDense: true, border: const OutlineInputBorder()),
                         items: [
-                          const DropdownMenuItem(value: null, child: Text('Sve uloge')),
+                          DropdownMenuItem(value: null, child: Text(tr.allRoles)),
                           for (final role in snapshot.data ?? const <LookupItem>[])
                             DropdownMenuItem(value: role.id, child: Text(_roleLabel(role.name))),
                         ],
@@ -111,11 +112,11 @@ class _UsersScreenState extends State<UsersScreen> {
                     width: 170,
                     child: DropdownButtonFormField<bool?>(
                       initialValue: _isActive,
-                      decoration: const InputDecoration(labelText: 'Status', isDense: true, border: OutlineInputBorder()),
-                      items: const [
-                        DropdownMenuItem(value: null, child: Text('Svi')),
-                        DropdownMenuItem(value: true, child: Text('Aktivni')),
-                        DropdownMenuItem(value: false, child: Text('Neaktivni')),
+                      decoration: InputDecoration(labelText: tr.status, isDense: true, border: const OutlineInputBorder()),
+                      items: [
+                        DropdownMenuItem(value: null, child: Text(tr.allMasculine)),
+                        DropdownMenuItem(value: true, child: Text(tr.activeMasculinePlural)),
+                        DropdownMenuItem(value: false, child: Text(tr.inactiveMasculinePlural)),
                       ],
                       onChanged: (value) {
                         _isActive = value;
@@ -127,7 +128,7 @@ class _UsersScreenState extends State<UsersScreen> {
                   FilledButton.icon(
                     onPressed: () => _openForm(),
                     icon: const Icon(Icons.person_add_alt),
-                    label: const Text('Dodaj korisnika'),
+                    label: Text(tr.addUser),
                   ),
                 ],
               ),
@@ -143,7 +144,7 @@ class _UsersScreenState extends State<UsersScreen> {
                   pageSize: pageSize,
                 ),
                 onRowTap: (user) => _openForm(id: user.id),
-                emptyText: 'Nema korisnika za prikaz.',
+                emptyText: tr.noUsers,
                 columns: [
                   PagedColumn(
                     header: '',
@@ -155,25 +156,25 @@ class _UsersScreenState extends State<UsersScreen> {
                           : Text(user.firstName.characters.first.toUpperCase()),
                     ),
                   ),
-                  PagedColumn(header: 'Ime i prezime', flex: 3, cell: (user) => Text(user.fullName)),
-                  PagedColumn(header: 'Korisničko ime', flex: 3, cell: (user) => Text(user.username)),
+                  PagedColumn(header: tr.fullName, flex: 3, cell: (user) => Text(user.fullName)),
+                  PagedColumn(header: tr.username, flex: 3, cell: (user) => Text(user.username)),
                   PagedColumn(
-                    header: 'E-mail',
+                    header: tr.email,
                     flex: 4,
                     cell: (user) => Text(user.email, overflow: TextOverflow.ellipsis),
                   ),
-                  PagedColumn(header: 'Grad', flex: 2, cell: (user) => Text(user.cityName)),
+                  PagedColumn(header: tr.city, flex: 2, cell: (user) => Text(user.cityName)),
                   PagedColumn(
-                    header: 'Uloge',
+                    header: tr.roles,
                     flex: 2,
                     cell: (user) => Text(user.roles.map(_roleLabel).join(', ')),
                   ),
                   PagedColumn(
-                    header: 'Status',
+                    header: tr.status,
                     flex: 2,
                     alignEnd: true,
                     cell: (user) => Text(
-                      user.isActive ? 'Aktivan' : 'Neaktivan',
+                      user.isActive ? tr.activeMasculine : tr.inactiveMasculine,
                       style: TextStyle(color: user.isActive ? AppColors.success : scheme.outline),
                     ),
                   ),

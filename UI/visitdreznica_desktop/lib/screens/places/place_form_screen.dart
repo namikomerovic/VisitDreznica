@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
 
+import '../../widgets/adaptive_row.dart';
 import '../../widgets/dialogs.dart';
 import '../../widgets/error_view.dart';
 import '../../widgets/image_gallery.dart';
@@ -163,8 +164,8 @@ class _PlaceFormScreenState extends State<PlaceFormScreen> {
       showMessage(
         context,
         wasNew
-            ? 'Mjesto je dodano (${Formatters.decimal(saved.distanceKm)} km od smještaja). Sada možete dodati slike.'
-            : 'Izmjene su sačuvane.',
+            ? tr.placeAdded(Formatters.decimal(saved.distanceKm))
+            : tr.changesSaved,
       );
       if (!wasNew) Navigator.pop(context, true);
     } on ApiException catch (e) {
@@ -183,10 +184,9 @@ class _PlaceFormScreenState extends State<PlaceFormScreen> {
   Future<void> _delete() async {
     final confirmed = await showConfirmDialog(
       context,
-      title: 'Brisanje mjesta',
-      message: 'Obrisati "${_place!.name}"? Ovo se ne može poništiti.\n\n'
-          'Ako mjesto ima recenzije ili je u favoritima gostiju, brisanje nije moguće. Tada ga označite kao neaktivno.',
-      confirmLabel: 'Obriši',
+      title: tr.deletingPlace,
+      message: tr.deletePlaceQuestion(_place!.name),
+      confirmLabel: tr.delete,
       destructive: true,
     );
 
@@ -218,17 +218,17 @@ class _PlaceFormScreenState extends State<PlaceFormScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          tooltip: 'Nazad',
+          tooltip: tr.back,
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context, _changed),
         ),
-        title: Text(_place?.name ?? 'Novo mjesto'),
+        title: Text(_place?.name ?? tr.newPlace),
         actions: [
           if (_isEdit)
             TextButton.icon(
               onPressed: _saving ? null : _delete,
               icon: Icon(Icons.delete_outline, color: scheme.error),
-              label: Text('Obriši', style: TextStyle(color: scheme.error)),
+              label: Text(tr.delete, style: TextStyle(color: scheme.error)),
             ),
           const SizedBox(width: 16),
         ],
@@ -257,7 +257,8 @@ class _PlaceFormScreenState extends State<PlaceFormScreen> {
                   padding: const EdgeInsets.all(24),
                   child: Form(
                     key: _formKey,
-                    child: Row(
+                    child: AdaptiveRow(
+                      breakpoint: 800,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
@@ -267,38 +268,38 @@ class _PlaceFormScreenState extends State<PlaceFormScreen> {
                                 controller: _nameController,
                                 maxLength: 150,
                                 decoration: InputDecoration(
-                                  labelText: 'Naziv *',
+                                  labelText: tr.nameRequired,
                                   border: const OutlineInputBorder(),
                                   errorText: _serverError('name'),
                                 ),
                                 validator: (value) =>
-                                    validateLength(value, 3, 150, 'Naziv mora imati između 3 i 150 znakova.'),
+                                    validateLength(value, 3, 150, tr.nameLength3to150),
                               ),
                               const SizedBox(height: 4),
                               DropdownButtonFormField<int>(
                                 initialValue: _typeId,
                                 decoration: InputDecoration(
-                                  labelText: 'Tip mjesta *',
+                                  labelText: tr.placeTypeRequired,
                                   border: const OutlineInputBorder(),
                                   errorText: _serverError('placeTypeId'),
                                 ),
                                 items: [for (final type in _types) DropdownMenuItem(value: type.id, child: Text(type.name))],
                                 onChanged: (value) => setState(() => _typeId = value),
-                                validator: (value) => value == null ? 'Odaberite tip mjesta.' : null,
+                                validator: (value) => value == null ? tr.selectPlaceType : null,
                               ),
                               const SizedBox(height: 16),
                               TextFormField(
                                 controller: _addressController,
                                 maxLength: 200,
                                 decoration: InputDecoration(
-                                  labelText: 'Adresa / naselje',
-                                  hintText: 'npr. Donja Drežnica',
+                                  labelText: tr.addressSettlement,
+                                  hintText: tr.addressExample,
                                   border: const OutlineInputBorder(),
                                   errorText: _serverError('address'),
                                 ),
                               ),
                               const SizedBox(height: 4),
-                              Row(
+                              AdaptiveRow(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Expanded(
@@ -307,12 +308,12 @@ class _PlaceFormScreenState extends State<PlaceFormScreen> {
                                       inputFormatters: coordinateFormatter,
                                       onChanged: (_) => _onCoordinatesTyped(),
                                       decoration: InputDecoration(
-                                        labelText: 'Geografska širina *',
+                                        labelText: tr.latitudeRequired,
                                         border: const OutlineInputBorder(),
                                         errorText: _serverError('latitude'),
                                       ),
                                       validator: (value) => validateDecimalRange(
-                                          value, -90, 90, 'Odaberite lokaciju na karti.'),
+                                          value, -90, 90, tr.selectLocationOnMap),
                                     ),
                                   ),
                                   const SizedBox(width: 12),
@@ -322,12 +323,12 @@ class _PlaceFormScreenState extends State<PlaceFormScreen> {
                                       inputFormatters: coordinateFormatter,
                                       onChanged: (_) => _onCoordinatesTyped(),
                                       decoration: InputDecoration(
-                                        labelText: 'Geografska dužina *',
+                                        labelText: tr.longitudeRequired,
                                         border: const OutlineInputBorder(),
                                         errorText: _serverError('longitude'),
                                       ),
                                       validator: (value) => validateDecimalRange(
-                                          value, -180, 180, 'Odaberite lokaciju na karti.'),
+                                          value, -180, 180, tr.selectLocationOnMap),
                                     ),
                                   ),
                                 ],
@@ -338,7 +339,7 @@ class _PlaceFormScreenState extends State<PlaceFormScreen> {
                                   child: Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      'Udaljenost od smještaja: ${Formatters.decimal(_place!.distanceKm)} km',
+                                      tr.distanceFromAccommodation(Formatters.decimal(_place!.distanceKm)),
                                       style: theme.textTheme.bodySmall,
                                     ),
                                   ),
@@ -349,7 +350,7 @@ class _PlaceFormScreenState extends State<PlaceFormScreen> {
                                 maxLines: 5,
                                 maxLength: 2000,
                                 decoration: InputDecoration(
-                                  labelText: 'Opis',
+                                  labelText: tr.description,
                                   alignLabelWithHint: true,
                                   border: const OutlineInputBorder(),
                                   errorText: _serverError('description'),
@@ -357,8 +358,8 @@ class _PlaceFormScreenState extends State<PlaceFormScreen> {
                               ),
                               SwitchListTile(
                                 contentPadding: EdgeInsets.zero,
-                                title: const Text('Aktivno'),
-                                subtitle: const Text('Neaktivna mjesta gosti ne vide.'),
+                                title: Text(tr.activeNeuter),
+                                subtitle: Text(tr.inactivePlacesHint),
                                 value: _isActive,
                                 onChanged: (value) => setState(() => _isActive = value),
                               ),
@@ -381,7 +382,7 @@ class _PlaceFormScreenState extends State<PlaceFormScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Slike', style: theme.textTheme.titleMedium),
+                      Text(tr.images, style: theme.textTheme.titleMedium),
                       const SizedBox(height: 16),
                       if (_place != null)
                         ImageGallery(
@@ -401,7 +402,7 @@ class _PlaceFormScreenState extends State<PlaceFormScreen> {
                           },
                         )
                       else
-                        const Text('Slike možete dodati nakon što sačuvate mjesto.'),
+                        Text(tr.imagesAfterSavePlace),
                     ],
                   ),
                 ),
@@ -414,7 +415,7 @@ class _PlaceFormScreenState extends State<PlaceFormScreen> {
                   icon: _saving
                       ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
                       : const Icon(Icons.save_outlined),
-                  label: Text(_isEdit ? 'Sačuvaj izmjene' : 'Dodaj mjesto'),
+                  label: Text(_isEdit ? tr.saveChanges : tr.addPlace),
                   style: FilledButton.styleFrom(minimumSize: const Size(180, 48)),
                 ),
               ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
+import '../../widgets/filter_bar.dart';
 import '../../widgets/paged_table.dart';
 import 'room_form_screen.dart';
 
@@ -64,7 +65,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Row(
+              child: FilterBar(
                 children: [
                   SizedBox(
                     width: 260,
@@ -77,10 +78,10 @@ class _RoomsScreenState extends State<RoomsScreen> {
                           _filtersChanged,
                         );
                       },
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         isDense: true,
                         prefixIcon: Icon(Icons.search),
-                        hintText: 'Naziv sobe',
+                        hintText: tr.roomName,
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -93,15 +94,15 @@ class _RoomsScreenState extends State<RoomsScreen> {
                       builder: (context, snapshot) =>
                           DropdownButtonFormField<int?>(
                             initialValue: _roomTypeId,
-                            decoration: const InputDecoration(
-                              labelText: 'Tip sobe',
+                            decoration: InputDecoration(
+                              labelText: tr.roomType,
                               isDense: true,
                               border: OutlineInputBorder(),
                             ),
                             items: [
-                              const DropdownMenuItem(
+                              DropdownMenuItem(
                                 value: null,
-                                child: Text('Svi tipovi'),
+                                child: Text(tr.allTypesFilter),
                               ),
                               for (final type
                                   in snapshot.data ?? const <LookupItem>[])
@@ -122,17 +123,17 @@ class _RoomsScreenState extends State<RoomsScreen> {
                     width: 170,
                     child: DropdownButtonFormField<bool?>(
                       initialValue: _isActive,
-                      decoration: const InputDecoration(
-                        labelText: 'Status',
+                      decoration: InputDecoration(
+                        labelText: tr.status,
                         isDense: true,
                         border: OutlineInputBorder(),
                       ),
-                      items: const [
-                        DropdownMenuItem(value: null, child: Text('Sve')),
-                        DropdownMenuItem(value: true, child: Text('Aktivne')),
+                      items: [
+                        DropdownMenuItem(value: null, child: Text(tr.all)),
+                        DropdownMenuItem(value: true, child: Text(tr.activePlural)),
                         DropdownMenuItem(
                           value: false,
-                          child: Text('Neaktivne'),
+                          child: Text(tr.inactivePlural),
                         ),
                       ],
                       onChanged: (value) {
@@ -145,7 +146,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                   FilledButton.icon(
                     onPressed: () => _openForm(),
                     icon: const Icon(Icons.add),
-                    label: const Text('Dodaj sobu'),
+                    label: Text(tr.addRoom),
                   ),
                 ],
               ),
@@ -165,7 +166,7 @@ class _RoomsScreenState extends State<RoomsScreen> {
                   pageSize: pageSize,
                 ),
                 onRowTap: (room) => _openForm(roomId: room.id),
-                emptyText: 'Nema soba za prikaz.',
+                emptyText: tr.noRooms,
                 columns: [
                   PagedColumn(
                     header: '',
@@ -190,39 +191,39 @@ class _RoomsScreenState extends State<RoomsScreen> {
                     ),
                   ),
                   PagedColumn(
-                    header: 'Naziv',
+                    header: tr.name,
                     flex: 5,
                     cell: (room) => Text(room.name),
                   ),
                   PagedColumn(
-                    header: 'Tip',
+                    header: tr.typeShort,
                     flex: 2,
                     cell: (room) => Text(room.roomTypeName),
                   ),
                   PagedColumn(
-                    header: 'Kapacitet',
+                    header: tr.capacity,
                     flex: 2,
                     alignEnd: true,
                     cell: (room) => Text('${room.capacity}'),
                   ),
                   PagedColumn(
-                    header: 'Površina',
+                    header: tr.area,
                     flex: 2,
                     alignEnd: true,
                     cell: (room) => Text('${room.areaSquareMeters} m²'),
                   ),
                   PagedColumn(
-                    header: 'Cijena / noć',
+                    header: tr.pricePerNightHeader,
                     flex: 2,
                     alignEnd: true,
                     cell: (room) => Text(Formatters.money(room.pricePerNight)),
                   ),
                   PagedColumn(
-                    header: 'Status',
+                    header: tr.status,
                     flex: 2,
                     alignEnd: true,
                     cell: (room) => Text(
-                      room.isActive ? 'Aktivna' : 'Neaktivna',
+                      room.isActive ? tr.activeFemale : tr.inactiveFemale,
                       style: TextStyle(
                         color: room.isActive
                             ? AppColors.success
