@@ -8,6 +8,8 @@ class Recommendation {
     required this.score,
     required this.reason,
     required this.isPersonalized,
+    this.coverImageId,
+    this.hasImage = false,
   });
 
   final ItemType itemType;
@@ -16,6 +18,8 @@ class Recommendation {
   final double score;
   final String reason;
   final bool isPersonalized;
+  final int? coverImageId;
+  final bool hasImage;
 
   factory Recommendation.fromJson(Map<String, dynamic> json) => Recommendation(
         itemType: ItemType.fromValue(json['itemType'] as int),
@@ -24,6 +28,8 @@ class Recommendation {
         score: (json['score'] as num).toDouble(),
         reason: json['reason'] as String,
         isPersonalized: json['isPersonalized'] as bool,
+        coverImageId: json['coverImageId'] as int?,
+        hasImage: json['hasImage'] as bool? ?? false,
       );
 }
 

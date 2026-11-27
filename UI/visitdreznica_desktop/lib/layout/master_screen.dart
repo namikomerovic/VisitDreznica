@@ -144,21 +144,21 @@ class _MasterScreenState extends State<MasterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
     final section = _sections[_selectedIndex];
+    final dark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       body: Row(
         children: [
           Container(
             width: 248,
-            color: scheme.surfaceContainerLow,
+            color: dark ? const Color(0xFF0C1410) : AppColors.forest,
             child: Column(
               children: [
                 SizedBox(
-                  height: 64,
+                  height: 72,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 18),
                     child: Row(
                       children: [
                         const AppLogo(size: 40),
@@ -166,53 +166,49 @@ class _MasterScreenState extends State<MasterScreen> {
                         Expanded(
                           child: Text(
                             'Visit Drežnica',
-                            style: Theme.of(context).textTheme.titleMedium
-                                ?.copyWith(fontWeight: FontWeight.w600),
+                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                  color: Colors.white,
+                                  fontSize: 19,
+                                ),
                           ),
                         ),
                       ],
                     ),
                   ),
                 ),
-                const Divider(height: 1),
+                const SizedBox(height: 8),
                 Expanded(
                   child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    padding: const EdgeInsets.symmetric(vertical: 4),
                     itemCount: _sections.length,
                     itemBuilder: (context, index) {
                       final item = _sections[index];
-                      final selected = index == _selectedIndex;
-
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 2,
-                        ),
-                        child: ListTile(
-                          leading: Icon(
-                            selected ? item.selectedIcon : item.icon,
-                          ),
-                          title: Text(item.label),
-                          selected: selected,
-                          selectedTileColor: scheme.secondaryContainer,
-                          selectedColor: scheme.onSecondaryContainer,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          onTap: () => setState(() => _selectedIndex = index),
-                        ),
+                      return _SidebarTile(
+                        icon: index == _selectedIndex ? item.selectedIcon : item.icon,
+                        label: item.label,
+                        selected: index == _selectedIndex,
+                        onTap: () => setState(() => _selectedIndex = index),
                       );
                     },
                   ),
                 ),
+                const Divider(height: 1, color: Colors.white24, indent: 16, endIndent: 16),
+                const SizedBox(height: 6),
+                const _ThemeTile(),
+                _SidebarTile(
+                  icon: Icons.logout,
+                  label: 'Odjava',
+                  selected: false,
+                  onTap: _confirmLogout,
+                ),
+                const SizedBox(height: 10),
               ],
             ),
           ),
-          const VerticalDivider(width: 1),
           Expanded(
             child: Column(
               children: [
-                _TopBar(title: section.label, onLogout: _confirmLogout),
+                _TopBar(title: section.label),
                 const Divider(height: 1),
                 Expanded(
                   child: KeyedSubtree(
@@ -229,72 +225,163 @@ class _MasterScreenState extends State<MasterScreen> {
   }
 }
 
-class _TopBar extends StatelessWidget {
-  const _TopBar({required this.title, required this.onLogout});
+class _SidebarTile extends StatelessWidget {
+  const _SidebarTile({
+    required this.icon,
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
 
-  final String title;
-  final VoidCallback onLogout;
+  final IconData icon;
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
+    final color = selected ? Colors.white : Colors.white70;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+      child: Material(
+        color: selected ? Colors.white.withValues(alpha: 0.12) : Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          hoverColor: Colors.white.withValues(alpha: 0.06),
+          onTap: onTap,
+          child: SizedBox(
+            height: 46,
+            child: Row(
+              children: [
+                Container(
+                  width: 3,
+                  height: 22,
+                  decoration: BoxDecoration(
+                    color: selected ? AppColors.nightTerracotta : Colors.transparent,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const SizedBox(width: 11),
+                Icon(icon, color: color, size: 22),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Text(
+                    label,
+                    style: TextStyle(
+                      color: color,
+                      fontSize: 15,
+                      fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ThemeTile extends StatelessWidget {
+  const _ThemeTile();
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = context.watch<ThemeController>();
+
+    return PopupMenuButton<ThemeMode>(
+      tooltip: 'Izgled',
+      offset: const Offset(240, -120),
+      onSelected: controller.setMode,
+      itemBuilder: (context) => [
+        for (final (mode, label) in [
+          (ThemeMode.system, 'Prati sistem'),
+          (ThemeMode.light, 'Svijetla tema'),
+          (ThemeMode.dark, 'Tamna tema'),
+        ])
+          CheckedPopupMenuItem(
+            value: mode,
+            checked: mode == controller.mode,
+            child: Text(label),
+          ),
+      ],
+      child: IgnorePointer(
+        child: _SidebarTile(
+          icon: switch (controller.mode) {
+            ThemeMode.system => Icons.brightness_auto_outlined,
+            ThemeMode.light => Icons.light_mode_outlined,
+            ThemeMode.dark => Icons.dark_mode_outlined,
+          },
+          label: 'Izgled',
+          selected: false,
+          onTap: () {},
+        ),
+      ),
+    );
+  }
+}
+
+class _TopBar extends StatelessWidget {
+  const _TopBar({required this.title});
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final auth = context.watch<AuthProvider>();
     final unread = context.watch<NotificationProvider>().unreadCount;
 
     return SizedBox(
-      height: 64,
+      height: 72,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 28),
         child: Row(
           children: [
-            Text(title, style: Theme.of(context).textTheme.titleLarge),
-            const Spacer(),
-            PopupMenuButton<ThemeMode>(
-              tooltip: 'Izgled',
-              icon: Icon(switch (context.watch<ThemeController>().mode) {
-                ThemeMode.system => Icons.brightness_auto_outlined,
-                ThemeMode.light => Icons.light_mode_outlined,
-                ThemeMode.dark => Icons.dark_mode_outlined,
-              }),
-              onSelected: context.read<ThemeController>().setMode,
-              itemBuilder: (context) {
-                final current = context.read<ThemeController>().mode;
-                return [
-                  for (final (mode, label) in [
-                    (ThemeMode.system, 'Prati sistem'),
-                    (ThemeMode.light, 'Svijetla tema'),
-                    (ThemeMode.dark, 'Tamna tema'),
-                  ])
-                    CheckedPopupMenuItem(
-                      value: mode,
-                      checked: mode == current,
-                      child: Text(label),
-                    ),
-                ];
-              },
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Administracija  /  $title',
+                  style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                ),
+                const SizedBox(height: 2),
+                Text(title, style: theme.textTheme.headlineSmall?.copyWith(fontSize: 24)),
+              ],
             ),
+            const Spacer(),
             IconButton(
               tooltip: 'Obavijesti',
               onPressed: () => showNotificationsPanel(context),
               icon: Badge(
                 isLabelVisible: unread > 0,
+                backgroundColor: AppColors.terracotta,
                 label: Text(unread > 99 ? '99+' : '$unread'),
                 child: const Icon(Icons.notifications_outlined),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 16),
             CircleAvatar(
-              radius: 16,
+              radius: 18,
+              backgroundColor: AppColors.terracottaSoft,
+              foregroundColor: AppColors.terracotta,
               child: Text(
                 auth.session?.firstName.characters.first.toUpperCase() ?? '?',
+                style: const TextStyle(fontWeight: FontWeight.w700),
               ),
             ),
-            const SizedBox(width: 8),
-            Text(auth.session?.fullName ?? ''),
-            const SizedBox(width: 8),
-            IconButton(
-              tooltip: 'Odjava',
-              onPressed: onLogout,
-              icon: const Icon(Icons.logout),
+            const SizedBox(width: 10),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(auth.session?.fullName ?? '', style: theme.textTheme.labelLarge),
+                Text('Administrator', style: theme.textTheme.labelSmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+              ],
             ),
           ],
         ),

@@ -3,13 +3,15 @@ import 'package:provider/provider.dart';
 import 'package:visitdreznica_core/visitdreznica_core.dart';
 
 import '../../utils/item_type_ui.dart';
+import '../../widgets/favorite_button.dart';
 import '../details/item_navigation.dart';
 import 'news_details_screen.dart';
 
 class HomeTab extends StatefulWidget {
-  const HomeTab({super.key, required this.onOpenCategory});
+  const HomeTab({super.key, required this.onOpenCategory, required this.onOpenExplore});
 
   final ValueChanged<ItemType> onOpenCategory;
+  final VoidCallback onOpenExplore;
 
   @override
   State<HomeTab> createState() => _HomeTabState();
@@ -43,45 +45,64 @@ class _HomeTabState extends State<HomeTab> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
     final firstName = context.watch<AuthProvider>().session?.firstName ?? '';
 
     return RefreshIndicator(
       onRefresh: _refresh,
       child: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.only(top: 8, bottom: 24),
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text('Zdravo, $firstName!', style: theme.textTheme.headlineSmall),
-          ),
-          const SizedBox(height: 4),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text('Šta vas danas zanima u Drežnici?', style: theme.textTheme.bodyMedium),
-          ),
-          const SizedBox(height: 16),
-          SizedBox(
-            height: 92,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                for (final type in ItemType.values)
-                  _CategoryTile(type: type, onTap: () => widget.onOpenCategory(type)),
+                Text('Zdravo, $firstName', style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurfaceVariant)),
+                const SizedBox(height: 2),
+                Text('Udahni Drežnicu.', style: theme.textTheme.headlineMedium),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Icon(Icons.place_outlined, size: 16, color: AppColors.cta(context)),
+                    const SizedBox(width: 4),
+                    Text('Drežnica, Bosna i Hercegovina', style: theme.textTheme.bodySmall),
+                  ],
+                ),
               ],
             ),
           ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: _SearchEntry(onTap: widget.onOpenExplore),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: _HeroCard(onExplore: widget.onOpenExplore),
+          ),
           const SizedBox(height: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            child: Row(
+              children: [
+                for (final type in ItemType.values)
+                  Expanded(child: _CategoryButton(type: type, onTap: () => widget.onOpenCategory(type))),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
           FutureBuilder<List<Recommendation>>(
             future: _recommendationsFuture,
             builder: (context, snapshot) => _RecommendationsSection(snapshot: snapshot),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 24),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Text('Novosti', style: theme.textTheme.titleLarge),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 10),
           FutureBuilder<PageResult<NewsItem>>(
             future: _newsFuture,
             builder: (context, snapshot) {
@@ -92,25 +113,11 @@ class _HomeTabState extends State<HomeTab> {
               final items = snapshot.data?.items ?? const <NewsItem>[];
 
               if (items.isEmpty) {
-                return const Padding(padding: EdgeInsets.all(16), child: Text('Trenutno nema novosti.'));
+                return const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: Text('Trenutno nema novosti.'));
               }
 
               return Column(
-                children: [
-                  for (final item in items)
-                    Card(
-                      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                      child: ListTile(
-                        leading: const Icon(Icons.campaign_outlined),
-                        title: Text(item.title, maxLines: 2, overflow: TextOverflow.ellipsis),
-                        subtitle: Text(Formatters.date(item.publishedAt)),
-                        trailing: const Icon(Icons.chevron_right),
-                        onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute(builder: (_) => NewsDetailsScreen(item: item)),
-                        ),
-                      ),
-                    ),
-                ],
+                children: [for (final item in items) _NewsCard(item: item, service: _news)],
               );
             },
           ),
@@ -120,33 +127,139 @@ class _HomeTabState extends State<HomeTab> {
   }
 }
 
-class _CategoryTile extends StatelessWidget {
-  const _CategoryTile({required this.type, required this.onTap});
+class _SearchEntry extends StatelessWidget {
+  const _SearchEntry({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
+    return Material(
+      color: scheme.surfaceContainerLowest,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(14),
+        side: BorderSide(color: scheme.outlineVariant),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+          child: Row(
+            children: [
+              Icon(Icons.search, color: scheme.onSurfaceVariant),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Pretraži smještaj, opremu, aktivnosti…',
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _HeroCard extends StatelessWidget {
+  const _HeroCard({required this.onExplore});
+
+  final VoidCallback onExplore;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: SizedBox(
+        height: 210,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.asset('assets/images/hero.jpg', fit: BoxFit.cover),
+            const DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0x11000000), Color(0xCC0F1F17)],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    'Malo mjesto.\nVeliki doživljaji.',
+                    style: theme.textTheme.headlineSmall?.copyWith(color: Colors.white, height: 1.15),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Rijeka, kanjon i planina na dohvat ruke.',
+                    style: theme.textTheme.bodySmall?.copyWith(color: Colors.white70),
+                  ),
+                  const SizedBox(height: 12),
+                  FilledButton.icon(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppColors.terracotta,
+                      foregroundColor: Colors.white,
+                      visualDensity: VisualDensity.compact,
+                    ),
+                    onPressed: onExplore,
+                    icon: const Icon(Icons.arrow_forward, size: 18),
+                    label: const Text('Istraži ponudu'),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CategoryButton extends StatelessWidget {
+  const _CategoryButton({required this.type, required this.onTap});
 
   final ItemType type;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: onTap,
-        child: Container(
-          width: 88,
-          decoration: BoxDecoration(
-            color: type.color.withValues(alpha: 0.12),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(type.icon, color: type.color, size: 30),
-              const SizedBox(height: 6),
-              Text(type.pluralLabel, style: TextStyle(color: type.color, fontWeight: FontWeight.w600)),
-            ],
-          ),
+    return InkWell(
+      borderRadius: BorderRadius.circular(16),
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6),
+        child: Column(
+          children: [
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                color: type.color.withValues(alpha: 0.14),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(type.icon, color: type.color, size: 26),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              type.pluralLabel,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.labelMedium,
+            ),
+          ],
         ),
       ),
     );
@@ -178,19 +291,22 @@ class _RecommendationsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             children: [
-              Text(personalized ? 'Preporučeno za vas' : 'Popularno među gostima', style: theme.textTheme.titleLarge),
+              Flexible(
+                child: Text(personalized ? 'Preporučeno za vas' : 'Popularno među gostima',
+                    style: theme.textTheme.titleLarge),
+              ),
               const SizedBox(width: 6),
               Icon(personalized ? Icons.auto_awesome : Icons.local_fire_department_outlined,
-                  color: theme.colorScheme.primary, size: 20),
+                  color: AppColors.cta(context), size: 20),
             ],
           ),
         ),
         if (!personalized)
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 2, 16, 0),
+            padding: const EdgeInsets.fromLTRB(20, 2, 20, 0),
             child: Text(
               'Ocijenite ili sačuvajte ono što vam se sviđa, pa ćemo vam preporučivati po vašem ukusu.',
               style: theme.textTheme.bodySmall,
@@ -198,10 +314,10 @@ class _RecommendationsSection extends StatelessWidget {
           ),
         const SizedBox(height: 10),
         SizedBox(
-          height: 210,
+          height: 250,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             itemCount: items.length,
             itemBuilder: (context, index) => _RecommendationCard(item: items[index]),
           ),
@@ -220,42 +336,54 @@ class _RecommendationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final type = item.itemType;
+    final url = itemImageUrl(context.read<ApiClient>(), type, item.itemId,
+        coverImageId: item.coverImageId, hasImage: item.hasImage);
 
     return SizedBox(
-      width: 220,
+      width: 190,
       child: Card(
+        margin: const EdgeInsets.symmetric(horizontal: 4),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: () => openItemDetails(context, type, item.itemId),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                height: 64,
+              SizedBox(
+                height: 130,
                 width: double.infinity,
-                color: type.color.withValues(alpha: 0.14),
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Row(
+                child: Stack(
+                  fit: StackFit.expand,
                   children: [
-                    Icon(type.icon, color: type.color),
-                    const SizedBox(width: 8),
-                    Text(type.label, style: TextStyle(color: type.color, fontWeight: FontWeight.w600)),
+                    url == null
+                        ? Container(
+                            color: type.color.withValues(alpha: 0.14),
+                            child: Icon(type.icon, color: type.color, size: 40),
+                          )
+                        : AuthImage(url: url),
+                    Positioned(
+                      top: 4,
+                      right: 4,
+                      child: FavoriteButton(type: type, id: item.itemId, filled: true),
+                    ),
+                    Positioned(left: 8, bottom: 8, child: _TypeLabel(type: type)),
                   ],
                 ),
               ),
-                          Expanded(
+              Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(item.itemName, maxLines: 2, overflow: TextOverflow.ellipsis, style: theme.textTheme.titleSmall),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: 4),
                       Expanded(
                         child: Text(
                           item.reason,
-                          overflow: TextOverflow.fade,
-                          style: theme.textTheme.bodySmall?.copyWith(fontStyle: FontStyle.italic),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodySmall,
                         ),
                       ),
                     ],
@@ -264,6 +392,78 @@ class _RecommendationCard extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _TypeLabel extends StatelessWidget {
+  const _TypeLabel({required this.type});
+
+  final ItemType type;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.92),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        type.label,
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(color: type.color, fontWeight: FontWeight.w600),
+      ),
+    );
+  }
+}
+
+class _NewsCard extends StatelessWidget {
+  const _NewsCard({required this.item, required this.service});
+
+  final NewsItem item;
+  final NewsService service;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => NewsDetailsScreen(item: item)),
+        ),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 88,
+              height: 76,
+              child: item.hasImage
+                  ? AuthImage(url: service.imageUrl(item.id))
+                  : Container(
+                      color: scheme.primaryContainer,
+                      child: Icon(Icons.campaign_outlined, color: scheme.onPrimaryContainer),
+                    ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(item.title, maxLines: 2, overflow: TextOverflow.ellipsis, style: theme.textTheme.titleSmall),
+                    const SizedBox(height: 2),
+                    Text(Formatters.date(item.publishedAt), style: theme.textTheme.bodySmall),
+                  ],
+                ),
+              ),
+            ),
+            const Padding(padding: EdgeInsets.only(right: 8), child: Icon(Icons.chevron_right)),
+          ],
         ),
       ),
     );

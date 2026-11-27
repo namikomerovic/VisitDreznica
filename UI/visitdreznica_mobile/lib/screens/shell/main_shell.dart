@@ -89,6 +89,7 @@ class _MainShellState extends State<MainShell> {
               _exploreType.value = type;
               setState(() => _index = 1);
             },
+            onOpenExplore: () => setState(() => _index = 1),
           ),
           ExploreTab(selectedType: _exploreType),
           ReservationsTab(

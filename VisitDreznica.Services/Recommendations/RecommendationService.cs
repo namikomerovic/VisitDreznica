@@ -73,7 +73,9 @@ public class RecommendationService(
             .OrderByDescending(x => x.Score)
             .Take(take)
             .ToList();
-    }    private static List<RecommendationResponse> Popular(RecommenderSnapshot snapshot, List<CatalogItem> candidates, int take)
+    }
+
+    private static List<RecommendationResponse> Popular(RecommenderSnapshot snapshot, List<CatalogItem> candidates, int take)
     {
         var mean = snapshot.GlobalMean > 0 ? snapshot.GlobalMean : 3.5;
 
@@ -174,16 +176,20 @@ public class RecommendationService(
         var items = new List<CatalogItem>();
 
         items.AddRange(await dbContext.Set<Room>().AsNoTracking().Where(x => x.IsActive)
-            .Select(x => new CatalogItem(ItemType.Room, x.Id, x.Name)).ToListAsync());
+            .Select(x => new CatalogItem(ItemType.Room, x.Id, x.Name,
+                x.Images.Where(i => i.IsCover).Select(i => (int?)i.Id).FirstOrDefault(), x.Images.Any()))
+            .ToListAsync());
 
         items.AddRange(await dbContext.Set<Equipment>().AsNoTracking().Where(x => x.IsActive)
-            .Select(x => new CatalogItem(ItemType.Equipment, x.Id, x.Name)).ToListAsync());
+            .Select(x => new CatalogItem(ItemType.Equipment, x.Id, x.Name, null, x.ImageData != null)).ToListAsync());
 
         items.AddRange(await dbContext.Set<Activity>().AsNoTracking().Where(x => x.IsActive)
-            .Select(x => new CatalogItem(ItemType.Activity, x.Id, x.Name)).ToListAsync());
+            .Select(x => new CatalogItem(ItemType.Activity, x.Id, x.Name, null, x.ImageData != null)).ToListAsync());
 
         items.AddRange(await dbContext.Set<Place>().AsNoTracking().Where(x => x.IsActive)
-            .Select(x => new CatalogItem(ItemType.Place, x.Id, x.Name)).ToListAsync());
+            .Select(x => new CatalogItem(ItemType.Place, x.Id, x.Name,
+                x.Images.Where(i => i.IsCover).Select(i => (int?)i.Id).FirstOrDefault(), x.Images.Any()))
+            .ToListAsync());
 
         return items.ToDictionary(x => x.Key);
     }
@@ -195,10 +201,12 @@ public class RecommendationService(
         ItemName = item.Name,
         Score = score,
         Reason = reason,
-        IsPersonalized = isPersonalized
+        IsPersonalized = isPersonalized,
+        CoverImageId = item.CoverImageId,
+        HasImage = item.HasImage
     };
 
-    private sealed record CatalogItem(ItemType Type, int Id, string Name)
+    private sealed record CatalogItem(ItemType Type, int Id, string Name, int? CoverImageId, bool HasImage)
     {
         public string Key => ItemKeys.From(Type, Id);
     }

@@ -4,25 +4,42 @@ import '../models/item_type.dart';
 import '../models/reservation_status.dart';
 
 abstract final class AppColors {
-  // Boje iz loga Visit Drežnica
-  static const brandRed = Color(0xFFEF4734);
-  static const brandYellow = Color(0xFFFAF6B1);
-  static const brandGreen = Color(0xFF8CCA74);
-  static const brandBlue = Color(0xFF6BB0E1);
+  // Paleta: šumsko zelena (osnovna), terakota (glavne akcije), topla krem pozadina
+  static const forest = Color(0xFF1F3D2E);
+  static const forestDeep = Color(0xFF172E23);
+  static const forestSoft = Color(0xFFE3ECE5);
+  static const sage = Color(0xFF5B6F62);
+  static const terracotta = Color(0xFFC4572E);
+  static const terracottaSoft = Color(0xFFF6E3DA);
+  static const cream = Color(0xFFF7F5EF);
+  static const sand = Color(0xFFE6E2D8);
+  static const ink = Color(0xFF1C1F1D);
+  static const muted = Color(0xFF6B6F68);
 
-  // Vrste stavki – tamnije nijanse boja iz loga, čitljive na svijetloj i tamnoj pozadini
-  static const room = Color(0xFF3A8FD1);
-  static const equipment = Color(0xFF4FA341);
-  static const activity = Color(0xFFD9A300);
-  static const place = Color(0xFFE5533F);
+  // Tamni način
+  static const nightBackground = Color(0xFF111714);
+  static const nightSurface = Color(0xFF19211D);
+  static const nightCard = Color(0xFF1F2924);
+  static const nightForest = Color(0xFF8FC2A2);
+  static const nightTerracotta = Color(0xFFE07A50);
+
+  // Glavne akcije (Rezerviši, Plati, Prijavi se) – terakota, i u tamnom načinu
+  static Color cta(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark ? nightTerracotta : terracotta;
+
+  // Vrste stavki – prigušeni tonovi koji se slažu s paletom
+  static const room = Color(0xFF4A7FA6);
+  static const equipment = Color(0xFF5E8F4E);
+  static const activity = Color(0xFFC18A1E);
+  static const place = Color(0xFFB5523B);
 
   // Značenja
-  static const success = Color(0xFF22A55A);
-  static const warning = Color(0xFFF59E0B);
-  static const danger = Color(0xFFE5484D);
-  static const info = Color(0xFF3B82F6);
-  static const neutral = Color(0xFF8B95A1);
-  static const star = Color(0xFFF5A623);
+  static const success = Color(0xFF2E8B57);
+  static const warning = Color(0xFFD9930D);
+  static const danger = Color(0xFFD64545);
+  static const info = Color(0xFF3F7CAC);
+  static const neutral = Color(0xFF8B918A);
+  static const star = Color(0xFFF2A922);
 
   static Color forItemType(ItemType type) => switch (type) {
         ItemType.room => room,

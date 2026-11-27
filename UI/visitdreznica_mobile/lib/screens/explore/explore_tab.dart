@@ -167,7 +167,7 @@ class _ExploreTabState extends State<ExploreTab> {
               ],
             )
           : ListView.builder(
-              padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               itemCount: _items.length,
               itemBuilder: (context, index) {
                 final item = _items[index];

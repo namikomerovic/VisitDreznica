@@ -10,4 +10,6 @@ public class RecommendationResponse
     public double Score { get; set; }
     public string Reason { get; set; } = string.Empty;
     public bool IsPersonalized { get; set; }
+    public int? CoverImageId { get; set; }
+    public bool HasImage { get; set; }
 }

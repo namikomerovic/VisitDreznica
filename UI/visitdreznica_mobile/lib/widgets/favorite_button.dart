@@ -25,7 +25,7 @@ class FavoriteButton extends StatelessWidget {
       onPressed: busy ? null : () => _toggle(context, favorites, isFavorite),
       icon: Icon(
         isFavorite ? Icons.favorite : Icons.favorite_border,
-        color: isFavorite ? Colors.red : null,
+        color: isFavorite ? AppColors.cta(context) : null,
       ),
     );
   }
