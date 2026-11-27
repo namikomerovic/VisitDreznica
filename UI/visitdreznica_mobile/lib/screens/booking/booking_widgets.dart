@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:visitdreznica_core/visitdreznica_core.dart';
 
 class CounterField extends StatelessWidget {
   const CounterField({
@@ -49,8 +50,8 @@ class NoteField extends StatelessWidget {
       maxLines: 2,
       maxLength: 500,
       textCapitalization: TextCapitalization.sentences,
-      decoration: const InputDecoration(
-        labelText: 'Napomena (nije obavezna)',
+      decoration: InputDecoration(
+        labelText: tr.noteOptional,
         border: OutlineInputBorder(),
       ),
     );
@@ -93,7 +94,7 @@ class PriceSummary extends StatelessWidget {
             const Divider(height: 20),
             Row(
               children: [
-                Expanded(child: Text('Ukupno', style: theme.textTheme.titleMedium)),
+                Expanded(child: Text(tr.total, style: theme.textTheme.titleMedium)),
                 Text(
                   total,
                   style: theme.textTheme.titleMedium?.copyWith(
@@ -133,7 +134,7 @@ class BookingBar extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Ukupno', style: theme.textTheme.bodySmall),
+                        Text(tr.total, style: theme.textTheme.bodySmall),
                         Text(total!, style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700)),
                       ],
                     ),
@@ -144,7 +145,7 @@ class BookingBar extends StatelessWidget {
               icon: busy
                   ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
                   : const Icon(Icons.lock_outline),
-              label: const Text('Rezerviši i plati'),
+              label: Text(tr.reserveAndPay),
             ),
           ],
         ),
@@ -153,27 +154,18 @@ class BookingBar extends StatelessWidget {
   }
 }
 
-String countLabel(int count, String one, String few, String many) {
-  final lastDigit = count % 10;
-  final lastTwo = count % 100;
-
-  if (lastDigit == 1 && lastTwo != 11) return one;
-  if (lastDigit >= 2 && lastDigit <= 4 && (lastTwo < 12 || lastTwo > 14)) return few;
-  return many;
-}
-
 Future<bool> confirmPayment(BuildContext context, String amount) async {
   final confirmed = await showDialog<bool>(
     context: context,
     builder: (context) => AlertDialog(
-      title: const Text('Potvrda plaćanja'),
-      content: Text('Nastaviti na plaćanje karticom u iznosu od $amount?'),
+      title: Text(tr.paymentConfirmation),
+      content: Text(tr.continueToCardPayment(amount)),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Odustani')),
+        TextButton(onPressed: () => Navigator.pop(context, false), child: Text(tr.cancel)),
         FilledButton.icon(
           onPressed: () => Navigator.pop(context, true),
           icon: const Icon(Icons.lock_outline),
-          label: const Text('Plati'),
+          label: Text(tr.pay),
         ),
       ],
     ),

@@ -25,7 +25,7 @@ class ItemDetailsScreen extends StatefulWidget {
   State<ItemDetailsScreen> createState() => _ItemDetailsScreenState();
 }
 
-class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
+class _ItemDetailsScreenState extends State<ItemDetailsScreen> with ReloadOnLocaleChange {
   late final ItemDetailsLoader _loader;
   late Future<ItemDetails> _future;
 
@@ -37,6 +37,9 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
     _future = _loader.load(widget.type, widget.id);
     _recordView(ContentViewService(api));
   }
+
+  @override
+  void onLocaleChanged() => setState(() => _future = _loader.load(widget.type, widget.id));
 
   Future<void> _recordView(ContentViewService service) async {
     try {
@@ -72,7 +75,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                     Text(
                       error is ApiException
                           ? error.message
-                          : 'Detalje nije moguće učitati.',
+                          : tr.detailsLoadError,
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 12),
@@ -80,7 +83,7 @@ class _ItemDetailsScreenState extends State<ItemDetailsScreen> {
                       onPressed: () => setState(
                         () => _future = _loader.load(widget.type, widget.id),
                       ),
-                      child: const Text('Pokušaj ponovo'),
+                      child: Text(tr.retry),
                     ),
                   ],
                 ),
@@ -116,7 +119,7 @@ class _DetailsView extends StatelessWidget {
             leading: Padding(
               padding: const EdgeInsets.all(8),
               child: IconButton(
-                tooltip: 'Nazad',
+                tooltip: tr.back,
                 style: IconButton.styleFrom(
                   backgroundColor: theme.colorScheme.surface.withValues(alpha: 0.85),
                 ),
@@ -133,7 +136,7 @@ class _DetailsView extends StatelessWidget {
             ),
           ),
           SliverToBoxAdapter(
-            child: Padding(
+            child: ContentWidth(maxWidth: 760, child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,7 +175,7 @@ class _DetailsView extends StatelessWidget {
                   ),
                   if (description != null && description.isNotEmpty) ...[
                     const SizedBox(height: 24),
-                    Text('Opis', style: theme.textTheme.titleLarge),
+                    Text(tr.description, style: theme.textTheme.titleLarge),
                     const SizedBox(height: 8),
                     Text(
                       description,
@@ -181,7 +184,7 @@ class _DetailsView extends StatelessWidget {
                   ],
                   if (details.tags.isNotEmpty) ...[
                     const SizedBox(height: 24),
-                    Text('Sadržaji', style: theme.textTheme.titleLarge),
+                    Text(tr.amenities, style: theme.textTheme.titleLarge),
                     const SizedBox(height: 8),
                     Wrap(
                       spacing: 8,
@@ -198,14 +201,14 @@ class _DetailsView extends StatelessWidget {
                   if (details.latitude != null &&
                       details.longitude != null) ...[
                     const SizedBox(height: 24),
-                    Text('Lokacija', style: theme.textTheme.titleLarge),
+                    Text(tr.location, style: theme.textTheme.titleLarge),
                     const SizedBox(height: 8),
                     _LocationPreview(details: details),
                   ],
                   if (type == ItemType.activity) ...[
                     const SizedBox(height: 24),
                     Text(
-                      'Nadolazeći termini',
+                      tr.upcomingSlots,
                       style: theme.textTheme.titleLarge,
                     ),
                     const SizedBox(height: 4),
@@ -215,7 +218,7 @@ class _DetailsView extends StatelessWidget {
                   ReviewsSection(type: type, itemId: details.id),
                 ],
               ),
-            ),
+            )),
           ),
         ],
       ),
@@ -245,10 +248,10 @@ class _DetailsView extends StatelessWidget {
                         foregroundColor: Colors.white,
                         minimumSize: const Size(150, 52),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Text('Rezerviši'),
+                          Text(tr.reserve),
                           SizedBox(width: 6),
                           Icon(Icons.arrow_forward, size: 18),
                         ],
@@ -298,9 +301,9 @@ class _SlotsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (slots.isEmpty) {
-      return const Padding(
+      return Padding(
         padding: EdgeInsets.symmetric(vertical: 8),
-        child: Text('Trenutno nema zakazanih termina.'),
+        child: Text(tr.noScheduledSlots),
       );
     }
 
@@ -311,11 +314,11 @@ class _SlotsList extends StatelessWidget {
             contentPadding: EdgeInsets.zero,
             leading: const Icon(Icons.event_outlined),
             title: Text(Formatters.dateTime(slot.startTime)),
-            subtitle: Text('Vodič: ${slot.guideFullName}'),
+            subtitle: Text(tr.guideName(slot.guideFullName)),
             trailing: Text(
               slot.availableSpots == 0
-                  ? 'Popunjeno'
-                  : 'Slobodno: ${slot.availableSpots}',
+                  ? tr.slotFull
+                  : tr.spotsFree(slot.availableSpots),
               style: TextStyle(
                 color: slot.availableSpots == 0
                     ? Theme.of(context).colorScheme.error
@@ -393,7 +396,7 @@ class _LocationPreview extends StatelessWidget {
               child: OutlinedButton.icon(
                 onPressed: openMap,
                 icon: const Icon(Icons.map_outlined),
-                label: const Text('Otvori mapu'),
+                label: Text(tr.openMap),
               ),
             ),
             const SizedBox(width: 8),
@@ -401,7 +404,7 @@ class _LocationPreview extends StatelessWidget {
               child: FilledButton.tonalIcon(
                 onPressed: () => openDirections(context, latitude, longitude),
                 icon: const Icon(Icons.directions_outlined),
-                label: const Text('Upute'),
+                label: Text(tr.directions),
               ),
             ),
           ],

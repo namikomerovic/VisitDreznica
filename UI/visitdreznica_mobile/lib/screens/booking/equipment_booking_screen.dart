@@ -80,7 +80,7 @@ class _EquipmentBookingScreenState extends State<EquipmentBookingScreen> {
       initialDate: _day,
       firstDate: today,
       lastDate: DateTime(today.year, today.month + 3, today.day),
-      helpText: 'Dan najma',
+      helpText: tr.rentalDay,
     );
 
     if (picked == null) return;
@@ -147,7 +147,7 @@ class _EquipmentBookingScreenState extends State<EquipmentBookingScreen> {
 
     if (equipment == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Najam opreme')),
+        appBar: AppBar(title: Text(tr.equipmentRental)),
         body: Center(child: _loadError == null ? const CircularProgressIndicator() : Text(_loadError!)),
       );
     }
@@ -156,18 +156,21 @@ class _EquipmentBookingScreenState extends State<EquipmentBookingScreen> {
     final canSubmit = quote != null && quote.isAvailable && !_quoting;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Najam opreme')),
+      appBar: AppBar(title: Text(tr.equipmentRental)),
       body: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: Breakpoints.centered(context),
         children: [
           Text(equipment.name, style: theme.textTheme.headlineSmall),
           Text(
-            'Prvi sat ${Formatters.money(equipment.firstHourPrice)}, svaki sljedeći '
-            '${Formatters.money(equipment.additionalHourPrice)}, cijeli dan najviše ${Formatters.money(equipment.fullDayPrice)}',
+            tr.equipmentPricing(
+              Formatters.money(equipment.firstHourPrice),
+              Formatters.money(equipment.additionalHourPrice),
+              Formatters.money(equipment.fullDayPrice),
+            ),
             style: theme.textTheme.bodyMedium,
           ),
           const SizedBox(height: 24),
-          Text('Dan i vrijeme preuzimanja', style: theme.textTheme.titleMedium),
+          Text(tr.pickupDayAndTime, style: theme.textTheme.titleMedium),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -184,7 +187,7 @@ class _EquipmentBookingScreenState extends State<EquipmentBookingScreen> {
                 width: 120,
                 child: DropdownButtonFormField<int>(
                   initialValue: _startHour,
-                  decoration: const InputDecoration(labelText: 'Od', border: OutlineInputBorder()),
+                  decoration: InputDecoration(labelText: tr.from, border: const OutlineInputBorder()),
                   items: [
                     for (final hour in _startHours)
                       DropdownMenuItem(value: hour, child: Text('${hour.toString().padLeft(2, '0')}:00')),
@@ -196,7 +199,7 @@ class _EquipmentBookingScreenState extends State<EquipmentBookingScreen> {
           ),
           const SizedBox(height: 20),
           CounterField(
-            label: 'Trajanje (sati)',
+            label: tr.durationHours,
             value: _hours,
             min: 1,
             max: _maxHours,
@@ -204,14 +207,14 @@ class _EquipmentBookingScreenState extends State<EquipmentBookingScreen> {
           ),
           const SizedBox(height: 8),
           CounterField(
-            label: 'Broj komada',
+            label: tr.numberOfPieces,
             value: _quantity,
             min: 1,
             max: math.min(equipment.totalQuantity, 20),
             onChanged: (value) => _change(() => _quantity = value),
           ),
           const SizedBox(height: 4),
-          Text('Vraćanje: ${Formatters.dateTime(_end)}', style: theme.textTheme.bodySmall),
+          Text(tr.returnAt(Formatters.dateTime(_end)), style: theme.textTheme.bodySmall),
           const SizedBox(height: 20),
           NoteField(controller: _note),
           const SizedBox(height: 8),
@@ -219,14 +222,14 @@ class _EquipmentBookingScreenState extends State<EquipmentBookingScreen> {
           if (_quoteError != null) MessageBox(text: _quoteError!, isError: true),
           if (quote != null && !quote.isAvailable)
             MessageBox(
-              text: 'U tom periodu slobodno je samo ${quote.availableQuantity} kom. Smanjite broj komada ili promijenite termin.',
+              text: tr.onlyPiecesAvailable(quote.availableQuantity),
               isError: true,
             ),
           if (quote != null)
             PriceSummary(
               rows: [
-                PriceRow('Cijena po komadu (${quote.hours} h)', Formatters.money(quote.unitPrice)),
-                PriceRow('Broj komada', '× ${quote.quantity}'),
+                PriceRow(tr.pricePerPieceHours(quote.hours), Formatters.money(quote.unitPrice)),
+                PriceRow(tr.numberOfPieces, '× ${quote.quantity}'),
               ],
               total: Formatters.money(quote.totalPrice),
             ),

@@ -93,8 +93,8 @@ class _RoomBookingScreenState extends State<RoomBookingScreen> {
       firstDate: today,
       lastDate: DateTime(today.year + 1, today.month, today.day),
       selectableDayPredicate: _isSelectable,
-      helpText: 'Odaberite dolazak i odlazak',
-      saveText: 'Potvrdi',
+      helpText: tr.selectArrivalDeparture,
+      saveText: tr.confirm,
     );
 
     if (picked == null) return;
@@ -160,7 +160,7 @@ class _RoomBookingScreenState extends State<RoomBookingScreen> {
 
     if (room == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Rezervacija sobe')),
+        appBar: AppBar(title: Text(tr.roomBooking)),
         body: Center(child: _loadError == null ? const CircularProgressIndicator() : Text(_loadError!)),
       );
     }
@@ -169,29 +169,29 @@ class _RoomBookingScreenState extends State<RoomBookingScreen> {
     final range = _range;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Rezervacija sobe')),
+      appBar: AppBar(title: Text(tr.roomBooking)),
       body: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: Breakpoints.centered(context),
         children: [
           Text(room.name, style: theme.textTheme.headlineSmall),
-          Text('${Formatters.money(room.pricePerNight)} / noć · do ${room.capacity} osoba',
+          Text(tr.roomPriceCapacity(Formatters.money(room.pricePerNight), tr.upToPeople(room.capacity)),
               style: theme.textTheme.bodyMedium),
           const SizedBox(height: 24),
-          Text('Termin boravka', style: theme.textTheme.titleMedium),
+          Text(tr.stayPeriod, style: theme.textTheme.titleMedium),
           const SizedBox(height: 8),
           OutlinedButton.icon(
             onPressed: _submitting ? null : _pickDates,
             style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(52)),
             icon: const Icon(Icons.date_range),
             label: Text(range == null
-                ? 'Odaberite datume'
+                ? tr.selectDates
                 : '${Formatters.date(range.start)} – ${Formatters.date(range.end)}'),
           ),
           const SizedBox(height: 6),
-          Text('Zauzeti dani su u kalendaru onemogućeni.', style: theme.textTheme.bodySmall),
+          Text(tr.bookedDaysDisabled, style: theme.textTheme.bodySmall),
           const SizedBox(height: 20),
           CounterField(
-            label: 'Broj gostiju',
+            label: tr.numberOfGuests,
             value: _guests,
             min: 1,
             max: math.min(room.capacity, 10),
@@ -209,10 +209,10 @@ class _RoomBookingScreenState extends State<RoomBookingScreen> {
             PriceSummary(
               rows: [
                 PriceRow(
-                  '${Formatters.money(quote.pricePerNight)} × ${quote.nights} ${countLabel(quote.nights, 'noć', 'noći', 'noći')}',
+                  '${Formatters.money(quote.pricePerNight)} × ${tr.nightsCount(quote.nights)}',
                   Formatters.money(quote.accommodationPrice),
                 ),
-                PriceRow('Boravišna taksa', Formatters.money(quote.touristTax)),
+                PriceRow(tr.touristTax, Formatters.money(quote.touristTax)),
               ],
               total: Formatters.money(quote.totalPrice),
             ),

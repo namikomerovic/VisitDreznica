@@ -74,8 +74,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       if (!mounted) return;
       setState(() {
         _codeSent = true;
-        _info = 'Ako postoji račun s adresom ${_email.text.trim()}, poslali smo mu šestocifreni kod. '
-            'Provjerite inbox i spam folder.';
+        _info = tr.resetCodeSent(_email.text.trim());
       });
     });
   }
@@ -105,17 +104,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Zaboravljena lozinka')),
+      appBar: AppBar(title: Text(tr.forgottenPassword)),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
-          child: Column(
+          child: ContentWidth(child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
                 _codeSent
-                    ? 'Unesite kod iz e-maila i novu lozinku.'
-                    : 'Unesite e-mail adresu svog računa. Poslat ćemo vam kod za postavljanje nove lozinke.',
+                    ? tr.enterCodeAndNewPassword
+                    : tr.enterAccountEmail,
                 style: theme.textTheme.bodyLarge,
               ),
               const SizedBox(height: 20),
@@ -126,7 +125,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 child: EmailField(
                   controller: _email,
                   enabled: !_busy && !_codeSent,
-                  decoration: _decoration('E-mail', 'email', Icons.email_outlined),
+                  decoration: _decoration(tr.email, 'email', Icons.email_outlined),
                   validator: validateEmail,
                 ),
               ),
@@ -137,7 +136,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52)),
                   child: _busy
                       ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.5))
-                      : const Text('Pošalji kod'),
+                      : Text(tr.sendCode),
                 )
               else
                 Form(
@@ -151,10 +150,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         keyboardType: TextInputType.number,
                         maxLength: 6,
                         textInputAction: TextInputAction.next,
-                        decoration: _decoration('Kod iz e-maila', 'code', Icons.pin_outlined),
+                        decoration: _decoration(tr.codeFromEmail, 'code', Icons.pin_outlined),
                         validator: (value) => RegExp(r'^\d{6}$').hasMatch(value?.trim() ?? '')
                             ? null
-                            : 'Kod se sastoji od tačno 6 cifara.',
+                            : tr.codeSixDigits,
                       ),
                       const SizedBox(height: 8),
                       TextFormField(
@@ -163,10 +162,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         obscureText: _obscure,
                         textInputAction: TextInputAction.next,
                         decoration: _decoration(
-                          'Nova lozinka',
+                          tr.newPassword,
                           'newPassword',
                           Icons.lock_outline,
-                          helper: 'Najmanje 8 znakova, slovo i broj.',
+                          helper: tr.passwordHint,
                           suffix: IconButton(
                             icon: Icon(_obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined),
                             onPressed: () => setState(() => _obscure = !_obscure),
@@ -181,8 +180,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         obscureText: _obscure,
                         textInputAction: TextInputAction.done,
                         onFieldSubmitted: (_) => _resetPassword(),
-                        decoration: _decoration('Potvrda nove lozinke', 'newPasswordConfirmation', Icons.lock_outline),
-                        validator: (value) => value == _password.text ? null : 'Lozinke se ne podudaraju.',
+                        decoration: _decoration(tr.confirmNewPassword, 'newPasswordConfirmation', Icons.lock_outline),
+                        validator: (value) => value == _password.text ? null : tr.passwordsDoNotMatch,
                       ),
                       const SizedBox(height: 24),
                       FilledButton(
@@ -190,18 +189,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52)),
                         child: _busy
                             ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.5))
-                            : const Text('Postavi novu lozinku'),
+                            : Text(tr.setNewPassword),
                       ),
                       const SizedBox(height: 8),
                       TextButton(
                         onPressed: _busy ? null : _sendCode,
-                        child: const Text('Nije stigao kod? Pošalji ponovo'),
+                        child: Text(tr.resendCode),
                       ),
                     ],
                   ),
                 ),
             ],
-          ),
+          )),
         ),
       ),
     );

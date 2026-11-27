@@ -12,7 +12,7 @@ class RatingBadge extends StatelessWidget {
     final style = Theme.of(context).textTheme.bodySmall;
 
     if (average == null || count == 0) {
-      return Text('Još nema ocjena', style: style);
+      return Text(tr.noRatingsYet, style: style);
     }
 
     return Row(

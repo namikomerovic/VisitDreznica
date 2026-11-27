@@ -18,7 +18,7 @@ class FavoriteButton extends StatelessWidget {
     final busy = favorites.isBusy(type, id);
 
     return IconButton(
-      tooltip: isFavorite ? 'Ukloni iz favorita' : 'Dodaj u favorite',
+      tooltip: isFavorite ? tr.removeFromFavorites : tr.addToFavorites,
       style: filled
           ? IconButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.surface.withValues(alpha: 0.85))
           : null,
@@ -37,7 +37,7 @@ class FavoriteButton extends StatelessWidget {
       await favorites.toggle(type, id);
       messenger.showSnackBar(SnackBar(
         duration: const Duration(seconds: 2),
-        content: Text(wasFavorite ? 'Uklonjeno iz favorita.' : 'Dodano u favorite.'),
+        content: Text(wasFavorite ? tr.removedFromFavorites : tr.addedToFavorites),
       ));
     } on ApiException catch (e) {
       messenger.showSnackBar(SnackBar(content: Text(e.message)));

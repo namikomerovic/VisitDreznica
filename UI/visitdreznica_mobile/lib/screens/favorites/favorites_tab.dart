@@ -29,7 +29,7 @@ class FavoritesTab extends StatelessWidget {
             children: [
               Text(favorites.error!, textAlign: TextAlign.center),
               const SizedBox(height: 12),
-              OutlinedButton(onPressed: favorites.load, child: const Text('Pokušaj ponovo')),
+              OutlinedButton(onPressed: favorites.load, child: Text(tr.retry)),
             ],
           ),
         ),
@@ -44,12 +44,12 @@ class FavoritesTab extends StatelessWidget {
                 const SizedBox(height: 120),
                 Icon(Icons.favorite_outline, size: 56, color: theme.colorScheme.outline),
                 const SizedBox(height: 12),
-                const Center(child: Text('Još nemate favorita.')),
+                Center(child: Text(tr.noFavoritesYet)),
                 const SizedBox(height: 4),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 32),
                   child: Text(
-                    'Dodirnite ♥ na sobi, opremi, aktivnosti ili mjestu i sačuvajte ga ovdje.',
+                    tr.favoritesHint,
                     textAlign: TextAlign.center,
                     style: theme.textTheme.bodySmall,
                   ),
@@ -76,7 +76,7 @@ class FavoritesTab extends StatelessWidget {
                     ),
                   ),
                   title: Text(favorite.itemName),
-                  subtitle: Text('${type.label} · sačuvano ${Formatters.date(favorite.createdAt)}'),
+                  subtitle: Text(tr.savedOn(type.label, Formatters.date(favorite.createdAt))),
                   trailing: FavoriteButton(type: type, id: favorite.itemId),
                   onTap: () => openItemDetails(context, type, favorite.itemId),
                 );

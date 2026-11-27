@@ -13,7 +13,7 @@ class NewsDetailsScreen extends StatelessWidget {
     final service = NewsService(context.read<ApiClient>());
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Novost')),
+      appBar: AppBar(title: Text(tr.newsItem)),
       body: ListView(
         children: [
           if (item.hasImage) AspectRatio(aspectRatio: 16 / 9, child: AuthImage(url: service.imageUrl(item.id))),

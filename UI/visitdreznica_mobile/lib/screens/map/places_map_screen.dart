@@ -60,7 +60,7 @@ class _PlacesMapScreenState extends State<PlacesMapScreen> {
     final places = _places;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Mapa mjesta')),
+      appBar: AppBar(title: Text(tr.placesMap)),
       body: places == null
           ? Center(child: _error == null ? const CircularProgressIndicator() : Text(_error!))
           : _buildMap(places),
@@ -115,7 +115,7 @@ class _PlacesMapScreenState extends State<PlacesMapScreen> {
           right: 12,
           child: FloatingActionButton.small(
             heroTag: 'accommodation',
-            tooltip: 'Smještaj',
+            tooltip: tr.accommodation,
             onPressed: () => _map.move(_accommodation, 13),
             child: const Icon(Icons.house_outlined),
           ),
@@ -153,7 +153,7 @@ class _PlaceCard extends StatelessWidget {
             Text(place.name, style: theme.textTheme.titleMedium),
             const SizedBox(height: 2),
             Text(
-              '${place.placeTypeName} · ${Formatters.decimal(place.distanceKm)} km od smještaja',
+              '${place.placeTypeName} · ${tr.kmFromAccommodation(Formatters.decimal(place.distanceKm))}',
               style: theme.textTheme.bodySmall,
             ),
             if (address != null && address.isNotEmpty) ...[
@@ -167,7 +167,7 @@ class _PlaceCard extends StatelessWidget {
                   child: OutlinedButton.icon(
                     onPressed: () => openDirections(context, place.latitude, place.longitude),
                     icon: const Icon(Icons.directions_outlined),
-                    label: const Text('Upute'),
+                    label: Text(tr.directions),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -175,7 +175,7 @@ class _PlaceCard extends StatelessWidget {
                   child: FilledButton.icon(
                     onPressed: () => openItemDetails(context, ItemType.place, place.id),
                     icon: const Icon(Icons.info_outline),
-                    label: const Text('Detalji'),
+                    label: Text(tr.details),
                   ),
                 ),
               ],

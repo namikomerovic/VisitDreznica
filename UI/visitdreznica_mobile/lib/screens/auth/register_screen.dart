@@ -105,11 +105,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Registracija')),
+      appBar: AppBar(title: Text(tr.registration)),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
-          child: Form(
+          child: ContentWidth(
+            child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -120,7 +121,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   textCapitalization: TextCapitalization.words,
                   textInputAction: TextInputAction.next,
                   decoration: _decoration(
-                    'Ime *',
+                    tr.firstNameRequired,
                     'firstName',
                     icon: Icons.badge_outlined,
                   ),
@@ -128,7 +129,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     v,
                     1,
                     50,
-                    'Unesite ime (najviše 50 znakova).',
+                    tr.enterFirstName,
                   ),
                 ),
                 const SizedBox(height: 14),
@@ -137,7 +138,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   textCapitalization: TextCapitalization.words,
                   textInputAction: TextInputAction.next,
                   decoration: _decoration(
-                    'Prezime *',
+                    tr.lastNameRequired,
                     'lastName',
                     icon: Icons.badge_outlined,
                   ),
@@ -145,14 +146,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     v,
                     1,
                     50,
-                    'Unesite prezime (najviše 50 znakova).',
+                    tr.enterLastName,
                   ),
                 ),
                 const SizedBox(height: 14),
                 EmailField(
                   controller: _email,
                   decoration: _decoration(
-                    'E-mail *',
+                    tr.emailRequiredLabel,
                     'email',
                     icon: Icons.email_outlined,
                   ),
@@ -164,7 +165,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   keyboardType: TextInputType.phone,
                   textInputAction: TextInputAction.next,
                   decoration: _decoration(
-                    'Telefon',
+                    tr.phone,
                     'phoneNumber',
                     icon: Icons.phone_outlined,
                     hint: '061 234 567',
@@ -176,8 +177,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   future: _cities,
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
-                      return const MessageBox(
-                        text: 'Gradove nije moguće učitati. Provjerite vezu.',
+                      return MessageBox(
+                        text: tr.citiesLoadError,
                         isError: true,
                       );
                     }
@@ -186,7 +187,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       initialValue: _cityId,
                       isExpanded: true,
                       decoration: _decoration(
-                        'Grad *',
+                        tr.cityRequiredLabel,
                         'cityId',
                         icon: Icons.location_city_outlined,
                       ),
@@ -199,7 +200,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ],
                       onChanged: (value) => setState(() => _cityId = value),
                       validator: (value) =>
-                          value == null ? 'Odaberite grad.' : null,
+                          value == null ? tr.selectCity : null,
                     );
                   },
                 ),
@@ -209,7 +210,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   autocorrect: false,
                   textInputAction: TextInputAction.next,
                   decoration: _decoration(
-                    'Korisničko ime *',
+                    tr.usernameRequiredLabel,
                     'username',
                     icon: Icons.person_outline,
                   ),
@@ -222,11 +223,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   textInputAction: TextInputAction.next,
                   decoration:
                       _decoration(
-                        'Lozinka *',
+                        tr.passwordRequiredLabel,
                         'password',
                         icon: Icons.lock_outline,
                       ).copyWith(
-                        helperText: 'Najmanje 8 znakova, slovo i broj.',
+                        helperText: tr.passwordHint,
                         suffixIcon: IconButton(
                           icon: Icon(
                             _obscure
@@ -245,12 +246,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   textInputAction: TextInputAction.done,
                   onFieldSubmitted: (_) => _submit(),
                   decoration: _decoration(
-                    'Potvrda lozinke *',
+                    tr.passwordConfirmRequiredLabel,
                     'passwordConfirmation',
                     icon: Icons.lock_outline,
                   ),
                   validator: (v) =>
-                      v == _password.text ? null : 'Lozinke se ne podudaraju.',
+                      v == _password.text ? null : tr.passwordsDoNotMatch,
                 ),
                 const SizedBox(height: 24),
                 FilledButton(
@@ -264,9 +265,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           height: 22,
                           child: CircularProgressIndicator(strokeWidth: 2.5),
                         )
-                      : const Text('Kreiraj račun'),
+                      : Text(tr.createAccount),
                 ),
               ],
+            ),
             ),
           ),
         ),

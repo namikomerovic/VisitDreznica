@@ -433,4 +433,688 @@ class L10nEn extends L10n {
 
   @override
   String get hidePassword => 'Hide password';
+
+  @override
+  String get registration => 'Sign up';
+
+  @override
+  String get firstNameRequired => 'First name *';
+
+  @override
+  String get lastNameRequired => 'Last name *';
+
+  @override
+  String get emailRequiredLabel => 'E-mail *';
+
+  @override
+  String get phone => 'Phone';
+
+  @override
+  String get cityRequiredLabel => 'City *';
+
+  @override
+  String get usernameRequiredLabel => 'Username *';
+
+  @override
+  String get passwordRequiredLabel => 'Password *';
+
+  @override
+  String get passwordConfirmRequiredLabel => 'Confirm password *';
+
+  @override
+  String get enterFirstName => 'Enter your first name (max. 50 characters).';
+
+  @override
+  String get enterLastName => 'Enter your last name (max. 50 characters).';
+
+  @override
+  String get citiesLoadError =>
+      'Cities could not be loaded. Check your connection.';
+
+  @override
+  String get selectCity => 'Select a city.';
+
+  @override
+  String get passwordHint => 'At least 8 characters, a letter and a digit.';
+
+  @override
+  String get passwordsDoNotMatch => 'Passwords do not match.';
+
+  @override
+  String get createAccount => 'Create account';
+
+  @override
+  String resetCodeSent(String email) {
+    return 'If an account with the address $email exists, we have sent it a six-digit code. Check your inbox and spam folder.';
+  }
+
+  @override
+  String get forgottenPassword => 'Forgotten password';
+
+  @override
+  String get enterCodeAndNewPassword =>
+      'Enter the code from the e-mail and a new password.';
+
+  @override
+  String get enterAccountEmail =>
+      'Enter the e-mail address of your account. We will send you a code to set a new password.';
+
+  @override
+  String get email => 'E-mail';
+
+  @override
+  String get sendCode => 'Send code';
+
+  @override
+  String get codeFromEmail => 'Code from e-mail';
+
+  @override
+  String get codeSixDigits => 'The code consists of exactly 6 digits.';
+
+  @override
+  String get newPassword => 'New password';
+
+  @override
+  String get confirmNewPassword => 'Confirm new password';
+
+  @override
+  String get setNewPassword => 'Set new password';
+
+  @override
+  String get resendCode => 'Didn\'t get the code? Send again';
+
+  @override
+  String helloName(String name) {
+    return 'Hello, $name';
+  }
+
+  @override
+  String get homeTitle => 'Breathe in Drežnica.';
+
+  @override
+  String get homeLocation => 'Drežnica, Bosnia and Herzegovina';
+
+  @override
+  String get news => 'News';
+
+  @override
+  String get noNews => 'There is no news at the moment.';
+
+  @override
+  String get searchHint => 'Search accommodation, equipment, activities…';
+
+  @override
+  String get heroTitle => 'Small place.\nBig experiences.';
+
+  @override
+  String get heroSubtitle => 'River, canyon and mountain within reach.';
+
+  @override
+  String get exploreOffer => 'Explore the offer';
+
+  @override
+  String get recommendedForYou => 'Recommended for you';
+
+  @override
+  String get popularAmongGuests => 'Popular among guests';
+
+  @override
+  String get recommendationsHint =>
+      'Rate or save what you like and we will recommend things to your taste.';
+
+  @override
+  String get newsItem => 'News';
+
+  @override
+  String get removeFromFavorites => 'Remove from favorites';
+
+  @override
+  String get addToFavorites => 'Add to favorites';
+
+  @override
+  String get removedFromFavorites => 'Removed from favorites.';
+
+  @override
+  String get addedToFavorites => 'Added to favorites.';
+
+  @override
+  String get noRatingsYet => 'No ratings yet';
+
+  @override
+  String get mapsAppError => 'The maps app could not be opened.';
+
+  @override
+  String get reserve => 'Book';
+
+  @override
+  String get view => 'View';
+
+  @override
+  String upToPeople(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'up to $count people',
+      one: 'up to $count person',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String upToPeopleCapital(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Up to $count people',
+      one: 'Up to $count person',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String peoplePerPiece(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count people per piece',
+      one: '$count person per piece',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String pricePerNight(String price) {
+    return '$price / night';
+  }
+
+  @override
+  String pricePerHourFrom(String price) {
+    return 'from $price / hour';
+  }
+
+  @override
+  String pricePerPerson(String price) {
+    return '$price / person';
+  }
+
+  @override
+  String get noSlotsNow => 'No slots at the moment';
+
+  @override
+  String nextSlot(String date) {
+    return 'Next slot: $date';
+  }
+
+  @override
+  String kmFromAccommodation(String km) {
+    return '$km km from the accommodation';
+  }
+
+  @override
+  String searchType(String type) {
+    return 'Search: $type';
+  }
+
+  @override
+  String get showOnMap => 'Show on map';
+
+  @override
+  String totalPieces(int count) {
+    return 'Total pieces: $count';
+  }
+
+  @override
+  String firstHourPrice(String price) {
+    return 'First hour: $price';
+  }
+
+  @override
+  String additionalHourPrice(String price) {
+    return 'Each additional hour: $price';
+  }
+
+  @override
+  String fullDayPrice(String price) {
+    return 'Full day: $price';
+  }
+
+  @override
+  String maxParticipants(int count) {
+    return 'Up to $count participants';
+  }
+
+  @override
+  String meetingPointLabel(String place) {
+    return 'Meeting point: $place';
+  }
+
+  @override
+  String get detailsLoadError => 'The details could not be loaded.';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get amenities => 'Amenities';
+
+  @override
+  String get location => 'Location';
+
+  @override
+  String get upcomingSlots => 'Upcoming slots';
+
+  @override
+  String get noScheduledSlots => 'There are no scheduled slots at the moment.';
+
+  @override
+  String guideName(String name) {
+    return 'Guide: $name';
+  }
+
+  @override
+  String get slotFull => 'Full';
+
+  @override
+  String spotsFree(int count) {
+    return 'Available: $count';
+  }
+
+  @override
+  String get openMap => 'Open map';
+
+  @override
+  String get directions => 'Directions';
+
+  @override
+  String get ratingLabels => 'Tap a star|Bad|Poor|Good|Very good|Excellent';
+
+  @override
+  String get selectRating => 'Select a rating from 1 to 5.';
+
+  @override
+  String get newReview => 'New review';
+
+  @override
+  String get editReview => 'Edit review';
+
+  @override
+  String get commentOptional => 'Comment (optional)';
+
+  @override
+  String get thanksForReview => 'Thank you for your review!';
+
+  @override
+  String get reviewUpdated => 'Your review has been updated.';
+
+  @override
+  String get deleteReviewQuestion => 'Delete the review?';
+
+  @override
+  String get cannotBeUndone => 'This action cannot be undone.';
+
+  @override
+  String get reviewDeleted => 'The review has been deleted.';
+
+  @override
+  String get reviews => 'Reviews';
+
+  @override
+  String get yourReview => 'Your review';
+
+  @override
+  String get writeReview => 'Write a review';
+
+  @override
+  String get reviewAfterReservation =>
+      'You can leave a review after a completed reservation.';
+
+  @override
+  String get loading => 'Loading...';
+
+  @override
+  String get showMoreReviews => 'Show more reviews';
+
+  @override
+  String reviewsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count reviews',
+      one: '$count review',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noReviewsYet => 'No reviews yet.';
+
+  @override
+  String get placesMap => 'Places map';
+
+  @override
+  String get accommodation => 'Accommodation';
+
+  @override
+  String get details => 'Details';
+
+  @override
+  String get activityBooking => 'Activity booking';
+
+  @override
+  String perPersonAndDuration(String price, String duration) {
+    return '$price per person · $duration';
+  }
+
+  @override
+  String get selectSlot => 'Select a slot';
+
+  @override
+  String get numberOfPeople => 'Number of people';
+
+  @override
+  String meetingPointFull(String place) {
+    return 'Meeting point: $place';
+  }
+
+  @override
+  String peopleCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count people',
+      one: '$count person',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String nightsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nights',
+      one: '$count night',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reservation => 'Reservation';
+
+  @override
+  String get paymentSucceeded => 'Payment successful!';
+
+  @override
+  String get reservationAwaitsPayment => 'The reservation is awaiting payment';
+
+  @override
+  String get paidAwaitingConfirmation =>
+      'The reservation is paid and awaiting confirmation. You will get a notification and an e-mail as soon as we confirm it.';
+
+  @override
+  String get savedNotPaid =>
+      'The reservation is saved but not paid. If you do not pay within 30 minutes, it is cancelled automatically.';
+
+  @override
+  String get period => 'Period';
+
+  @override
+  String get amount => 'Amount';
+
+  @override
+  String get payNow => 'Pay now';
+
+  @override
+  String get done => 'Done';
+
+  @override
+  String get noteOptional => 'Note (optional)';
+
+  @override
+  String get reserveAndPay => 'Book and pay';
+
+  @override
+  String get paymentConfirmation => 'Payment confirmation';
+
+  @override
+  String continueToCardPayment(String amount) {
+    return 'Continue to card payment of $amount?';
+  }
+
+  @override
+  String get pay => 'Pay';
+
+  @override
+  String get rentalDay => 'Rental day';
+
+  @override
+  String get equipmentRental => 'Equipment rental';
+
+  @override
+  String equipmentPricing(String first, String additional, String fullDay) {
+    return 'First hour $first, each additional $additional, full day at most $fullDay';
+  }
+
+  @override
+  String get pickupDayAndTime => 'Pick-up day and time';
+
+  @override
+  String get from => 'From';
+
+  @override
+  String get durationHours => 'Duration (hours)';
+
+  @override
+  String get numberOfPieces => 'Number of pieces';
+
+  @override
+  String returnAt(String date) {
+    return 'Return: $date';
+  }
+
+  @override
+  String onlyPiecesAvailable(int count) {
+    return 'Only $count pcs. are available in that period. Reduce the number of pieces or change the time.';
+  }
+
+  @override
+  String pricePerPieceHours(int hours) {
+    return 'Price per piece ($hours h)';
+  }
+
+  @override
+  String get selectArrivalDeparture => 'Select arrival and departure';
+
+  @override
+  String get roomBooking => 'Room booking';
+
+  @override
+  String roomPriceCapacity(String price, String capacity) {
+    return '$price / night · $capacity';
+  }
+
+  @override
+  String get stayPeriod => 'Stay period';
+
+  @override
+  String get selectDates => 'Select dates';
+
+  @override
+  String get bookedDaysDisabled => 'Booked days are disabled in the calendar.';
+
+  @override
+  String get numberOfGuests => 'Number of guests';
+
+  @override
+  String get touristTax => 'Tourist tax';
+
+  @override
+  String get paymentFailed => 'The payment failed. Please try again.';
+
+  @override
+  String get paymentSucceededShort => 'Payment successful.';
+
+  @override
+  String get cancelledRefund =>
+      'The reservation has been cancelled. The money is being refunded to your card.';
+
+  @override
+  String get cancelledNoRefund => 'The reservation has been cancelled.';
+
+  @override
+  String get reservationDetails => 'Reservation details';
+
+  @override
+  String get payment => 'Payment';
+
+  @override
+  String get paidByCard => 'Paid by card';
+
+  @override
+  String get notPaid => 'Not paid';
+
+  @override
+  String get created => 'Created';
+
+  @override
+  String get note => 'Note';
+
+  @override
+  String payUntil(String time) {
+    return 'Pay for the reservation by $time, otherwise it is cancelled automatically.';
+  }
+
+  @override
+  String payAmount(String amount) {
+    return 'Pay $amount';
+  }
+
+  @override
+  String yourRatingEdit(int rating) {
+    return 'Your rating: $rating★ · edit';
+  }
+
+  @override
+  String get rate => 'Rate';
+
+  @override
+  String viewItem(String name) {
+    return 'View: $name';
+  }
+
+  @override
+  String get cancelReservation => 'Cancel reservation';
+
+  @override
+  String get cancelPolicy =>
+      'A confirmed reservation can be cancelled no later than 24 hours before it starts. The paid amount is refunded to your card.';
+
+  @override
+  String get history => 'History';
+
+  @override
+  String get cancelReservationQuestion => 'Cancel the reservation?';
+
+  @override
+  String get refundToCard => 'The paid amount will be refunded to your card.';
+
+  @override
+  String get noRefundNotPaid =>
+      'The reservation has not been paid yet, so there is no refund.';
+
+  @override
+  String get reasonOptional => 'Reason (optional)';
+
+  @override
+  String get filterActive => 'Active';
+
+  @override
+  String get filterCompleted => 'Completed';
+
+  @override
+  String get filterCancelled => 'Cancelled';
+
+  @override
+  String get noActiveReservations => 'You have no active bookings.';
+
+  @override
+  String get noCompletedReservations => 'You have no completed bookings yet.';
+
+  @override
+  String get noCancelledReservations => 'You have no cancelled bookings.';
+
+  @override
+  String get awaitingPayment => 'Awaiting payment';
+
+  @override
+  String get noFavoritesYet => 'You have no favorites yet.';
+
+  @override
+  String get favoritesHint =>
+      'Tap ♥ on a room, equipment, activity or place to save it here.';
+
+  @override
+  String savedOn(String type, String date) {
+    return '$type · saved $date';
+  }
+
+  @override
+  String get changePassword => 'Change password';
+
+  @override
+  String get currentPasswordRequired => 'Current password *';
+
+  @override
+  String get enterCurrentPassword => 'Enter your current password.';
+
+  @override
+  String get newPasswordRequired => 'New password *';
+
+  @override
+  String get newPasswordMustDiffer =>
+      'The new password must be different from the current one.';
+
+  @override
+  String get confirmNewPasswordRequired => 'Confirm new password *';
+
+  @override
+  String get logoutOtherDevices =>
+      'After the change you will be logged out on all other devices.';
+
+  @override
+  String get editProfile => 'Edit profile';
+
+  @override
+  String usernameCannotChange(String username) {
+    return 'The username (@$username) cannot be changed.';
+  }
+
+  @override
+  String get profileSaved => 'Profile saved.';
+
+  @override
+  String get passwordChanged => 'Your password has been changed.';
+
+  @override
+  String get pickFromGallery => 'Choose from gallery';
+
+  @override
+  String get removePhoto => 'Remove photo';
+
+  @override
+  String errorTryAgain(String error) {
+    return '$error Try again.';
+  }
+
+  @override
+  String get phoneNotEntered => 'No phone number';
+
+  @override
+  String get markAllRead => 'Mark all as read';
+
+  @override
+  String get noNotifications => 'You have no notifications.';
+
+  @override
+  String get showOlder => 'Show older';
 }

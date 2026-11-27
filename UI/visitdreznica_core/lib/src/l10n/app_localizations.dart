@@ -876,6 +876,1128 @@ abstract class L10n {
   /// In bs, this message translates to:
   /// **'Sakrij lozinku'**
   String get hidePassword;
+
+  /// No description provided for @registration.
+  ///
+  /// In bs, this message translates to:
+  /// **'Registracija'**
+  String get registration;
+
+  /// No description provided for @firstNameRequired.
+  ///
+  /// In bs, this message translates to:
+  /// **'Ime *'**
+  String get firstNameRequired;
+
+  /// No description provided for @lastNameRequired.
+  ///
+  /// In bs, this message translates to:
+  /// **'Prezime *'**
+  String get lastNameRequired;
+
+  /// No description provided for @emailRequiredLabel.
+  ///
+  /// In bs, this message translates to:
+  /// **'E-mail *'**
+  String get emailRequiredLabel;
+
+  /// No description provided for @phone.
+  ///
+  /// In bs, this message translates to:
+  /// **'Telefon'**
+  String get phone;
+
+  /// No description provided for @cityRequiredLabel.
+  ///
+  /// In bs, this message translates to:
+  /// **'Grad *'**
+  String get cityRequiredLabel;
+
+  /// No description provided for @usernameRequiredLabel.
+  ///
+  /// In bs, this message translates to:
+  /// **'Korisničko ime *'**
+  String get usernameRequiredLabel;
+
+  /// No description provided for @passwordRequiredLabel.
+  ///
+  /// In bs, this message translates to:
+  /// **'Lozinka *'**
+  String get passwordRequiredLabel;
+
+  /// No description provided for @passwordConfirmRequiredLabel.
+  ///
+  /// In bs, this message translates to:
+  /// **'Potvrda lozinke *'**
+  String get passwordConfirmRequiredLabel;
+
+  /// No description provided for @enterFirstName.
+  ///
+  /// In bs, this message translates to:
+  /// **'Unesite ime (najviše 50 znakova).'**
+  String get enterFirstName;
+
+  /// No description provided for @enterLastName.
+  ///
+  /// In bs, this message translates to:
+  /// **'Unesite prezime (najviše 50 znakova).'**
+  String get enterLastName;
+
+  /// No description provided for @citiesLoadError.
+  ///
+  /// In bs, this message translates to:
+  /// **'Gradove nije moguće učitati. Provjerite vezu.'**
+  String get citiesLoadError;
+
+  /// No description provided for @selectCity.
+  ///
+  /// In bs, this message translates to:
+  /// **'Odaberite grad.'**
+  String get selectCity;
+
+  /// No description provided for @passwordHint.
+  ///
+  /// In bs, this message translates to:
+  /// **'Najmanje 8 znakova, slovo i broj.'**
+  String get passwordHint;
+
+  /// No description provided for @passwordsDoNotMatch.
+  ///
+  /// In bs, this message translates to:
+  /// **'Lozinke se ne podudaraju.'**
+  String get passwordsDoNotMatch;
+
+  /// No description provided for @createAccount.
+  ///
+  /// In bs, this message translates to:
+  /// **'Kreiraj račun'**
+  String get createAccount;
+
+  /// No description provided for @resetCodeSent.
+  ///
+  /// In bs, this message translates to:
+  /// **'Ako postoji račun s adresom {email}, poslali smo mu šestocifreni kod. Provjerite inbox i spam folder.'**
+  String resetCodeSent(String email);
+
+  /// No description provided for @forgottenPassword.
+  ///
+  /// In bs, this message translates to:
+  /// **'Zaboravljena lozinka'**
+  String get forgottenPassword;
+
+  /// No description provided for @enterCodeAndNewPassword.
+  ///
+  /// In bs, this message translates to:
+  /// **'Unesite kod iz e-maila i novu lozinku.'**
+  String get enterCodeAndNewPassword;
+
+  /// No description provided for @enterAccountEmail.
+  ///
+  /// In bs, this message translates to:
+  /// **'Unesite e-mail adresu svog računa. Poslat ćemo vam kod za postavljanje nove lozinke.'**
+  String get enterAccountEmail;
+
+  /// No description provided for @email.
+  ///
+  /// In bs, this message translates to:
+  /// **'E-mail'**
+  String get email;
+
+  /// No description provided for @sendCode.
+  ///
+  /// In bs, this message translates to:
+  /// **'Pošalji kod'**
+  String get sendCode;
+
+  /// No description provided for @codeFromEmail.
+  ///
+  /// In bs, this message translates to:
+  /// **'Kod iz e-maila'**
+  String get codeFromEmail;
+
+  /// No description provided for @codeSixDigits.
+  ///
+  /// In bs, this message translates to:
+  /// **'Kod se sastoji od tačno 6 cifara.'**
+  String get codeSixDigits;
+
+  /// No description provided for @newPassword.
+  ///
+  /// In bs, this message translates to:
+  /// **'Nova lozinka'**
+  String get newPassword;
+
+  /// No description provided for @confirmNewPassword.
+  ///
+  /// In bs, this message translates to:
+  /// **'Potvrda nove lozinke'**
+  String get confirmNewPassword;
+
+  /// No description provided for @setNewPassword.
+  ///
+  /// In bs, this message translates to:
+  /// **'Postavi novu lozinku'**
+  String get setNewPassword;
+
+  /// No description provided for @resendCode.
+  ///
+  /// In bs, this message translates to:
+  /// **'Nije stigao kod? Pošalji ponovo'**
+  String get resendCode;
+
+  /// No description provided for @helloName.
+  ///
+  /// In bs, this message translates to:
+  /// **'Zdravo, {name}'**
+  String helloName(String name);
+
+  /// No description provided for @homeTitle.
+  ///
+  /// In bs, this message translates to:
+  /// **'Udahni Drežnicu.'**
+  String get homeTitle;
+
+  /// No description provided for @homeLocation.
+  ///
+  /// In bs, this message translates to:
+  /// **'Drežnica, Bosna i Hercegovina'**
+  String get homeLocation;
+
+  /// No description provided for @news.
+  ///
+  /// In bs, this message translates to:
+  /// **'Novosti'**
+  String get news;
+
+  /// No description provided for @noNews.
+  ///
+  /// In bs, this message translates to:
+  /// **'Trenutno nema novosti.'**
+  String get noNews;
+
+  /// No description provided for @searchHint.
+  ///
+  /// In bs, this message translates to:
+  /// **'Pretraži smještaj, opremu, aktivnosti…'**
+  String get searchHint;
+
+  /// No description provided for @heroTitle.
+  ///
+  /// In bs, this message translates to:
+  /// **'Malo mjesto.\nVeliki doživljaji.'**
+  String get heroTitle;
+
+  /// No description provided for @heroSubtitle.
+  ///
+  /// In bs, this message translates to:
+  /// **'Rijeka, kanjon i planina na dohvat ruke.'**
+  String get heroSubtitle;
+
+  /// No description provided for @exploreOffer.
+  ///
+  /// In bs, this message translates to:
+  /// **'Istraži ponudu'**
+  String get exploreOffer;
+
+  /// No description provided for @recommendedForYou.
+  ///
+  /// In bs, this message translates to:
+  /// **'Preporučeno za vas'**
+  String get recommendedForYou;
+
+  /// No description provided for @popularAmongGuests.
+  ///
+  /// In bs, this message translates to:
+  /// **'Popularno među gostima'**
+  String get popularAmongGuests;
+
+  /// No description provided for @recommendationsHint.
+  ///
+  /// In bs, this message translates to:
+  /// **'Ocijenite ili sačuvajte ono što vam se sviđa, pa ćemo vam preporučivati po vašem ukusu.'**
+  String get recommendationsHint;
+
+  /// No description provided for @newsItem.
+  ///
+  /// In bs, this message translates to:
+  /// **'Novost'**
+  String get newsItem;
+
+  /// No description provided for @removeFromFavorites.
+  ///
+  /// In bs, this message translates to:
+  /// **'Ukloni iz favorita'**
+  String get removeFromFavorites;
+
+  /// No description provided for @addToFavorites.
+  ///
+  /// In bs, this message translates to:
+  /// **'Dodaj u favorite'**
+  String get addToFavorites;
+
+  /// No description provided for @removedFromFavorites.
+  ///
+  /// In bs, this message translates to:
+  /// **'Uklonjeno iz favorita.'**
+  String get removedFromFavorites;
+
+  /// No description provided for @addedToFavorites.
+  ///
+  /// In bs, this message translates to:
+  /// **'Dodano u favorite.'**
+  String get addedToFavorites;
+
+  /// No description provided for @noRatingsYet.
+  ///
+  /// In bs, this message translates to:
+  /// **'Još nema ocjena'**
+  String get noRatingsYet;
+
+  /// No description provided for @mapsAppError.
+  ///
+  /// In bs, this message translates to:
+  /// **'Aplikaciju za mape nije moguće otvoriti.'**
+  String get mapsAppError;
+
+  /// No description provided for @reserve.
+  ///
+  /// In bs, this message translates to:
+  /// **'Rezerviši'**
+  String get reserve;
+
+  /// No description provided for @view.
+  ///
+  /// In bs, this message translates to:
+  /// **'Pogledaj'**
+  String get view;
+
+  /// No description provided for @upToPeople.
+  ///
+  /// In bs, this message translates to:
+  /// **'{count, plural, one{do {count} osobe} few{do {count} osobe} other{do {count} osoba}}'**
+  String upToPeople(int count);
+
+  /// No description provided for @upToPeopleCapital.
+  ///
+  /// In bs, this message translates to:
+  /// **'{count, plural, one{Do {count} osobe} few{Do {count} osobe} other{Do {count} osoba}}'**
+  String upToPeopleCapital(int count);
+
+  /// No description provided for @peoplePerPiece.
+  ///
+  /// In bs, this message translates to:
+  /// **'{count, plural, one{{count} osoba po komadu} few{{count} osobe po komadu} other{{count} osoba po komadu}}'**
+  String peoplePerPiece(int count);
+
+  /// No description provided for @pricePerNight.
+  ///
+  /// In bs, this message translates to:
+  /// **'{price} / noć'**
+  String pricePerNight(String price);
+
+  /// No description provided for @pricePerHourFrom.
+  ///
+  /// In bs, this message translates to:
+  /// **'od {price} / sat'**
+  String pricePerHourFrom(String price);
+
+  /// No description provided for @pricePerPerson.
+  ///
+  /// In bs, this message translates to:
+  /// **'{price} / osobi'**
+  String pricePerPerson(String price);
+
+  /// No description provided for @noSlotsNow.
+  ///
+  /// In bs, this message translates to:
+  /// **'Trenutno nema termina'**
+  String get noSlotsNow;
+
+  /// No description provided for @nextSlot.
+  ///
+  /// In bs, this message translates to:
+  /// **'Sljedeći termin: {date}'**
+  String nextSlot(String date);
+
+  /// No description provided for @kmFromAccommodation.
+  ///
+  /// In bs, this message translates to:
+  /// **'{km} km od smještaja'**
+  String kmFromAccommodation(String km);
+
+  /// No description provided for @searchType.
+  ///
+  /// In bs, this message translates to:
+  /// **'Pretraži: {type}'**
+  String searchType(String type);
+
+  /// No description provided for @showOnMap.
+  ///
+  /// In bs, this message translates to:
+  /// **'Prikaži na mapi'**
+  String get showOnMap;
+
+  /// No description provided for @totalPieces.
+  ///
+  /// In bs, this message translates to:
+  /// **'Ukupno komada: {count}'**
+  String totalPieces(int count);
+
+  /// No description provided for @firstHourPrice.
+  ///
+  /// In bs, this message translates to:
+  /// **'Prvi sat: {price}'**
+  String firstHourPrice(String price);
+
+  /// No description provided for @additionalHourPrice.
+  ///
+  /// In bs, this message translates to:
+  /// **'Svaki sljedeći sat: {price}'**
+  String additionalHourPrice(String price);
+
+  /// No description provided for @fullDayPrice.
+  ///
+  /// In bs, this message translates to:
+  /// **'Cijeli dan: {price}'**
+  String fullDayPrice(String price);
+
+  /// No description provided for @maxParticipants.
+  ///
+  /// In bs, this message translates to:
+  /// **'Najviše {count} učesnika'**
+  String maxParticipants(int count);
+
+  /// No description provided for @meetingPointLabel.
+  ///
+  /// In bs, this message translates to:
+  /// **'Okupljanje: {place}'**
+  String meetingPointLabel(String place);
+
+  /// No description provided for @detailsLoadError.
+  ///
+  /// In bs, this message translates to:
+  /// **'Detalje nije moguće učitati.'**
+  String get detailsLoadError;
+
+  /// No description provided for @description.
+  ///
+  /// In bs, this message translates to:
+  /// **'Opis'**
+  String get description;
+
+  /// No description provided for @amenities.
+  ///
+  /// In bs, this message translates to:
+  /// **'Sadržaji'**
+  String get amenities;
+
+  /// No description provided for @location.
+  ///
+  /// In bs, this message translates to:
+  /// **'Lokacija'**
+  String get location;
+
+  /// No description provided for @upcomingSlots.
+  ///
+  /// In bs, this message translates to:
+  /// **'Nadolazeći termini'**
+  String get upcomingSlots;
+
+  /// No description provided for @noScheduledSlots.
+  ///
+  /// In bs, this message translates to:
+  /// **'Trenutno nema zakazanih termina.'**
+  String get noScheduledSlots;
+
+  /// No description provided for @guideName.
+  ///
+  /// In bs, this message translates to:
+  /// **'Vodič: {name}'**
+  String guideName(String name);
+
+  /// No description provided for @slotFull.
+  ///
+  /// In bs, this message translates to:
+  /// **'Popunjeno'**
+  String get slotFull;
+
+  /// No description provided for @spotsFree.
+  ///
+  /// In bs, this message translates to:
+  /// **'Slobodno: {count}'**
+  String spotsFree(int count);
+
+  /// No description provided for @openMap.
+  ///
+  /// In bs, this message translates to:
+  /// **'Otvori mapu'**
+  String get openMap;
+
+  /// No description provided for @directions.
+  ///
+  /// In bs, this message translates to:
+  /// **'Upute'**
+  String get directions;
+
+  /// No description provided for @ratingLabels.
+  ///
+  /// In bs, this message translates to:
+  /// **'Dodirnite zvjezdicu|Loše|Slabo|Dobro|Vrlo dobro|Odlično'**
+  String get ratingLabels;
+
+  /// No description provided for @selectRating.
+  ///
+  /// In bs, this message translates to:
+  /// **'Odaberite ocjenu od 1 do 5.'**
+  String get selectRating;
+
+  /// No description provided for @newReview.
+  ///
+  /// In bs, this message translates to:
+  /// **'Nova recenzija'**
+  String get newReview;
+
+  /// No description provided for @editReview.
+  ///
+  /// In bs, this message translates to:
+  /// **'Uredi recenziju'**
+  String get editReview;
+
+  /// No description provided for @commentOptional.
+  ///
+  /// In bs, this message translates to:
+  /// **'Komentar (nije obavezan)'**
+  String get commentOptional;
+
+  /// No description provided for @thanksForReview.
+  ///
+  /// In bs, this message translates to:
+  /// **'Hvala na recenziji!'**
+  String get thanksForReview;
+
+  /// No description provided for @reviewUpdated.
+  ///
+  /// In bs, this message translates to:
+  /// **'Recenzija je izmijenjena.'**
+  String get reviewUpdated;
+
+  /// No description provided for @deleteReviewQuestion.
+  ///
+  /// In bs, this message translates to:
+  /// **'Obrisati recenziju?'**
+  String get deleteReviewQuestion;
+
+  /// No description provided for @cannotBeUndone.
+  ///
+  /// In bs, this message translates to:
+  /// **'Ova radnja se ne može poništiti.'**
+  String get cannotBeUndone;
+
+  /// No description provided for @reviewDeleted.
+  ///
+  /// In bs, this message translates to:
+  /// **'Recenzija je obrisana.'**
+  String get reviewDeleted;
+
+  /// No description provided for @reviews.
+  ///
+  /// In bs, this message translates to:
+  /// **'Recenzije'**
+  String get reviews;
+
+  /// No description provided for @yourReview.
+  ///
+  /// In bs, this message translates to:
+  /// **'Vaša recenzija'**
+  String get yourReview;
+
+  /// No description provided for @writeReview.
+  ///
+  /// In bs, this message translates to:
+  /// **'Napiši recenziju'**
+  String get writeReview;
+
+  /// No description provided for @reviewAfterReservation.
+  ///
+  /// In bs, this message translates to:
+  /// **'Recenziju možete ostaviti nakon završene rezervacije.'**
+  String get reviewAfterReservation;
+
+  /// No description provided for @loading.
+  ///
+  /// In bs, this message translates to:
+  /// **'Učitavanje...'**
+  String get loading;
+
+  /// No description provided for @showMoreReviews.
+  ///
+  /// In bs, this message translates to:
+  /// **'Prikaži još recenzija'**
+  String get showMoreReviews;
+
+  /// No description provided for @reviewsCount.
+  ///
+  /// In bs, this message translates to:
+  /// **'{count, plural, one{{count} recenzija} few{{count} recenzije} other{{count} recenzija}}'**
+  String reviewsCount(int count);
+
+  /// No description provided for @noReviewsYet.
+  ///
+  /// In bs, this message translates to:
+  /// **'Još nema recenzija.'**
+  String get noReviewsYet;
+
+  /// No description provided for @placesMap.
+  ///
+  /// In bs, this message translates to:
+  /// **'Mapa mjesta'**
+  String get placesMap;
+
+  /// No description provided for @accommodation.
+  ///
+  /// In bs, this message translates to:
+  /// **'Smještaj'**
+  String get accommodation;
+
+  /// No description provided for @details.
+  ///
+  /// In bs, this message translates to:
+  /// **'Detalji'**
+  String get details;
+
+  /// No description provided for @activityBooking.
+  ///
+  /// In bs, this message translates to:
+  /// **'Rezervacija aktivnosti'**
+  String get activityBooking;
+
+  /// No description provided for @perPersonAndDuration.
+  ///
+  /// In bs, this message translates to:
+  /// **'{price} po osobi · {duration}'**
+  String perPersonAndDuration(String price, String duration);
+
+  /// No description provided for @selectSlot.
+  ///
+  /// In bs, this message translates to:
+  /// **'Odaberite termin'**
+  String get selectSlot;
+
+  /// No description provided for @numberOfPeople.
+  ///
+  /// In bs, this message translates to:
+  /// **'Broj osoba'**
+  String get numberOfPeople;
+
+  /// No description provided for @meetingPointFull.
+  ///
+  /// In bs, this message translates to:
+  /// **'Mjesto okupljanja: {place}'**
+  String meetingPointFull(String place);
+
+  /// No description provided for @peopleCount.
+  ///
+  /// In bs, this message translates to:
+  /// **'{count, plural, one{{count} osoba} few{{count} osobe} other{{count} osoba}}'**
+  String peopleCount(int count);
+
+  /// No description provided for @nightsCount.
+  ///
+  /// In bs, this message translates to:
+  /// **'{count, plural, one{{count} noć} few{{count} noći} other{{count} noći}}'**
+  String nightsCount(int count);
+
+  /// No description provided for @reservation.
+  ///
+  /// In bs, this message translates to:
+  /// **'Rezervacija'**
+  String get reservation;
+
+  /// No description provided for @paymentSucceeded.
+  ///
+  /// In bs, this message translates to:
+  /// **'Plaćanje je uspjelo!'**
+  String get paymentSucceeded;
+
+  /// No description provided for @reservationAwaitsPayment.
+  ///
+  /// In bs, this message translates to:
+  /// **'Rezervacija čeka plaćanje'**
+  String get reservationAwaitsPayment;
+
+  /// No description provided for @paidAwaitingConfirmation.
+  ///
+  /// In bs, this message translates to:
+  /// **'Rezervacija je plaćena i čeka potvrdu. Obavijest i e-mail stižu čim je potvrdimo.'**
+  String get paidAwaitingConfirmation;
+
+  /// No description provided for @savedNotPaid.
+  ///
+  /// In bs, this message translates to:
+  /// **'Rezervacija je sačuvana, ali nije plaćena. Ako je ne platite u roku od 30 minuta, automatski se otkazuje.'**
+  String get savedNotPaid;
+
+  /// No description provided for @period.
+  ///
+  /// In bs, this message translates to:
+  /// **'Termin'**
+  String get period;
+
+  /// No description provided for @amount.
+  ///
+  /// In bs, this message translates to:
+  /// **'Iznos'**
+  String get amount;
+
+  /// No description provided for @payNow.
+  ///
+  /// In bs, this message translates to:
+  /// **'Plati sada'**
+  String get payNow;
+
+  /// No description provided for @done.
+  ///
+  /// In bs, this message translates to:
+  /// **'Gotovo'**
+  String get done;
+
+  /// No description provided for @noteOptional.
+  ///
+  /// In bs, this message translates to:
+  /// **'Napomena (nije obavezna)'**
+  String get noteOptional;
+
+  /// No description provided for @reserveAndPay.
+  ///
+  /// In bs, this message translates to:
+  /// **'Rezerviši i plati'**
+  String get reserveAndPay;
+
+  /// No description provided for @paymentConfirmation.
+  ///
+  /// In bs, this message translates to:
+  /// **'Potvrda plaćanja'**
+  String get paymentConfirmation;
+
+  /// No description provided for @continueToCardPayment.
+  ///
+  /// In bs, this message translates to:
+  /// **'Nastaviti na plaćanje karticom u iznosu od {amount}?'**
+  String continueToCardPayment(String amount);
+
+  /// No description provided for @pay.
+  ///
+  /// In bs, this message translates to:
+  /// **'Plati'**
+  String get pay;
+
+  /// No description provided for @rentalDay.
+  ///
+  /// In bs, this message translates to:
+  /// **'Dan najma'**
+  String get rentalDay;
+
+  /// No description provided for @equipmentRental.
+  ///
+  /// In bs, this message translates to:
+  /// **'Najam opreme'**
+  String get equipmentRental;
+
+  /// No description provided for @equipmentPricing.
+  ///
+  /// In bs, this message translates to:
+  /// **'Prvi sat {first}, svaki sljedeći {additional}, cijeli dan najviše {fullDay}'**
+  String equipmentPricing(String first, String additional, String fullDay);
+
+  /// No description provided for @pickupDayAndTime.
+  ///
+  /// In bs, this message translates to:
+  /// **'Dan i vrijeme preuzimanja'**
+  String get pickupDayAndTime;
+
+  /// No description provided for @from.
+  ///
+  /// In bs, this message translates to:
+  /// **'Od'**
+  String get from;
+
+  /// No description provided for @durationHours.
+  ///
+  /// In bs, this message translates to:
+  /// **'Trajanje (sati)'**
+  String get durationHours;
+
+  /// No description provided for @numberOfPieces.
+  ///
+  /// In bs, this message translates to:
+  /// **'Broj komada'**
+  String get numberOfPieces;
+
+  /// No description provided for @returnAt.
+  ///
+  /// In bs, this message translates to:
+  /// **'Vraćanje: {date}'**
+  String returnAt(String date);
+
+  /// No description provided for @onlyPiecesAvailable.
+  ///
+  /// In bs, this message translates to:
+  /// **'U tom periodu slobodno je samo {count} kom. Smanjite broj komada ili promijenite termin.'**
+  String onlyPiecesAvailable(int count);
+
+  /// No description provided for @pricePerPieceHours.
+  ///
+  /// In bs, this message translates to:
+  /// **'Cijena po komadu ({hours} h)'**
+  String pricePerPieceHours(int hours);
+
+  /// No description provided for @selectArrivalDeparture.
+  ///
+  /// In bs, this message translates to:
+  /// **'Odaberite dolazak i odlazak'**
+  String get selectArrivalDeparture;
+
+  /// No description provided for @roomBooking.
+  ///
+  /// In bs, this message translates to:
+  /// **'Rezervacija sobe'**
+  String get roomBooking;
+
+  /// No description provided for @roomPriceCapacity.
+  ///
+  /// In bs, this message translates to:
+  /// **'{price} / noć · {capacity}'**
+  String roomPriceCapacity(String price, String capacity);
+
+  /// No description provided for @stayPeriod.
+  ///
+  /// In bs, this message translates to:
+  /// **'Termin boravka'**
+  String get stayPeriod;
+
+  /// No description provided for @selectDates.
+  ///
+  /// In bs, this message translates to:
+  /// **'Odaberite datume'**
+  String get selectDates;
+
+  /// No description provided for @bookedDaysDisabled.
+  ///
+  /// In bs, this message translates to:
+  /// **'Zauzeti dani su u kalendaru onemogućeni.'**
+  String get bookedDaysDisabled;
+
+  /// No description provided for @numberOfGuests.
+  ///
+  /// In bs, this message translates to:
+  /// **'Broj gostiju'**
+  String get numberOfGuests;
+
+  /// No description provided for @touristTax.
+  ///
+  /// In bs, this message translates to:
+  /// **'Boravišna taksa'**
+  String get touristTax;
+
+  /// No description provided for @paymentFailed.
+  ///
+  /// In bs, this message translates to:
+  /// **'Plaćanje nije uspjelo. Pokušajte ponovo.'**
+  String get paymentFailed;
+
+  /// No description provided for @paymentSucceededShort.
+  ///
+  /// In bs, this message translates to:
+  /// **'Plaćanje je uspjelo.'**
+  String get paymentSucceededShort;
+
+  /// No description provided for @cancelledRefund.
+  ///
+  /// In bs, this message translates to:
+  /// **'Rezervacija je otkazana. Novac se vraća na vašu karticu.'**
+  String get cancelledRefund;
+
+  /// No description provided for @cancelledNoRefund.
+  ///
+  /// In bs, this message translates to:
+  /// **'Rezervacija je otkazana.'**
+  String get cancelledNoRefund;
+
+  /// No description provided for @reservationDetails.
+  ///
+  /// In bs, this message translates to:
+  /// **'Detalji rezervacije'**
+  String get reservationDetails;
+
+  /// No description provided for @payment.
+  ///
+  /// In bs, this message translates to:
+  /// **'Plaćanje'**
+  String get payment;
+
+  /// No description provided for @paidByCard.
+  ///
+  /// In bs, this message translates to:
+  /// **'Plaćeno karticom'**
+  String get paidByCard;
+
+  /// No description provided for @notPaid.
+  ///
+  /// In bs, this message translates to:
+  /// **'Nije plaćeno'**
+  String get notPaid;
+
+  /// No description provided for @created.
+  ///
+  /// In bs, this message translates to:
+  /// **'Kreirana'**
+  String get created;
+
+  /// No description provided for @note.
+  ///
+  /// In bs, this message translates to:
+  /// **'Napomena'**
+  String get note;
+
+  /// No description provided for @payUntil.
+  ///
+  /// In bs, this message translates to:
+  /// **'Rezervaciju platite do {time}, inače se automatski otkazuje.'**
+  String payUntil(String time);
+
+  /// No description provided for @payAmount.
+  ///
+  /// In bs, this message translates to:
+  /// **'Plati {amount}'**
+  String payAmount(String amount);
+
+  /// No description provided for @yourRatingEdit.
+  ///
+  /// In bs, this message translates to:
+  /// **'Vaša ocjena: {rating}★ · uredi'**
+  String yourRatingEdit(int rating);
+
+  /// No description provided for @rate.
+  ///
+  /// In bs, this message translates to:
+  /// **'Ocijeni'**
+  String get rate;
+
+  /// No description provided for @viewItem.
+  ///
+  /// In bs, this message translates to:
+  /// **'Pogledaj: {name}'**
+  String viewItem(String name);
+
+  /// No description provided for @cancelReservation.
+  ///
+  /// In bs, this message translates to:
+  /// **'Otkaži rezervaciju'**
+  String get cancelReservation;
+
+  /// No description provided for @cancelPolicy.
+  ///
+  /// In bs, this message translates to:
+  /// **'Potvrđenu rezervaciju možete otkazati najkasnije 24 sata prije početka. Uplaćeni iznos se vraća na karticu.'**
+  String get cancelPolicy;
+
+  /// No description provided for @history.
+  ///
+  /// In bs, this message translates to:
+  /// **'Historija'**
+  String get history;
+
+  /// No description provided for @cancelReservationQuestion.
+  ///
+  /// In bs, this message translates to:
+  /// **'Otkazati rezervaciju?'**
+  String get cancelReservationQuestion;
+
+  /// No description provided for @refundToCard.
+  ///
+  /// In bs, this message translates to:
+  /// **'Uplaćeni iznos biće vraćen na vašu karticu.'**
+  String get refundToCard;
+
+  /// No description provided for @noRefundNotPaid.
+  ///
+  /// In bs, this message translates to:
+  /// **'Rezervacija još nije plaćena, pa nema povrata novca.'**
+  String get noRefundNotPaid;
+
+  /// No description provided for @reasonOptional.
+  ///
+  /// In bs, this message translates to:
+  /// **'Razlog (nije obavezan)'**
+  String get reasonOptional;
+
+  /// No description provided for @filterActive.
+  ///
+  /// In bs, this message translates to:
+  /// **'Aktivne'**
+  String get filterActive;
+
+  /// No description provided for @filterCompleted.
+  ///
+  /// In bs, this message translates to:
+  /// **'Završene'**
+  String get filterCompleted;
+
+  /// No description provided for @filterCancelled.
+  ///
+  /// In bs, this message translates to:
+  /// **'Otkazane'**
+  String get filterCancelled;
+
+  /// No description provided for @noActiveReservations.
+  ///
+  /// In bs, this message translates to:
+  /// **'Nemate aktivnih rezervacija.'**
+  String get noActiveReservations;
+
+  /// No description provided for @noCompletedReservations.
+  ///
+  /// In bs, this message translates to:
+  /// **'Još nemate završenih rezervacija.'**
+  String get noCompletedReservations;
+
+  /// No description provided for @noCancelledReservations.
+  ///
+  /// In bs, this message translates to:
+  /// **'Nemate otkazanih rezervacija.'**
+  String get noCancelledReservations;
+
+  /// No description provided for @awaitingPayment.
+  ///
+  /// In bs, this message translates to:
+  /// **'Čeka plaćanje'**
+  String get awaitingPayment;
+
+  /// No description provided for @noFavoritesYet.
+  ///
+  /// In bs, this message translates to:
+  /// **'Još nemate favorita.'**
+  String get noFavoritesYet;
+
+  /// No description provided for @favoritesHint.
+  ///
+  /// In bs, this message translates to:
+  /// **'Dodirnite ♥ na sobi, opremi, aktivnosti ili mjestu i sačuvajte ga ovdje.'**
+  String get favoritesHint;
+
+  /// No description provided for @savedOn.
+  ///
+  /// In bs, this message translates to:
+  /// **'{type} · sačuvano {date}'**
+  String savedOn(String type, String date);
+
+  /// No description provided for @changePassword.
+  ///
+  /// In bs, this message translates to:
+  /// **'Promijeni lozinku'**
+  String get changePassword;
+
+  /// No description provided for @currentPasswordRequired.
+  ///
+  /// In bs, this message translates to:
+  /// **'Trenutna lozinka *'**
+  String get currentPasswordRequired;
+
+  /// No description provided for @enterCurrentPassword.
+  ///
+  /// In bs, this message translates to:
+  /// **'Unesite trenutnu lozinku.'**
+  String get enterCurrentPassword;
+
+  /// No description provided for @newPasswordRequired.
+  ///
+  /// In bs, this message translates to:
+  /// **'Nova lozinka *'**
+  String get newPasswordRequired;
+
+  /// No description provided for @newPasswordMustDiffer.
+  ///
+  /// In bs, this message translates to:
+  /// **'Nova lozinka mora biti različita od trenutne.'**
+  String get newPasswordMustDiffer;
+
+  /// No description provided for @confirmNewPasswordRequired.
+  ///
+  /// In bs, this message translates to:
+  /// **'Potvrda nove lozinke *'**
+  String get confirmNewPasswordRequired;
+
+  /// No description provided for @logoutOtherDevices.
+  ///
+  /// In bs, this message translates to:
+  /// **'Nakon promjene bićete odjavljeni sa svih drugih uređaja.'**
+  String get logoutOtherDevices;
+
+  /// No description provided for @editProfile.
+  ///
+  /// In bs, this message translates to:
+  /// **'Uredi profil'**
+  String get editProfile;
+
+  /// No description provided for @usernameCannotChange.
+  ///
+  /// In bs, this message translates to:
+  /// **'Korisničko ime (@{username}) se ne može mijenjati.'**
+  String usernameCannotChange(String username);
+
+  /// No description provided for @profileSaved.
+  ///
+  /// In bs, this message translates to:
+  /// **'Profil je sačuvan.'**
+  String get profileSaved;
+
+  /// No description provided for @passwordChanged.
+  ///
+  /// In bs, this message translates to:
+  /// **'Lozinka je promijenjena.'**
+  String get passwordChanged;
+
+  /// No description provided for @pickFromGallery.
+  ///
+  /// In bs, this message translates to:
+  /// **'Odaberi iz galerije'**
+  String get pickFromGallery;
+
+  /// No description provided for @removePhoto.
+  ///
+  /// In bs, this message translates to:
+  /// **'Ukloni sliku'**
+  String get removePhoto;
+
+  /// No description provided for @errorTryAgain.
+  ///
+  /// In bs, this message translates to:
+  /// **'{error} Pokušaj ponovo.'**
+  String errorTryAgain(String error);
+
+  /// No description provided for @phoneNotEntered.
+  ///
+  /// In bs, this message translates to:
+  /// **'Telefon nije unesen'**
+  String get phoneNotEntered;
+
+  /// No description provided for @markAllRead.
+  ///
+  /// In bs, this message translates to:
+  /// **'Označi sve kao pročitano'**
+  String get markAllRead;
+
+  /// No description provided for @noNotifications.
+  ///
+  /// In bs, this message translates to:
+  /// **'Nemate obavijesti.'**
+  String get noNotifications;
+
+  /// No description provided for @showOlder.
+  ///
+  /// In bs, this message translates to:
+  /// **'Prikaži starije'**
+  String get showOlder;
 }
 
 class _L10nDelegate extends LocalizationsDelegate<L10n> {

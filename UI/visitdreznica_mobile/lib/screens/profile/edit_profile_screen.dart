@@ -103,11 +103,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Uredi profil')),
+      appBar: AppBar(title: Text(tr.editProfile)),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
-          child: Form(
+          child: ContentWidth(child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -118,7 +118,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   textCapitalization: TextCapitalization.words,
                   textInputAction: TextInputAction.next,
                   decoration: _decoration(
-                    'Ime *',
+                    tr.firstNameRequired,
                     'firstName',
                     icon: Icons.badge_outlined,
                   ),
@@ -126,7 +126,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     v,
                     1,
                     50,
-                    'Unesite ime (najviše 50 znakova).',
+                    tr.enterFirstName,
                   ),
                 ),
                 const SizedBox(height: 14),
@@ -135,7 +135,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   textCapitalization: TextCapitalization.words,
                   textInputAction: TextInputAction.next,
                   decoration: _decoration(
-                    'Prezime *',
+                    tr.lastNameRequired,
                     'lastName',
                     icon: Icons.badge_outlined,
                   ),
@@ -143,14 +143,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     v,
                     1,
                     50,
-                    'Unesite prezime (najviše 50 znakova).',
+                    tr.enterLastName,
                   ),
                 ),
                 const SizedBox(height: 14),
                 EmailField(
                   controller: _email,
                   decoration: _decoration(
-                    'E-mail *',
+                    tr.emailRequiredLabel,
                     'email',
                     icon: Icons.email_outlined,
                   ),
@@ -162,7 +162,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   keyboardType: TextInputType.phone,
                   textInputAction: TextInputAction.done,
                   decoration: _decoration(
-                    'Telefon',
+                    tr.phone,
                     'phoneNumber',
                     icon: Icons.phone_outlined,
                     hint: '061 234 567',
@@ -174,8 +174,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   future: _cities,
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
-                      return const MessageBox(
-                        text: 'Gradove nije moguće učitati. Provjerite vezu.',
+                      return MessageBox(
+                        text: tr.citiesLoadError,
                         isError: true,
                       );
                     }
@@ -194,7 +194,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           : null,
                       isExpanded: true,
                       decoration: _decoration(
-                        'Grad *',
+                        tr.cityRequiredLabel,
                         'cityId',
                         icon: Icons.location_city_outlined,
                       ),
@@ -209,13 +209,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ? null
                           : (value) => setState(() => _cityId = value!),
                       validator: (value) =>
-                          value == null ? 'Odaberite grad.' : null,
+                          value == null ? tr.selectCity : null,
                     );
                   },
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Korisničko ime (@${widget.profile.username}) se ne može mijenjati.',
+                  tr.usernameCannotChange(widget.profile.username),
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(height: 24),
@@ -230,11 +230,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           height: 22,
                           child: CircularProgressIndicator(strokeWidth: 2.5),
                         )
-                      : const Text('Sačuvaj'),
+                      : Text(tr.save),
                 ),
               ],
             ),
-          ),
+          )),
         ),
       ),
     );

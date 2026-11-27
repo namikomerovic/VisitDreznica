@@ -109,7 +109,7 @@ class ExploreCard extends StatelessWidget {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(bookable ? 'Rezerviši' : 'Pogledaj'),
+                            Text(bookable ? tr.reserve : tr.view),
                             const SizedBox(width: 4),
                             const Icon(Icons.arrow_forward, size: 18),
                           ],

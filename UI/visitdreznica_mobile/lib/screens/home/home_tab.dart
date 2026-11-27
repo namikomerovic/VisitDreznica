@@ -17,7 +17,7 @@ class HomeTab extends StatefulWidget {
   State<HomeTab> createState() => _HomeTabState();
 }
 
-class _HomeTabState extends State<HomeTab> {
+class _HomeTabState extends State<HomeTab> with ReloadOnLocaleChange {
   late final RecommendationService _recommendations;
   late final NewsService _news;
   late Future<List<Recommendation>> _recommendationsFuture;
@@ -31,6 +31,10 @@ class _HomeTabState extends State<HomeTab> {
     _news = NewsService(api);
     _load();
   }
+
+  // Razlozi preporuka dolaze sa servera na izabranom jeziku.
+  @override
+  void onLocaleChanged() => setState(_load);
 
   void _load() {
     _recommendationsFuture = _recommendations.getForMe(take: 10);
@@ -58,15 +62,15 @@ class _HomeTabState extends State<HomeTab> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Zdravo, $firstName', style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurfaceVariant)),
+                Text(tr.helloName(firstName), style: theme.textTheme.bodyLarge?.copyWith(color: scheme.onSurfaceVariant)),
                 const SizedBox(height: 2),
-                Text('Udahni Drežnicu.', style: theme.textTheme.headlineMedium),
+                Text(tr.homeTitle, style: theme.textTheme.headlineMedium),
                 const SizedBox(height: 4),
                 Row(
                   children: [
                     Icon(Icons.place_outlined, size: 16, color: AppColors.cta(context)),
                     const SizedBox(width: 4),
-                    Text('Drežnica, Bosna i Hercegovina', style: theme.textTheme.bodySmall),
+                    Text(tr.homeLocation, style: theme.textTheme.bodySmall),
                   ],
                 ),
               ],
@@ -100,7 +104,7 @@ class _HomeTabState extends State<HomeTab> {
           const SizedBox(height: 24),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Text('Novosti', style: theme.textTheme.titleLarge),
+            child: Text(tr.news, style: theme.textTheme.titleLarge),
           ),
           const SizedBox(height: 10),
           FutureBuilder<PageResult<NewsItem>>(
@@ -113,7 +117,7 @@ class _HomeTabState extends State<HomeTab> {
               final items = snapshot.data?.items ?? const <NewsItem>[];
 
               if (items.isEmpty) {
-                return const Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: Text('Trenutno nema novosti.'));
+                return Padding(padding: EdgeInsets.symmetric(horizontal: 20), child: Text(tr.noNews));
               }
 
               return Column(
@@ -153,7 +157,7 @@ class _SearchEntry extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  'Pretraži smještaj, opremu, aktivnosti…',
+                  tr.searchHint,
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
                 ),
@@ -199,12 +203,12 @@ class _HeroCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    'Malo mjesto.\nVeliki doživljaji.',
+                    tr.heroTitle,
                     style: theme.textTheme.headlineSmall?.copyWith(color: Colors.white, height: 1.15),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Rijeka, kanjon i planina na dohvat ruke.',
+                    tr.heroSubtitle,
                     style: theme.textTheme.bodySmall?.copyWith(color: Colors.white70),
                   ),
                   const SizedBox(height: 12),
@@ -216,7 +220,7 @@ class _HeroCard extends StatelessWidget {
                     ),
                     onPressed: onExplore,
                     icon: const Icon(Icons.arrow_forward, size: 18),
-                    label: const Text('Istraži ponudu'),
+                    label: Text(tr.exploreOffer),
                   ),
                 ],
               ),
@@ -295,7 +299,7 @@ class _RecommendationsSection extends StatelessWidget {
           child: Row(
             children: [
               Flexible(
-                child: Text(personalized ? 'Preporučeno za vas' : 'Popularno među gostima',
+                child: Text(personalized ? tr.recommendedForYou : tr.popularAmongGuests,
                     style: theme.textTheme.titleLarge),
               ),
               const SizedBox(width: 6),
@@ -308,7 +312,7 @@ class _RecommendationsSection extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 2, 20, 0),
             child: Text(
-              'Ocijenite ili sačuvajte ono što vam se sviđa, pa ćemo vam preporučivati po vašem ukusu.',
+              tr.recommendationsHint,
               style: theme.textTheme.bodySmall,
             ),
           ),

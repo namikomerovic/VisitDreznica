@@ -128,11 +128,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Obavijesti'),
+        title: Text(tr.notifications),
         actions: [
           if (hasUnread)
             IconButton(
-              tooltip: 'Označi sve kao pročitano',
+              tooltip: tr.markAllRead,
               onPressed: _markAllAsRead,
               icon: const Icon(Icons.done_all),
             ),
@@ -158,7 +158,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             children: [
               Text(_error!, textAlign: TextAlign.center),
               const SizedBox(height: 12),
-              OutlinedButton(onPressed: _load, child: const Text('Pokušaj ponovo')),
+              OutlinedButton(onPressed: _load, child: Text(tr.retry)),
             ],
           ),
         ),
@@ -173,7 +173,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 const SizedBox(height: 120),
                 Icon(Icons.notifications_none, size: 56, color: theme.colorScheme.outline),
                 const SizedBox(height: 12),
-                const Center(child: Text('Nemate obavijesti.')),
+                Center(child: Text(tr.noNotifications)),
               ],
             )
           : ListView(
@@ -195,7 +195,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   Center(
                     child: TextButton(
                       onPressed: _loadingMore ? null : _loadMore,
-                      child: Text(_loadingMore ? 'Učitavanje...' : 'Prikaži starije'),
+                      child: Text(_loadingMore ? tr.loading : tr.showOlder),
                     ),
                   ),
               ],

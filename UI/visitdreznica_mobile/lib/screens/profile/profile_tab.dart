@@ -53,7 +53,7 @@ class _ProfileTabState extends State<ProfileTab> {
     if (updated == null || !mounted) return;
     setState(() => _profile = updated);
     auth.updateFullName(updated.fullName);
-    _showMessage('Profil je sačuvan.');
+    _showMessage(tr.profileSaved);
   }
 
   Future<void> _changePassword() async {
@@ -61,7 +61,7 @@ class _ProfileTabState extends State<ProfileTab> {
       MaterialPageRoute(builder: (_) => const ChangePasswordScreen()),
     );
 
-    if (changed == true && mounted) _showMessage('Lozinka je promijenjena.');
+    if (changed == true && mounted) _showMessage(tr.passwordChanged);
   }
 
   Future<void> _photoOptions(AppUser profile) async {
@@ -74,7 +74,7 @@ class _ProfileTabState extends State<ProfileTab> {
           children: [
             ListTile(
               leading: const Icon(Icons.photo_library_outlined),
-              title: const Text('Odaberi iz galerije'),
+              title: Text(tr.pickFromGallery),
               onTap: () => Navigator.pop(context, 'pick'),
             ),
             if (profile.hasImage)
@@ -83,7 +83,7 @@ class _ProfileTabState extends State<ProfileTab> {
                   Icons.delete_outline,
                   color: Theme.of(context).colorScheme.error,
                 ),
-                title: const Text('Ukloni sliku'),
+                title: Text(tr.removePhoto),
                 onTap: () => Navigator.pop(context, 'remove'),
               ),
           ],
@@ -144,16 +144,16 @@ class _ProfileTabState extends State<ProfileTab> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Odjava'),
-        content: const Text('Da li se želite odjaviti?'),
+        title: Text(tr.logout),
+        content: Text(tr.logoutQuestion),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Odustani'),
+            child: Text(tr.cancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Odjavi se'),
+            child: Text(tr.logoutAction),
           ),
         ],
       ),
@@ -175,7 +175,7 @@ class _ProfileTabState extends State<ProfileTab> {
     return RefreshIndicator(
       onRefresh: _load,
       child: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: Breakpoints.centered(context, maxWidth: 640),
         children: [
           Center(
             child: GestureDetector(
@@ -231,7 +231,7 @@ class _ProfileTabState extends State<ProfileTab> {
             Center(
               child: TextButton(
                 onPressed: _load,
-                child: Text('$_error Pokušaj ponovo.'),
+                child: Text(tr.errorTryAgain(_error!)),
               ),
             ),
           if (profile != null)
@@ -244,7 +244,7 @@ class _ProfileTabState extends State<ProfileTab> {
                   ),
                   ListTile(
                     leading: const Icon(Icons.phone_outlined),
-                    title: Text(profile.phoneNumber ?? 'Telefon nije unesen'),
+                    title: Text(profile.phoneNumber ?? tr.phoneNotEntered),
                   ),
                   ListTile(
                     leading: const Icon(Icons.location_city_outlined),
@@ -259,14 +259,14 @@ class _ProfileTabState extends State<ProfileTab> {
               children: [
                 ListTile(
                   leading: const Icon(Icons.edit_outlined),
-                  title: const Text('Uredi profil'),
+                  title: Text(tr.editProfile),
                   trailing: const Icon(Icons.chevron_right),
                   enabled: profile != null,
                   onTap: profile == null ? null : () => _edit(profile),
                 ),
                 ListTile(
                   leading: const Icon(Icons.password_outlined),
-                  title: const Text('Promijeni lozinku'),
+                  title: Text(tr.changePassword),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: _changePassword,
                 ),
@@ -302,7 +302,7 @@ class _ProfileTabState extends State<ProfileTab> {
             child: ListTile(
               leading: Icon(Icons.logout, color: theme.colorScheme.error),
               title: Text(
-                'Odjava',
+                tr.logout,
                 style: TextStyle(color: theme.colorScheme.error),
               ),
               onTap: _logout,

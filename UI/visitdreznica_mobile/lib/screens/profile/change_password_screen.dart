@@ -74,11 +74,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Promijeni lozinku')),
+      appBar: AppBar(title: Text(tr.changePassword)),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
-          child: Form(
+          child: ContentWidth(child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -88,19 +88,19 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   controller: _current,
                   obscureText: _obscure,
                   textInputAction: TextInputAction.next,
-                  decoration: _decoration('Trenutna lozinka *', 'currentPassword'),
-                  validator: (v) => (v == null || v.isEmpty) ? 'Unesite trenutnu lozinku.' : null,
+                  decoration: _decoration(tr.currentPasswordRequired, 'currentPassword'),
+                  validator: (v) => (v == null || v.isEmpty) ? tr.enterCurrentPassword : null,
                 ),
                 const SizedBox(height: 14),
                 TextFormField(
                   controller: _new,
                   obscureText: _obscure,
                   textInputAction: TextInputAction.next,
-                  decoration: _decoration('Nova lozinka *', 'newPassword', helper: 'Najmanje 8 znakova, slovo i broj.'),
+                  decoration: _decoration(tr.newPasswordRequired, 'newPassword', helper: tr.passwordHint),
                   validator: (v) {
                     final basic = validatePassword(v, required: true);
                     if (basic != null) return basic;
-                    return v == _current.text ? 'Nova lozinka mora biti različita od trenutne.' : null;
+                    return v == _current.text ? tr.newPasswordMustDiffer : null;
                   },
                 ),
                 const SizedBox(height: 14),
@@ -109,12 +109,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   obscureText: _obscure,
                   textInputAction: TextInputAction.done,
                   onFieldSubmitted: (_) => _save(),
-                  decoration: _decoration('Potvrda nove lozinke *', 'newPasswordConfirmation'),
-                  validator: (v) => v == _new.text ? null : 'Lozinke se ne podudaraju.',
+                  decoration: _decoration(tr.confirmNewPasswordRequired, 'newPasswordConfirmation'),
+                  validator: (v) => v == _new.text ? null : tr.passwordsDoNotMatch,
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  'Nakon promjene bićete odjavljeni sa svih drugih uređaja.',
+                  tr.logoutOtherDevices,
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(height: 24),
@@ -123,11 +123,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52)),
                   child: _saving
                       ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2.5))
-                      : const Text('Promijeni lozinku'),
+                      : Text(tr.changePassword),
                 ),
               ],
             ),
-          ),
+          )),
         ),
       ),
     );

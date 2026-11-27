@@ -60,3 +60,4 @@ export 'src/l10n/locale_controller.dart';
 export 'src/l10n/language_selector.dart';
 export 'src/layout/breakpoints.dart';
 export 'src/l10n/locale_scope.dart';
+export 'src/l10n/reload_on_locale_change.dart';

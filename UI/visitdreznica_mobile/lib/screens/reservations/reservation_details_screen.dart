@@ -73,7 +73,7 @@ class _ReservationDetailsScreenState extends State<ReservationDetailsScreen> {
 
     try {
       final result = await checkout.pay(widget.reservationId);
-      if (mounted && result == CheckoutResult.paid) _showMessage('Plaćanje je uspjelo.');
+      if (mounted && result == CheckoutResult.paid) _showMessage(tr.paymentSucceededShort);
     } on PaymentFailure catch (e) {
       if (mounted) _showMessage(e.message);
     } finally {
@@ -97,8 +97,8 @@ class _ReservationDetailsScreenState extends State<ReservationDetailsScreen> {
       await _service.cancel(reservation.id, comment: reason);
       if (!mounted) return;
       _showMessage(reservation.isPaid
-          ? 'Rezervacija je otkazana. Novac se vraća na vašu karticu.'
-          : 'Rezervacija je otkazana.');
+          ? tr.cancelledRefund
+          : tr.cancelledNoRefund);
       await _load();
     } on ApiException catch (e) {
       if (mounted) _showMessage(e.message);
@@ -116,7 +116,7 @@ class _ReservationDetailsScreenState extends State<ReservationDetailsScreen> {
     );
 
     if (saved && mounted) {
-      _showMessage('Hvala na recenziji!');
+      _showMessage(tr.thanksForReview);
       _load();
     }
   }
@@ -126,7 +126,7 @@ class _ReservationDetailsScreenState extends State<ReservationDetailsScreen> {
     final reservation = _reservation;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Detalji rezervacije')),
+      appBar: AppBar(title: Text(tr.reservationDetails)),
       body: reservation == null
           ? Center(child: _error == null ? const CircularProgressIndicator() : Text(_error!))
           : RefreshIndicator(onRefresh: _load, child: _buildContent(reservation)),
@@ -140,7 +140,7 @@ class _ReservationDetailsScreenState extends State<ReservationDetailsScreen> {
     final payUntil = reservation.createdAt.add(_paymentWindow);
 
     return ListView(
-      padding: const EdgeInsets.all(20),
+      padding: Breakpoints.centered(context, maxWidth: 640),
       children: [
         Row(
           children: [
@@ -160,12 +160,12 @@ class _ReservationDetailsScreenState extends State<ReservationDetailsScreen> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                _InfoRow('Termin', reservation.periodLabel),
+                _InfoRow(tr.period, reservation.periodLabel),
                 _InfoRow(reservation.quantityLabel.split(':').first, reservation.quantityLabel.split(':').last.trim()),
-                _InfoRow('Iznos', Formatters.money(reservation.totalPrice)),
-                _InfoRow('Plaćanje', reservation.isPaid ? 'Plaćeno karticom' : 'Nije plaćeno'),
-                _InfoRow('Kreirana', Formatters.dateTime(reservation.createdAt)),
-                if (reservation.note != null && reservation.note!.isNotEmpty) _InfoRow('Napomena', reservation.note!),
+                _InfoRow(tr.amount, Formatters.money(reservation.totalPrice)),
+                _InfoRow(tr.payment, reservation.isPaid ? tr.paidByCard : tr.notPaid),
+                _InfoRow(tr.created, Formatters.dateTime(reservation.createdAt)),
+                if (reservation.note != null && reservation.note!.isNotEmpty) _InfoRow(tr.note, reservation.note!),
               ],
             ),
           ),
@@ -173,13 +173,13 @@ class _ReservationDetailsScreenState extends State<ReservationDetailsScreen> {
         const SizedBox(height: 16),
         if (reservation.awaitsPayment) ...[
           MessageBox(
-            text: 'Rezervaciju platite do ${Formatters.time(payUntil)}, inače se automatski otkazuje.',
+            text: tr.payUntil(Formatters.time(payUntil)),
           ),
           FilledButton.icon(
             onPressed: _busy ? null : _pay,
             style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52)),
             icon: const Icon(Icons.credit_card),
-            label: Text('Plati ${Formatters.money(reservation.totalPrice)}'),
+            label: Text(tr.payAmount(Formatters.money(reservation.totalPrice))),
           ),
           const SizedBox(height: 8),
         ],
@@ -189,14 +189,14 @@ class _ReservationDetailsScreenState extends State<ReservationDetailsScreen> {
               onPressed: _busy ? null : () => _writeReview(reservation),
               style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(52)),
               icon: const Icon(Icons.edit_outlined),
-              label: Text('Vaša ocjena: ${review.myReview!.rating}★ · uredi'),
+              label: Text(tr.yourRatingEdit(review.myReview!.rating)),
             )
           else if (review.canReview)
             FilledButton.tonalIcon(
               onPressed: _busy ? null : () => _writeReview(reservation),
               style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(52)),
               icon: const Icon(Icons.star_outline_rounded),
-              label: const Text('Ocijeni'),
+              label: Text(tr.rate),
             ),
           const SizedBox(height: 8),
         ],
@@ -205,7 +205,7 @@ class _ReservationDetailsScreenState extends State<ReservationDetailsScreen> {
             onPressed: () => openItemDetails(context, itemType, reservation.itemId!),
             style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(52)),
             icon: Icon(itemType.icon),
-            label: Text('Pogledaj: ${reservation.itemName}', overflow: TextOverflow.ellipsis),
+            label: Text(tr.viewItem(reservation.itemName), overflow: TextOverflow.ellipsis),
           ),
         if (reservation.isActive) ...[
           const SizedBox(height: 8),
@@ -213,18 +213,18 @@ class _ReservationDetailsScreenState extends State<ReservationDetailsScreen> {
             onPressed: _busy ? null : () => _cancel(reservation),
             style: TextButton.styleFrom(foregroundColor: theme.colorScheme.error),
             icon: const Icon(Icons.cancel_outlined),
-            label: const Text('Otkaži rezervaciju'),
+            label: Text(tr.cancelReservation),
           ),
           if (reservation.status == ReservationStatus.confirmed)
             Text(
-              'Potvrđenu rezervaciju možete otkazati najkasnije 24 sata prije početka. Uplaćeni iznos se vraća na karticu.',
+              tr.cancelPolicy,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodySmall,
             ),
         ],
         if (reservation.statusHistory.isNotEmpty) ...[
           const SizedBox(height: 24),
-          Text('Historija', style: theme.textTheme.titleMedium),
+          Text(tr.history, style: theme.textTheme.titleMedium),
           const SizedBox(height: 4),
           for (final change in reservation.statusHistory)
             ListTile(
@@ -287,32 +287,32 @@ class _CancelDialogState extends State<_CancelDialog> {
     final theme = Theme.of(context);
 
     return AlertDialog(
-      title: const Text('Otkazati rezervaciju?'),
+      title: Text(tr.cancelReservationQuestion),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(widget.isPaid
-              ? 'Uplaćeni iznos biće vraćen na vašu karticu.'
-              : 'Rezervacija još nije plaćena, pa nema povrata novca.'),
+              ? tr.refundToCard
+              : tr.noRefundNotPaid),
           const SizedBox(height: 12),
           TextField(
             controller: _reason,
             maxLength: 500,
             maxLines: 2,
             textCapitalization: TextCapitalization.sentences,
-            decoration: const InputDecoration(
-              labelText: 'Razlog (nije obavezan)',
+            decoration: InputDecoration(
+              labelText: tr.reasonOptional,
               border: OutlineInputBorder(),
             ),
           ),
         ],
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.pop(context), child: const Text('Nazad')),
+        TextButton(onPressed: () => Navigator.pop(context), child: Text(tr.back)),
         FilledButton(
           style: FilledButton.styleFrom(backgroundColor: theme.colorScheme.error),
           onPressed: () => Navigator.pop(context, _reason.text.trim()),
-          child: const Text('Otkaži rezervaciju'),
+          child: Text(tr.cancelReservation),
         ),
       ],
     );

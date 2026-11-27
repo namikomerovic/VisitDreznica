@@ -79,12 +79,12 @@ class ItemDetailsLoader {
       facts: [
         DetailFact(
           Icons.people_outline,
-          'Do ${room.capacity} ${room.capacity == 1 ? 'osobe' : 'osoba'}',
+          tr.upToPeopleCapital(room.capacity),
         ),
         DetailFact(Icons.square_foot, '${room.areaSquareMeters} m²'),
       ],
       tags: [for (final amenity in room.amenities) amenity.name],
-      priceLabel: '${Formatters.money(room.pricePerNight)} / noć',
+      priceLabel: tr.pricePerNight(Formatters.money(room.pricePerNight)),
       canReserve: true,
     );
   }
@@ -102,26 +102,26 @@ class ItemDetailsLoader {
       facts: [
         DetailFact(
           Icons.people_outline,
-          '${item.capacity} ${item.capacity == 1 ? 'osoba' : 'osobe'} po komadu',
+          tr.peoplePerPiece(item.capacity),
         ),
         DetailFact(
           Icons.inventory_2_outlined,
-          'Ukupno komada: ${item.totalQuantity}',
+          tr.totalPieces(item.totalQuantity),
         ),
         DetailFact(
           Icons.timer_outlined,
-          'Prvi sat: ${Formatters.money(item.firstHourPrice)}',
+          tr.firstHourPrice(Formatters.money(item.firstHourPrice)),
         ),
         DetailFact(
           Icons.more_time,
-          'Svaki sljedeći sat: ${Formatters.money(item.additionalHourPrice)}',
+          tr.additionalHourPrice(Formatters.money(item.additionalHourPrice)),
         ),
         DetailFact(
           Icons.wb_sunny_outlined,
-          'Cijeli dan: ${Formatters.money(item.fullDayPrice)}',
+          tr.fullDayPrice(Formatters.money(item.fullDayPrice)),
         ),
       ],
-      priceLabel: 'od ${Formatters.money(item.firstHourPrice)} / sat',
+      priceLabel: tr.pricePerHourFrom(Formatters.money(item.firstHourPrice)),
       canReserve: true,
     );
   }
@@ -145,12 +145,12 @@ class ItemDetailsLoader {
         ),
         DetailFact(
           Icons.groups_outlined,
-          'Najviše ${activity.maxParticipants} učesnika',
+          tr.maxParticipants(activity.maxParticipants),
         ),
         if (meetingPoint != null && meetingPoint.isNotEmpty)
-          DetailFact(Icons.flag_outlined, 'Okupljanje: $meetingPoint'),
+          DetailFact(Icons.flag_outlined, tr.meetingPointLabel(meetingPoint)),
       ],
-      priceLabel: '${Formatters.money(activity.pricePerPerson)} / osobi',
+      priceLabel: tr.pricePerPerson(Formatters.money(activity.pricePerPerson)),
       slots: slots.items,
       canReserve: slots.items.any((x) => x.availableSpots > 0),
     );
@@ -175,7 +175,7 @@ class ItemDetailsLoader {
       facts: [
         DetailFact(
           Icons.near_me_outlined,
-          '${Formatters.decimal(place.distanceKm)} km od smještaja',
+          tr.kmFromAccommodation(Formatters.decimal(place.distanceKm)),
         ),
         if (address != null && address.isNotEmpty)
           DetailFact(Icons.map_outlined, address),

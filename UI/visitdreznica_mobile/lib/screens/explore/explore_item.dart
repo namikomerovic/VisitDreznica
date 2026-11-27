@@ -42,8 +42,8 @@ class ExploreLoader {
               type: type,
               id: r.id,
               title: r.name,
-              subtitle: '${r.roomTypeName} · do ${r.capacity} ${r.capacity == 1 ? 'osobe' : 'osoba'} · ${r.areaSquareMeters} m²',
-              priceLabel: '${Formatters.money(r.pricePerNight)} / noć',
+              subtitle: '${r.roomTypeName} · ${tr.upToPeople(r.capacity)} · ${r.areaSquareMeters} m²',
+              priceLabel: tr.pricePerNight(Formatters.money(r.pricePerNight)),
               imageUrl: r.coverImageId == null ? null : _rooms.imageUrl(r.coverImageId!),
             ),
         ];
@@ -55,8 +55,8 @@ class ExploreLoader {
               type: type,
               id: e.id,
               title: e.name,
-              subtitle: '${e.equipmentTypeName} · ${e.capacity} ${e.capacity == 1 ? 'osoba' : 'osobe'} po komadu',
-              priceLabel: 'od ${Formatters.money(e.firstHourPrice)} / sat',
+              subtitle: '${e.equipmentTypeName} · ${tr.peoplePerPiece(e.capacity)}',
+              priceLabel: tr.pricePerHourFrom(Formatters.money(e.firstHourPrice)),
               imageUrl: e.hasImage ? _equipment.imageUrl(e.id) : null,
             ),
         ];
@@ -69,11 +69,11 @@ class ExploreLoader {
               id: a.id,
               title: a.name,
               subtitle: '${a.activityCategoryName} · ${Formatters.duration(a.durationMinutes)}',
-              priceLabel: '${Formatters.money(a.pricePerPerson)} / osobi',
+              priceLabel: tr.pricePerPerson(Formatters.money(a.pricePerPerson)),
               imageUrl: a.hasImage ? _activities.imageUrl(a.id) : null,
               extra: a.nextSlotStart == null
-                  ? 'Trenutno nema termina'
-                  : 'Sljedeći termin: ${Formatters.dateTime(a.nextSlotStart!)}',
+                  ? tr.noSlotsNow
+                  : tr.nextSlot(Formatters.dateTime(a.nextSlotStart!)),
             ),
         ];
       case ItemType.place:
@@ -84,7 +84,7 @@ class ExploreLoader {
               type: type,
               id: p.id,
               title: p.name,
-              subtitle: '${p.placeTypeName} · ${Formatters.decimal(p.distanceKm)} km od smještaja',
+              subtitle: '${p.placeTypeName} · ${tr.kmFromAccommodation(Formatters.decimal(p.distanceKm))}',
               imageUrl: p.coverImageId == null ? null : _places.imageUrl(p.coverImageId!),
             ),
         ];

@@ -50,7 +50,7 @@ class VisitDreznicaApp extends StatelessWidget {
 
     return MaterialApp(
       key: ValueKey(isLoggedIn),
-      title: 'Visit Drežnica',
+      onGenerateTitle: (_) => tr.appName,
       debugShowCheckedModeBanner: false,
       locale: context.watch<LocaleController>().locale,
       supportedLocales: LocaleController.supported,

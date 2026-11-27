@@ -213,5 +213,466 @@
   "login": "Prijava",
   "noAccountRegister": "Nemate račun? Registrujte se",
   "showPassword": "Prikaži lozinku",
-  "hidePassword": "Sakrij lozinku"
+  "hidePassword": "Sakrij lozinku",
+  "registration": "Registracija",
+  "firstNameRequired": "Ime *",
+  "lastNameRequired": "Prezime *",
+  "emailRequiredLabel": "E-mail *",
+  "phone": "Telefon",
+  "cityRequiredLabel": "Grad *",
+  "usernameRequiredLabel": "Korisničko ime *",
+  "passwordRequiredLabel": "Lozinka *",
+  "passwordConfirmRequiredLabel": "Potvrda lozinke *",
+  "enterFirstName": "Unesite ime (najviše 50 znakova).",
+  "enterLastName": "Unesite prezime (najviše 50 znakova).",
+  "citiesLoadError": "Gradove nije moguće učitati. Provjerite vezu.",
+  "selectCity": "Odaberite grad.",
+  "passwordHint": "Najmanje 8 znakova, slovo i broj.",
+  "passwordsDoNotMatch": "Lozinke se ne podudaraju.",
+  "createAccount": "Kreiraj račun",
+  "resetCodeSent": "Ako postoji račun s adresom {email}, poslali smo mu šestocifreni kod. Provjerite inbox i spam folder.",
+  "@resetCodeSent": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "forgottenPassword": "Zaboravljena lozinka",
+  "enterCodeAndNewPassword": "Unesite kod iz e-maila i novu lozinku.",
+  "enterAccountEmail": "Unesite e-mail adresu svog računa. Poslat ćemo vam kod za postavljanje nove lozinke.",
+  "email": "E-mail",
+  "sendCode": "Pošalji kod",
+  "codeFromEmail": "Kod iz e-maila",
+  "codeSixDigits": "Kod se sastoji od tačno 6 cifara.",
+  "newPassword": "Nova lozinka",
+  "confirmNewPassword": "Potvrda nove lozinke",
+  "setNewPassword": "Postavi novu lozinku",
+  "resendCode": "Nije stigao kod? Pošalji ponovo",
+  "helloName": "Zdravo, {name}",
+  "@helloName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "homeTitle": "Udahni Drežnicu.",
+  "homeLocation": "Drežnica, Bosna i Hercegovina",
+  "news": "Novosti",
+  "noNews": "Trenutno nema novosti.",
+  "searchHint": "Pretraži smještaj, opremu, aktivnosti…",
+  "heroTitle": "Malo mjesto.\nVeliki doživljaji.",
+  "heroSubtitle": "Rijeka, kanjon i planina na dohvat ruke.",
+  "exploreOffer": "Istraži ponudu",
+  "recommendedForYou": "Preporučeno za vas",
+  "popularAmongGuests": "Popularno među gostima",
+  "recommendationsHint": "Ocijenite ili sačuvajte ono što vam se sviđa, pa ćemo vam preporučivati po vašem ukusu.",
+  "newsItem": "Novost",
+  "removeFromFavorites": "Ukloni iz favorita",
+  "addToFavorites": "Dodaj u favorite",
+  "removedFromFavorites": "Uklonjeno iz favorita.",
+  "addedToFavorites": "Dodano u favorite.",
+  "noRatingsYet": "Još nema ocjena",
+  "mapsAppError": "Aplikaciju za mape nije moguće otvoriti.",
+  "reserve": "Rezerviši",
+  "view": "Pogledaj",
+  "upToPeople": "{count, plural, one{do {count} osobe} few{do {count} osobe} other{do {count} osoba}}",
+  "@upToPeople": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "upToPeopleCapital": "{count, plural, one{Do {count} osobe} few{Do {count} osobe} other{Do {count} osoba}}",
+  "@upToPeopleCapital": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "peoplePerPiece": "{count, plural, one{{count} osoba po komadu} few{{count} osobe po komadu} other{{count} osoba po komadu}}",
+  "@peoplePerPiece": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pricePerNight": "{price} / noć",
+  "@pricePerNight": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "pricePerHourFrom": "od {price} / sat",
+  "@pricePerHourFrom": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "pricePerPerson": "{price} / osobi",
+  "@pricePerPerson": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "noSlotsNow": "Trenutno nema termina",
+  "nextSlot": "Sljedeći termin: {date}",
+  "@nextSlot": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "kmFromAccommodation": "{km} km od smještaja",
+  "@kmFromAccommodation": {
+    "placeholders": {
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "searchType": "Pretraži: {type}",
+  "@searchType": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "showOnMap": "Prikaži na mapi",
+  "totalPieces": "Ukupno komada: {count}",
+  "@totalPieces": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "firstHourPrice": "Prvi sat: {price}",
+  "@firstHourPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "additionalHourPrice": "Svaki sljedeći sat: {price}",
+  "@additionalHourPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "fullDayPrice": "Cijeli dan: {price}",
+  "@fullDayPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "maxParticipants": "Najviše {count} učesnika",
+  "@maxParticipants": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "meetingPointLabel": "Okupljanje: {place}",
+  "@meetingPointLabel": {
+    "placeholders": {
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "detailsLoadError": "Detalje nije moguće učitati.",
+  "description": "Opis",
+  "amenities": "Sadržaji",
+  "location": "Lokacija",
+  "upcomingSlots": "Nadolazeći termini",
+  "noScheduledSlots": "Trenutno nema zakazanih termina.",
+  "guideName": "Vodič: {name}",
+  "@guideName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "slotFull": "Popunjeno",
+  "spotsFree": "Slobodno: {count}",
+  "@spotsFree": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "openMap": "Otvori mapu",
+  "directions": "Upute",
+  "ratingLabels": "Dodirnite zvjezdicu|Loše|Slabo|Dobro|Vrlo dobro|Odlično",
+  "selectRating": "Odaberite ocjenu od 1 do 5.",
+  "newReview": "Nova recenzija",
+  "editReview": "Uredi recenziju",
+  "commentOptional": "Komentar (nije obavezan)",
+  "thanksForReview": "Hvala na recenziji!",
+  "reviewUpdated": "Recenzija je izmijenjena.",
+  "deleteReviewQuestion": "Obrisati recenziju?",
+  "cannotBeUndone": "Ova radnja se ne može poništiti.",
+  "reviewDeleted": "Recenzija je obrisana.",
+  "reviews": "Recenzije",
+  "yourReview": "Vaša recenzija",
+  "writeReview": "Napiši recenziju",
+  "reviewAfterReservation": "Recenziju možete ostaviti nakon završene rezervacije.",
+  "loading": "Učitavanje...",
+  "showMoreReviews": "Prikaži još recenzija",
+  "reviewsCount": "{count, plural, one{{count} recenzija} few{{count} recenzije} other{{count} recenzija}}",
+  "@reviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noReviewsYet": "Još nema recenzija.",
+  "placesMap": "Mapa mjesta",
+  "accommodation": "Smještaj",
+  "details": "Detalji",
+  "activityBooking": "Rezervacija aktivnosti",
+  "perPersonAndDuration": "{price} po osobi · {duration}",
+  "@perPersonAndDuration": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      },
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "selectSlot": "Odaberite termin",
+  "numberOfPeople": "Broj osoba",
+  "meetingPointFull": "Mjesto okupljanja: {place}",
+  "@meetingPointFull": {
+    "placeholders": {
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "peopleCount": "{count, plural, one{{count} osoba} few{{count} osobe} other{{count} osoba}}",
+  "@peopleCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "nightsCount": "{count, plural, one{{count} noć} few{{count} noći} other{{count} noći}}",
+  "@nightsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reservation": "Rezervacija",
+  "paymentSucceeded": "Plaćanje je uspjelo!",
+  "reservationAwaitsPayment": "Rezervacija čeka plaćanje",
+  "paidAwaitingConfirmation": "Rezervacija je plaćena i čeka potvrdu. Obavijest i e-mail stižu čim je potvrdimo.",
+  "savedNotPaid": "Rezervacija je sačuvana, ali nije plaćena. Ako je ne platite u roku od 30 minuta, automatski se otkazuje.",
+  "period": "Termin",
+  "amount": "Iznos",
+  "payNow": "Plati sada",
+  "done": "Gotovo",
+  "noteOptional": "Napomena (nije obavezna)",
+  "reserveAndPay": "Rezerviši i plati",
+  "paymentConfirmation": "Potvrda plaćanja",
+  "continueToCardPayment": "Nastaviti na plaćanje karticom u iznosu od {amount}?",
+  "@continueToCardPayment": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "pay": "Plati",
+  "rentalDay": "Dan najma",
+  "equipmentRental": "Najam opreme",
+  "equipmentPricing": "Prvi sat {first}, svaki sljedeći {additional}, cijeli dan najviše {fullDay}",
+  "@equipmentPricing": {
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "additional": {
+        "type": "String"
+      },
+      "fullDay": {
+        "type": "String"
+      }
+    }
+  },
+  "pickupDayAndTime": "Dan i vrijeme preuzimanja",
+  "from": "Od",
+  "durationHours": "Trajanje (sati)",
+  "numberOfPieces": "Broj komada",
+  "returnAt": "Vraćanje: {date}",
+  "@returnAt": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "onlyPiecesAvailable": "U tom periodu slobodno je samo {count} kom. Smanjite broj komada ili promijenite termin.",
+  "@onlyPiecesAvailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pricePerPieceHours": "Cijena po komadu ({hours} h)",
+  "@pricePerPieceHours": {
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "selectArrivalDeparture": "Odaberite dolazak i odlazak",
+  "roomBooking": "Rezervacija sobe",
+  "roomPriceCapacity": "{price} / noć · {capacity}",
+  "@roomPriceCapacity": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      },
+      "capacity": {
+        "type": "String"
+      }
+    }
+  },
+  "stayPeriod": "Termin boravka",
+  "selectDates": "Odaberite datume",
+  "bookedDaysDisabled": "Zauzeti dani su u kalendaru onemogućeni.",
+  "numberOfGuests": "Broj gostiju",
+  "touristTax": "Boravišna taksa",
+  "paymentFailed": "Plaćanje nije uspjelo. Pokušajte ponovo.",
+  "paymentSucceededShort": "Plaćanje je uspjelo.",
+  "cancelledRefund": "Rezervacija je otkazana. Novac se vraća na vašu karticu.",
+  "cancelledNoRefund": "Rezervacija je otkazana.",
+  "reservationDetails": "Detalji rezervacije",
+  "payment": "Plaćanje",
+  "paidByCard": "Plaćeno karticom",
+  "notPaid": "Nije plaćeno",
+  "created": "Kreirana",
+  "note": "Napomena",
+  "payUntil": "Rezervaciju platite do {time}, inače se automatski otkazuje.",
+  "@payUntil": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "payAmount": "Plati {amount}",
+  "@payAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "yourRatingEdit": "Vaša ocjena: {rating}★ · uredi",
+  "@yourRatingEdit": {
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "rate": "Ocijeni",
+  "viewItem": "Pogledaj: {name}",
+  "@viewItem": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "cancelReservation": "Otkaži rezervaciju",
+  "cancelPolicy": "Potvrđenu rezervaciju možete otkazati najkasnije 24 sata prije početka. Uplaćeni iznos se vraća na karticu.",
+  "history": "Historija",
+  "cancelReservationQuestion": "Otkazati rezervaciju?",
+  "refundToCard": "Uplaćeni iznos biće vraćen na vašu karticu.",
+  "noRefundNotPaid": "Rezervacija još nije plaćena, pa nema povrata novca.",
+  "reasonOptional": "Razlog (nije obavezan)",
+  "filterActive": "Aktivne",
+  "filterCompleted": "Završene",
+  "filterCancelled": "Otkazane",
+  "noActiveReservations": "Nemate aktivnih rezervacija.",
+  "noCompletedReservations": "Još nemate završenih rezervacija.",
+  "noCancelledReservations": "Nemate otkazanih rezervacija.",
+  "awaitingPayment": "Čeka plaćanje",
+  "noFavoritesYet": "Još nemate favorita.",
+  "favoritesHint": "Dodirnite ♥ na sobi, opremi, aktivnosti ili mjestu i sačuvajte ga ovdje.",
+  "savedOn": "{type} · sačuvano {date}",
+  "@savedOn": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "changePassword": "Promijeni lozinku",
+  "currentPasswordRequired": "Trenutna lozinka *",
+  "enterCurrentPassword": "Unesite trenutnu lozinku.",
+  "newPasswordRequired": "Nova lozinka *",
+  "newPasswordMustDiffer": "Nova lozinka mora biti različita od trenutne.",
+  "confirmNewPasswordRequired": "Potvrda nove lozinke *",
+  "logoutOtherDevices": "Nakon promjene bićete odjavljeni sa svih drugih uređaja.",
+  "editProfile": "Uredi profil",
+  "usernameCannotChange": "Korisničko ime (@{username}) se ne može mijenjati.",
+  "@usernameCannotChange": {
+    "placeholders": {
+      "username": {
+        "type": "String"
+      }
+    }
+  },
+  "profileSaved": "Profil je sačuvan.",
+  "passwordChanged": "Lozinka je promijenjena.",
+  "pickFromGallery": "Odaberi iz galerije",
+  "removePhoto": "Ukloni sliku",
+  "errorTryAgain": "{error} Pokušaj ponovo.",
+  "@errorTryAgain": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "phoneNotEntered": "Telefon nije unesen",
+  "markAllRead": "Označi sve kao pročitano",
+  "noNotifications": "Nemate obavijesti.",
+  "showOlder": "Prikaži starije"
 }

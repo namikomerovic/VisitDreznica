@@ -42,7 +42,7 @@ class Checkout {
       if (e.error.code == FailureCode.Canceled) {
         return CheckoutResult.cancelled;
       }
-      throw PaymentFailure(e.error.localizedMessage ?? 'Plaćanje nije uspjelo. Pokušajte ponovo.');
+      throw PaymentFailure(e.error.localizedMessage ?? tr.paymentFailed);
     } on ApiException catch (e) {
       throw PaymentFailure(e.message);
     }

@@ -431,4 +431,694 @@ class L10nBs extends L10n {
 
   @override
   String get hidePassword => 'Sakrij lozinku';
+
+  @override
+  String get registration => 'Registracija';
+
+  @override
+  String get firstNameRequired => 'Ime *';
+
+  @override
+  String get lastNameRequired => 'Prezime *';
+
+  @override
+  String get emailRequiredLabel => 'E-mail *';
+
+  @override
+  String get phone => 'Telefon';
+
+  @override
+  String get cityRequiredLabel => 'Grad *';
+
+  @override
+  String get usernameRequiredLabel => 'Korisničko ime *';
+
+  @override
+  String get passwordRequiredLabel => 'Lozinka *';
+
+  @override
+  String get passwordConfirmRequiredLabel => 'Potvrda lozinke *';
+
+  @override
+  String get enterFirstName => 'Unesite ime (najviše 50 znakova).';
+
+  @override
+  String get enterLastName => 'Unesite prezime (najviše 50 znakova).';
+
+  @override
+  String get citiesLoadError => 'Gradove nije moguće učitati. Provjerite vezu.';
+
+  @override
+  String get selectCity => 'Odaberite grad.';
+
+  @override
+  String get passwordHint => 'Najmanje 8 znakova, slovo i broj.';
+
+  @override
+  String get passwordsDoNotMatch => 'Lozinke se ne podudaraju.';
+
+  @override
+  String get createAccount => 'Kreiraj račun';
+
+  @override
+  String resetCodeSent(String email) {
+    return 'Ako postoji račun s adresom $email, poslali smo mu šestocifreni kod. Provjerite inbox i spam folder.';
+  }
+
+  @override
+  String get forgottenPassword => 'Zaboravljena lozinka';
+
+  @override
+  String get enterCodeAndNewPassword =>
+      'Unesite kod iz e-maila i novu lozinku.';
+
+  @override
+  String get enterAccountEmail =>
+      'Unesite e-mail adresu svog računa. Poslat ćemo vam kod za postavljanje nove lozinke.';
+
+  @override
+  String get email => 'E-mail';
+
+  @override
+  String get sendCode => 'Pošalji kod';
+
+  @override
+  String get codeFromEmail => 'Kod iz e-maila';
+
+  @override
+  String get codeSixDigits => 'Kod se sastoji od tačno 6 cifara.';
+
+  @override
+  String get newPassword => 'Nova lozinka';
+
+  @override
+  String get confirmNewPassword => 'Potvrda nove lozinke';
+
+  @override
+  String get setNewPassword => 'Postavi novu lozinku';
+
+  @override
+  String get resendCode => 'Nije stigao kod? Pošalji ponovo';
+
+  @override
+  String helloName(String name) {
+    return 'Zdravo, $name';
+  }
+
+  @override
+  String get homeTitle => 'Udahni Drežnicu.';
+
+  @override
+  String get homeLocation => 'Drežnica, Bosna i Hercegovina';
+
+  @override
+  String get news => 'Novosti';
+
+  @override
+  String get noNews => 'Trenutno nema novosti.';
+
+  @override
+  String get searchHint => 'Pretraži smještaj, opremu, aktivnosti…';
+
+  @override
+  String get heroTitle => 'Malo mjesto.\nVeliki doživljaji.';
+
+  @override
+  String get heroSubtitle => 'Rijeka, kanjon i planina na dohvat ruke.';
+
+  @override
+  String get exploreOffer => 'Istraži ponudu';
+
+  @override
+  String get recommendedForYou => 'Preporučeno za vas';
+
+  @override
+  String get popularAmongGuests => 'Popularno među gostima';
+
+  @override
+  String get recommendationsHint =>
+      'Ocijenite ili sačuvajte ono što vam se sviđa, pa ćemo vam preporučivati po vašem ukusu.';
+
+  @override
+  String get newsItem => 'Novost';
+
+  @override
+  String get removeFromFavorites => 'Ukloni iz favorita';
+
+  @override
+  String get addToFavorites => 'Dodaj u favorite';
+
+  @override
+  String get removedFromFavorites => 'Uklonjeno iz favorita.';
+
+  @override
+  String get addedToFavorites => 'Dodano u favorite.';
+
+  @override
+  String get noRatingsYet => 'Još nema ocjena';
+
+  @override
+  String get mapsAppError => 'Aplikaciju za mape nije moguće otvoriti.';
+
+  @override
+  String get reserve => 'Rezerviši';
+
+  @override
+  String get view => 'Pogledaj';
+
+  @override
+  String upToPeople(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'do $count osoba',
+      few: 'do $count osobe',
+      one: 'do $count osobe',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String upToPeopleCapital(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Do $count osoba',
+      few: 'Do $count osobe',
+      one: 'Do $count osobe',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String peoplePerPiece(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count osoba po komadu',
+      few: '$count osobe po komadu',
+      one: '$count osoba po komadu',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String pricePerNight(String price) {
+    return '$price / noć';
+  }
+
+  @override
+  String pricePerHourFrom(String price) {
+    return 'od $price / sat';
+  }
+
+  @override
+  String pricePerPerson(String price) {
+    return '$price / osobi';
+  }
+
+  @override
+  String get noSlotsNow => 'Trenutno nema termina';
+
+  @override
+  String nextSlot(String date) {
+    return 'Sljedeći termin: $date';
+  }
+
+  @override
+  String kmFromAccommodation(String km) {
+    return '$km km od smještaja';
+  }
+
+  @override
+  String searchType(String type) {
+    return 'Pretraži: $type';
+  }
+
+  @override
+  String get showOnMap => 'Prikaži na mapi';
+
+  @override
+  String totalPieces(int count) {
+    return 'Ukupno komada: $count';
+  }
+
+  @override
+  String firstHourPrice(String price) {
+    return 'Prvi sat: $price';
+  }
+
+  @override
+  String additionalHourPrice(String price) {
+    return 'Svaki sljedeći sat: $price';
+  }
+
+  @override
+  String fullDayPrice(String price) {
+    return 'Cijeli dan: $price';
+  }
+
+  @override
+  String maxParticipants(int count) {
+    return 'Najviše $count učesnika';
+  }
+
+  @override
+  String meetingPointLabel(String place) {
+    return 'Okupljanje: $place';
+  }
+
+  @override
+  String get detailsLoadError => 'Detalje nije moguće učitati.';
+
+  @override
+  String get description => 'Opis';
+
+  @override
+  String get amenities => 'Sadržaji';
+
+  @override
+  String get location => 'Lokacija';
+
+  @override
+  String get upcomingSlots => 'Nadolazeći termini';
+
+  @override
+  String get noScheduledSlots => 'Trenutno nema zakazanih termina.';
+
+  @override
+  String guideName(String name) {
+    return 'Vodič: $name';
+  }
+
+  @override
+  String get slotFull => 'Popunjeno';
+
+  @override
+  String spotsFree(int count) {
+    return 'Slobodno: $count';
+  }
+
+  @override
+  String get openMap => 'Otvori mapu';
+
+  @override
+  String get directions => 'Upute';
+
+  @override
+  String get ratingLabels =>
+      'Dodirnite zvjezdicu|Loše|Slabo|Dobro|Vrlo dobro|Odlično';
+
+  @override
+  String get selectRating => 'Odaberite ocjenu od 1 do 5.';
+
+  @override
+  String get newReview => 'Nova recenzija';
+
+  @override
+  String get editReview => 'Uredi recenziju';
+
+  @override
+  String get commentOptional => 'Komentar (nije obavezan)';
+
+  @override
+  String get thanksForReview => 'Hvala na recenziji!';
+
+  @override
+  String get reviewUpdated => 'Recenzija je izmijenjena.';
+
+  @override
+  String get deleteReviewQuestion => 'Obrisati recenziju?';
+
+  @override
+  String get cannotBeUndone => 'Ova radnja se ne može poništiti.';
+
+  @override
+  String get reviewDeleted => 'Recenzija je obrisana.';
+
+  @override
+  String get reviews => 'Recenzije';
+
+  @override
+  String get yourReview => 'Vaša recenzija';
+
+  @override
+  String get writeReview => 'Napiši recenziju';
+
+  @override
+  String get reviewAfterReservation =>
+      'Recenziju možete ostaviti nakon završene rezervacije.';
+
+  @override
+  String get loading => 'Učitavanje...';
+
+  @override
+  String get showMoreReviews => 'Prikaži još recenzija';
+
+  @override
+  String reviewsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count recenzija',
+      few: '$count recenzije',
+      one: '$count recenzija',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noReviewsYet => 'Još nema recenzija.';
+
+  @override
+  String get placesMap => 'Mapa mjesta';
+
+  @override
+  String get accommodation => 'Smještaj';
+
+  @override
+  String get details => 'Detalji';
+
+  @override
+  String get activityBooking => 'Rezervacija aktivnosti';
+
+  @override
+  String perPersonAndDuration(String price, String duration) {
+    return '$price po osobi · $duration';
+  }
+
+  @override
+  String get selectSlot => 'Odaberite termin';
+
+  @override
+  String get numberOfPeople => 'Broj osoba';
+
+  @override
+  String meetingPointFull(String place) {
+    return 'Mjesto okupljanja: $place';
+  }
+
+  @override
+  String peopleCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count osoba',
+      few: '$count osobe',
+      one: '$count osoba',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String nightsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count noći',
+      few: '$count noći',
+      one: '$count noć',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reservation => 'Rezervacija';
+
+  @override
+  String get paymentSucceeded => 'Plaćanje je uspjelo!';
+
+  @override
+  String get reservationAwaitsPayment => 'Rezervacija čeka plaćanje';
+
+  @override
+  String get paidAwaitingConfirmation =>
+      'Rezervacija je plaćena i čeka potvrdu. Obavijest i e-mail stižu čim je potvrdimo.';
+
+  @override
+  String get savedNotPaid =>
+      'Rezervacija je sačuvana, ali nije plaćena. Ako je ne platite u roku od 30 minuta, automatski se otkazuje.';
+
+  @override
+  String get period => 'Termin';
+
+  @override
+  String get amount => 'Iznos';
+
+  @override
+  String get payNow => 'Plati sada';
+
+  @override
+  String get done => 'Gotovo';
+
+  @override
+  String get noteOptional => 'Napomena (nije obavezna)';
+
+  @override
+  String get reserveAndPay => 'Rezerviši i plati';
+
+  @override
+  String get paymentConfirmation => 'Potvrda plaćanja';
+
+  @override
+  String continueToCardPayment(String amount) {
+    return 'Nastaviti na plaćanje karticom u iznosu od $amount?';
+  }
+
+  @override
+  String get pay => 'Plati';
+
+  @override
+  String get rentalDay => 'Dan najma';
+
+  @override
+  String get equipmentRental => 'Najam opreme';
+
+  @override
+  String equipmentPricing(String first, String additional, String fullDay) {
+    return 'Prvi sat $first, svaki sljedeći $additional, cijeli dan najviše $fullDay';
+  }
+
+  @override
+  String get pickupDayAndTime => 'Dan i vrijeme preuzimanja';
+
+  @override
+  String get from => 'Od';
+
+  @override
+  String get durationHours => 'Trajanje (sati)';
+
+  @override
+  String get numberOfPieces => 'Broj komada';
+
+  @override
+  String returnAt(String date) {
+    return 'Vraćanje: $date';
+  }
+
+  @override
+  String onlyPiecesAvailable(int count) {
+    return 'U tom periodu slobodno je samo $count kom. Smanjite broj komada ili promijenite termin.';
+  }
+
+  @override
+  String pricePerPieceHours(int hours) {
+    return 'Cijena po komadu ($hours h)';
+  }
+
+  @override
+  String get selectArrivalDeparture => 'Odaberite dolazak i odlazak';
+
+  @override
+  String get roomBooking => 'Rezervacija sobe';
+
+  @override
+  String roomPriceCapacity(String price, String capacity) {
+    return '$price / noć · $capacity';
+  }
+
+  @override
+  String get stayPeriod => 'Termin boravka';
+
+  @override
+  String get selectDates => 'Odaberite datume';
+
+  @override
+  String get bookedDaysDisabled => 'Zauzeti dani su u kalendaru onemogućeni.';
+
+  @override
+  String get numberOfGuests => 'Broj gostiju';
+
+  @override
+  String get touristTax => 'Boravišna taksa';
+
+  @override
+  String get paymentFailed => 'Plaćanje nije uspjelo. Pokušajte ponovo.';
+
+  @override
+  String get paymentSucceededShort => 'Plaćanje je uspjelo.';
+
+  @override
+  String get cancelledRefund =>
+      'Rezervacija je otkazana. Novac se vraća na vašu karticu.';
+
+  @override
+  String get cancelledNoRefund => 'Rezervacija je otkazana.';
+
+  @override
+  String get reservationDetails => 'Detalji rezervacije';
+
+  @override
+  String get payment => 'Plaćanje';
+
+  @override
+  String get paidByCard => 'Plaćeno karticom';
+
+  @override
+  String get notPaid => 'Nije plaćeno';
+
+  @override
+  String get created => 'Kreirana';
+
+  @override
+  String get note => 'Napomena';
+
+  @override
+  String payUntil(String time) {
+    return 'Rezervaciju platite do $time, inače se automatski otkazuje.';
+  }
+
+  @override
+  String payAmount(String amount) {
+    return 'Plati $amount';
+  }
+
+  @override
+  String yourRatingEdit(int rating) {
+    return 'Vaša ocjena: $rating★ · uredi';
+  }
+
+  @override
+  String get rate => 'Ocijeni';
+
+  @override
+  String viewItem(String name) {
+    return 'Pogledaj: $name';
+  }
+
+  @override
+  String get cancelReservation => 'Otkaži rezervaciju';
+
+  @override
+  String get cancelPolicy =>
+      'Potvrđenu rezervaciju možete otkazati najkasnije 24 sata prije početka. Uplaćeni iznos se vraća na karticu.';
+
+  @override
+  String get history => 'Historija';
+
+  @override
+  String get cancelReservationQuestion => 'Otkazati rezervaciju?';
+
+  @override
+  String get refundToCard => 'Uplaćeni iznos biće vraćen na vašu karticu.';
+
+  @override
+  String get noRefundNotPaid =>
+      'Rezervacija još nije plaćena, pa nema povrata novca.';
+
+  @override
+  String get reasonOptional => 'Razlog (nije obavezan)';
+
+  @override
+  String get filterActive => 'Aktivne';
+
+  @override
+  String get filterCompleted => 'Završene';
+
+  @override
+  String get filterCancelled => 'Otkazane';
+
+  @override
+  String get noActiveReservations => 'Nemate aktivnih rezervacija.';
+
+  @override
+  String get noCompletedReservations => 'Još nemate završenih rezervacija.';
+
+  @override
+  String get noCancelledReservations => 'Nemate otkazanih rezervacija.';
+
+  @override
+  String get awaitingPayment => 'Čeka plaćanje';
+
+  @override
+  String get noFavoritesYet => 'Još nemate favorita.';
+
+  @override
+  String get favoritesHint =>
+      'Dodirnite ♥ na sobi, opremi, aktivnosti ili mjestu i sačuvajte ga ovdje.';
+
+  @override
+  String savedOn(String type, String date) {
+    return '$type · sačuvano $date';
+  }
+
+  @override
+  String get changePassword => 'Promijeni lozinku';
+
+  @override
+  String get currentPasswordRequired => 'Trenutna lozinka *';
+
+  @override
+  String get enterCurrentPassword => 'Unesite trenutnu lozinku.';
+
+  @override
+  String get newPasswordRequired => 'Nova lozinka *';
+
+  @override
+  String get newPasswordMustDiffer =>
+      'Nova lozinka mora biti različita od trenutne.';
+
+  @override
+  String get confirmNewPasswordRequired => 'Potvrda nove lozinke *';
+
+  @override
+  String get logoutOtherDevices =>
+      'Nakon promjene bićete odjavljeni sa svih drugih uređaja.';
+
+  @override
+  String get editProfile => 'Uredi profil';
+
+  @override
+  String usernameCannotChange(String username) {
+    return 'Korisničko ime (@$username) se ne može mijenjati.';
+  }
+
+  @override
+  String get profileSaved => 'Profil je sačuvan.';
+
+  @override
+  String get passwordChanged => 'Lozinka je promijenjena.';
+
+  @override
+  String get pickFromGallery => 'Odaberi iz galerije';
+
+  @override
+  String get removePhoto => 'Ukloni sliku';
+
+  @override
+  String errorTryAgain(String error) {
+    return '$error Pokušaj ponovo.';
+  }
+
+  @override
+  String get phoneNotEntered => 'Telefon nije unesen';
+
+  @override
+  String get markAllRead => 'Označi sve kao pročitano';
+
+  @override
+  String get noNotifications => 'Nemate obavijesti.';
+
+  @override
+  String get showOlder => 'Prikaži starije';
 }

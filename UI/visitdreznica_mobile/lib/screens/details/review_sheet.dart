@@ -31,7 +31,7 @@ class _ReviewSheet extends StatefulWidget {
 }
 
 class _ReviewSheetState extends State<_ReviewSheet> {
-  static const _labels = ['Dodirnite zvjezdicu', 'Loše', 'Slabo', 'Dobro', 'Vrlo dobro', 'Odlično'];
+  List<String> get _labels => tr.ratingLabels.split('|');
 
   late final ReviewService _service;
   late final TextEditingController _comment;
@@ -55,7 +55,7 @@ class _ReviewSheetState extends State<_ReviewSheet> {
 
   Future<void> _save() async {
     if (_rating == 0) {
-      setState(() => _error = 'Odaberite ocjenu od 1 do 5.');
+      setState(() => _error = tr.selectRating);
       return;
     }
 
@@ -97,7 +97,7 @@ class _ReviewSheetState extends State<_ReviewSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(widget.existing == null ? 'Nova recenzija' : 'Uredi recenziju', style: theme.textTheme.titleLarge),
+          Text(widget.existing == null ? tr.newReview : tr.editReview, style: theme.textTheme.titleLarge),
           const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -126,8 +126,8 @@ class _ReviewSheetState extends State<_ReviewSheet> {
             maxLines: 4,
             maxLength: 1000,
             textCapitalization: TextCapitalization.sentences,
-            decoration: const InputDecoration(
-              labelText: 'Komentar (nije obavezan)',
+            decoration: InputDecoration(
+              labelText: tr.commentOptional,
               alignLabelWithHint: true,
               border: OutlineInputBorder(),
             ),
@@ -139,7 +139,7 @@ class _ReviewSheetState extends State<_ReviewSheet> {
             style: FilledButton.styleFrom(minimumSize: const Size.fromHeight(48)),
             child: _saving
                 ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
-                : const Text('Sačuvaj'),
+                : Text(tr.save),
           ),
         ],
       ),

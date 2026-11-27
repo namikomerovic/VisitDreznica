@@ -7,17 +7,22 @@ import '../../widgets/status_chip.dart';
 import 'reservation_details_screen.dart';
 
 enum _Filter {
-  active('Aktivne', {ReservationStatus.pending, ReservationStatus.confirmed}),
-  completed('Završene', {ReservationStatus.completed}),
-  cancelled('Otkazane', {
+  active({ReservationStatus.pending, ReservationStatus.confirmed}),
+  completed({ReservationStatus.completed}),
+  cancelled({
     ReservationStatus.cancelled,
     ReservationStatus.rejected,
   });
 
-  const _Filter(this.label, this.statuses);
+  const _Filter(this.statuses);
 
-  final String label;
   final Set<ReservationStatus> statuses;
+
+  String get label => switch (this) {
+        _Filter.active => tr.filterActive,
+        _Filter.completed => tr.filterCompleted,
+        _Filter.cancelled => tr.filterCancelled,
+      };
 }
 
 class ReservationsTab extends StatefulWidget {
@@ -123,7 +128,7 @@ class ReservationsTabState extends State<ReservationsTab> {
               const SizedBox(height: 12),
               OutlinedButton(
                 onPressed: reload,
-                child: const Text('Pokušaj ponovo'),
+                child: Text(tr.retry),
               ),
             ],
           ),
@@ -145,9 +150,9 @@ class ReservationsTabState extends State<ReservationsTab> {
                 const SizedBox(height: 12),
                 Center(
                   child: Text(switch (_filter) {
-                    _Filter.active => 'Nemate aktivnih rezervacija.',
-                    _Filter.completed => 'Još nemate završenih rezervacija.',
-                    _Filter.cancelled => 'Nemate otkazanih rezervacija.',
+                    _Filter.active => tr.noActiveReservations,
+                    _Filter.completed => tr.noCompletedReservations,
+                    _Filter.cancelled => tr.noCancelledReservations,
                   }),
                 ),
                 if (_filter == _Filter.active) ...[
@@ -155,7 +160,7 @@ class ReservationsTabState extends State<ReservationsTab> {
                   Center(
                     child: FilledButton.tonal(
                       onPressed: widget.onExplore,
-                      child: const Text('Istraži ponudu'),
+                      child: Text(tr.exploreOffer),
                     ),
                   ),
                 ],
@@ -261,7 +266,7 @@ class _ReservationCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            'Čeka plaćanje',
+                            tr.awaitingPayment,
                             style: TextStyle(
                               color: theme.colorScheme.error,
                               fontWeight: FontWeight.w600,

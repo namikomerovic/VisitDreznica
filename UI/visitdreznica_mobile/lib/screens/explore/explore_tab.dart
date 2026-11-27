@@ -19,7 +19,7 @@ class ExploreTab extends StatefulWidget {
   State<ExploreTab> createState() => _ExploreTabState();
 }
 
-class _ExploreTabState extends State<ExploreTab> {
+class _ExploreTabState extends State<ExploreTab> with ReloadOnLocaleChange {
   final _searchController = TextEditingController();
   late final ExploreLoader _loader;
   late final ReviewService _reviews;
@@ -50,6 +50,15 @@ class _ExploreTabState extends State<ExploreTab> {
     _searchController.dispose();
     super.dispose();
   }
+
+  @override
+  void onLocaleChanged() => _load();
+
+  Widget _card(ExploreItem item) => ExploreCard(
+        item: item,
+        rating: _ratings[item.id],
+        onTap: () => openItemDetails(context, item.type, item.id),
+      );
 
   void _onTypeChanged() {
     _searchController.clear();
@@ -112,7 +121,7 @@ class _ExploreTabState extends State<ExploreTab> {
                   decoration: InputDecoration(
                     isDense: true,
                     prefixIcon: const Icon(Icons.search),
-                    hintText: 'Pretraži: ${_type.pluralLabel.toLowerCase()}',
+                    hintText: tr.searchType(_type.pluralLabel.toLowerCase()),
                     border: const OutlineInputBorder(),
                   ),
                 ),
@@ -120,7 +129,7 @@ class _ExploreTabState extends State<ExploreTab> {
               if (_type == ItemType.place) ...[
                 const SizedBox(width: 8),
                 IconButton.filledTonal(
-                  tooltip: 'Prikaži na mapi',
+                  tooltip: tr.showOnMap,
                   onPressed: () => Navigator.of(context).push(
                     MaterialPageRoute<void>(builder: (_) => const PlacesMapScreen()),
                   ),
@@ -150,7 +159,7 @@ class _ExploreTabState extends State<ExploreTab> {
             children: [
               Text(_error!, textAlign: TextAlign.center),
               const SizedBox(height: 12),
-              OutlinedButton(onPressed: _load, child: const Text('Pokušaj ponovo')),
+              OutlinedButton(onPressed: _load, child: Text(tr.retry)),
             ],
           ),
         ),
@@ -161,20 +170,33 @@ class _ExploreTabState extends State<ExploreTab> {
       onRefresh: _load,
       child: _items.isEmpty
           ? ListView(
-              children: const [
-                SizedBox(height: 120),
-                Center(child: Text('Nema rezultata.')),
+              children: [
+                const SizedBox(height: 120),
+                Center(child: Text(tr.noResults)),
               ],
             )
-          : ListView.builder(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-              itemCount: _items.length,
-              itemBuilder: (context, index) {
-                final item = _items[index];
-                return ExploreCard(
-                  item: item,
-                  rating: _ratings[item.id],
-                  onTap: () => openItemDetails(context, item.type, item.id),
+          : LayoutBuilder(
+              builder: (context, constraints) {
+                // Na širem ekranu (tablet, ležeći položaj) kartice idu u više kolona.
+                final columns = Breakpoints.columns(constraints.maxWidth - 32, minItemWidth: 340, max: 3);
+                final rows = (_items.length / columns).ceil();
+
+                return ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                  itemCount: rows,
+                  itemBuilder: (context, row) => Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      for (var column = 0; column < columns; column++) ...[
+                        if (column > 0) const SizedBox(width: 12),
+                        Expanded(
+                          child: row * columns + column < _items.length
+                              ? _card(_items[row * columns + column])
+                              : const SizedBox.shrink(),
+                        ),
+                      ],
+                    ],
+                  ),
                 );
               },
             ),

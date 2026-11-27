@@ -86,7 +86,7 @@ class _ActivityBookingScreenState extends State<ActivityBookingScreen> {
 
     if (activity == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Rezervacija aktivnosti')),
+        appBar: AppBar(title: Text(tr.activityBooking)),
         body: Center(child: _loadError == null ? const CircularProgressIndicator() : Text(_loadError!)),
       );
     }
@@ -94,19 +94,19 @@ class _ActivityBookingScreenState extends State<ActivityBookingScreen> {
     final total = activity.pricePerPerson * _participants;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Rezervacija aktivnosti')),
+      appBar: AppBar(title: Text(tr.activityBooking)),
       body: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: Breakpoints.centered(context),
         children: [
           Text(activity.name, style: theme.textTheme.headlineSmall),
           Text(
-            '${Formatters.money(activity.pricePerPerson)} po osobi · ${Formatters.duration(activity.durationMinutes)}',
+            tr.perPersonAndDuration(Formatters.money(activity.pricePerPerson), Formatters.duration(activity.durationMinutes)),
             style: theme.textTheme.bodyMedium,
           ),
           const SizedBox(height: 24),
-          Text('Odaberite termin', style: theme.textTheme.titleMedium),
+          Text(tr.selectSlot, style: theme.textTheme.titleMedium),
           const SizedBox(height: 4),
-          if (_slots.isEmpty) const Text('Trenutno nema zakazanih termina.'),
+          if (_slots.isEmpty) Text(tr.noScheduledSlots),
           for (final slot in _slots)
             ListTile(
               contentPadding: EdgeInsets.zero,
@@ -120,13 +120,13 @@ class _ActivityBookingScreenState extends State<ActivityBookingScreen> {
                 color: _slot?.id == slot.id ? theme.colorScheme.primary : null,
               ),
               title: Text(Formatters.dateTime(slot.startTime)),
-              subtitle: Text('Vodič: ${slot.guideFullName}'),
-              trailing: Text(slot.availableSpots == 0 ? 'Popunjeno' : 'Slobodno: ${slot.availableSpots}'),
+              subtitle: Text(tr.guideName(slot.guideFullName)),
+              trailing: Text(slot.availableSpots == 0 ? tr.slotFull : tr.spotsFree(slot.availableSpots)),
             ),
           if (_slot != null) ...[
             const SizedBox(height: 16),
             CounterField(
-              label: 'Broj osoba',
+              label: tr.numberOfPeople,
               value: _participants,
               min: 1,
               max: _maxParticipants,
@@ -134,7 +134,7 @@ class _ActivityBookingScreenState extends State<ActivityBookingScreen> {
             ),
             if (activity.meetingPoint != null && activity.meetingPoint!.trim().isNotEmpty) ...[
               const SizedBox(height: 8),
-              Text('Mjesto okupljanja: ${activity.meetingPoint}', style: theme.textTheme.bodySmall),
+              Text(tr.meetingPointFull(activity.meetingPoint ?? ''), style: theme.textTheme.bodySmall),
             ],
             const SizedBox(height: 20),
             NoteField(controller: _note),
@@ -142,7 +142,7 @@ class _ActivityBookingScreenState extends State<ActivityBookingScreen> {
             PriceSummary(
               rows: [
                 PriceRow(
-                  '${Formatters.money(activity.pricePerPerson)} × $_participants ${countLabel(_participants, 'osoba', 'osobe', 'osoba')}',
+                  '${Formatters.money(activity.pricePerPerson)} × ${tr.peopleCount(_participants)}',
                   Formatters.money(total),
                 ),
               ],

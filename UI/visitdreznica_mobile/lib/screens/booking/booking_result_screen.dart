@@ -53,9 +53,9 @@ class _BookingResultScreenState extends State<BookingResultScreen> {
     final paid = _result == CheckoutResult.paid;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Rezervacija')),
+      appBar: AppBar(title: Text(tr.reservation)),
       body: ListView(
-        padding: const EdgeInsets.all(24),
+        padding: Breakpoints.centered(context, padding: 24),
         children: [
           const SizedBox(height: 16),
           Icon(
@@ -65,15 +65,15 @@ class _BookingResultScreenState extends State<BookingResultScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            paid ? 'Plaćanje je uspjelo!' : 'Rezervacija čeka plaćanje',
+            paid ? tr.paymentSucceeded : tr.reservationAwaitsPayment,
             textAlign: TextAlign.center,
             style: theme.textTheme.headlineSmall,
           ),
           const SizedBox(height: 8),
           Text(
             paid
-                ? 'Rezervacija je plaćena i čeka potvrdu. Obavijest i e-mail stižu čim je potvrdimo.'
-                : 'Rezervacija je sačuvana, ali nije plaćena. Ako je ne platite u roku od 30 minuta, automatski se otkazuje.',
+                ? tr.paidAwaitingConfirmation
+                : tr.savedNotPaid,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
@@ -89,9 +89,9 @@ class _BookingResultScreenState extends State<BookingResultScreen> {
                   const SizedBox(height: 4),
                   Text(reservation.type.label, style: theme.textTheme.bodySmall),
                   const Divider(height: 24),
-                  _row('Termin', reservation.periodLabel),
+                  _row(tr.period, reservation.periodLabel),
                   _row(reservation.quantityLabel.split(':').first, reservation.quantityLabel.split(':').last.trim()),
-                  _row('Iznos', Formatters.money(reservation.totalPrice)),
+                  _row(tr.amount, Formatters.money(reservation.totalPrice)),
                 ],
               ),
             ),
@@ -104,13 +104,13 @@ class _BookingResultScreenState extends State<BookingResultScreen> {
               icon: _paying
                   ? const SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
                   : const Icon(Icons.credit_card),
-              label: const Text('Plati sada'),
+              label: Text(tr.payNow),
             ),
           const SizedBox(height: 8),
           OutlinedButton(
             onPressed: _paying ? null : () => Navigator.of(context).pop(),
             style: OutlinedButton.styleFrom(minimumSize: const Size.fromHeight(52)),
-            child: const Text('Gotovo'),
+            child: Text(tr.done),
           ),
         ],
       ),

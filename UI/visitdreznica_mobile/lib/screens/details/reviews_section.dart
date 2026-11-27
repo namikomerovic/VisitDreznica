@@ -87,7 +87,7 @@ class _ReviewsSectionState extends State<ReviewsSection> {
 
     if (saved && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(existing == null ? 'Hvala na recenziji!' : 'Recenzija je izmijenjena.')),
+        SnackBar(content: Text(existing == null ? tr.thanksForReview : tr.reviewUpdated)),
       );
       _load();
     }
@@ -97,11 +97,11 @@ class _ReviewsSectionState extends State<ReviewsSection> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Obrisati recenziju?'),
-        content: const Text('Ova radnja se ne može poništiti.'),
+        title: Text(tr.deleteReviewQuestion),
+        content: Text(tr.cannotBeUndone),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Odustani')),
-          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('Obriši')),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(tr.cancel)),
+          FilledButton(onPressed: () => Navigator.pop(context, true), child: Text(tr.delete)),
         ],
       ),
     );
@@ -111,7 +111,7 @@ class _ReviewsSectionState extends State<ReviewsSection> {
     try {
       await _service.delete(review.id);
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Recenzija je obrisana.')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(tr.reviewDeleted)));
       _load();
     } on ApiException catch (e) {
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
@@ -126,7 +126,7 @@ class _ReviewsSectionState extends State<ReviewsSection> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Recenzije', style: theme.textTheme.titleLarge),
+        Text(tr.reviews, style: theme.textTheme.titleLarge),
         const SizedBox(height: 12),
         if (_loading && summary == null)
           const Padding(padding: EdgeInsets.all(16), child: Center(child: CircularProgressIndicator()))
@@ -134,7 +134,7 @@ class _ReviewsSectionState extends State<ReviewsSection> {
           Row(
             children: [
               Expanded(child: Text(_error!)),
-              TextButton(onPressed: _load, child: const Text('Pokušaj ponovo')),
+              TextButton(onPressed: _load, child: Text(tr.retry)),
             ],
           )
         else if (summary != null) ...[
@@ -163,12 +163,12 @@ class _ReviewsSectionState extends State<ReviewsSection> {
             children: [
               Row(
                 children: [
-                  Text('Vaša recenzija', style: theme.textTheme.titleSmall),
+                  Text(tr.yourReview, style: theme.textTheme.titleSmall),
                   const SizedBox(width: 8),
                   StarRating(rating: mine.rating.toDouble(), size: 16),
                   const Spacer(),
-                  IconButton(tooltip: 'Uredi', onPressed: () => _write(mine), icon: const Icon(Icons.edit_outlined)),
-                  IconButton(tooltip: 'Obriši', onPressed: () => _delete(mine), icon: const Icon(Icons.delete_outline)),
+                  IconButton(tooltip: tr.edit, onPressed: () => _write(mine), icon: const Icon(Icons.edit_outlined)),
+                  IconButton(tooltip: tr.delete, onPressed: () => _delete(mine), icon: const Icon(Icons.delete_outline)),
                 ],
               ),
               if (mine.comment != null && mine.comment!.isNotEmpty)
@@ -185,13 +185,13 @@ class _ReviewsSectionState extends State<ReviewsSection> {
         child: FilledButton.tonalIcon(
           onPressed: () => _write(),
           icon: const Icon(Icons.rate_review_outlined),
-          label: const Text('Napiši recenziju'),
+          label: Text(tr.writeReview),
         ),
       );
     }
 
     return Text(
-      'Recenziju možete ostaviti nakon završene rezervacije.',
+      tr.reviewAfterReservation,
       style: theme.textTheme.bodySmall,
     );
   }
@@ -208,7 +208,7 @@ class _ReviewsSectionState extends State<ReviewsSection> {
         Center(
           child: TextButton(
             onPressed: _loadingMore ? null : _loadMore,
-            child: Text(_loadingMore ? 'Učitavanje...' : 'Prikaži još recenzija'),
+            child: Text(_loadingMore ? tr.loading : tr.showMoreReviews),
           ),
         ),
     ];
@@ -220,20 +220,13 @@ class _SummaryView extends StatelessWidget {
 
   final ReviewSummary summary;
 
-  static String _reviewsLabel(int count) {
-    final lastDigit = count % 10;
-    final lastTwo = count % 100;
-    final isFew = lastDigit >= 2 && lastDigit <= 4 && (lastTwo < 12 || lastTwo > 14);
-    return isFew ? 'recenzije' : 'recenzija';
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final average = summary.averageRating;
 
     if (summary.reviewCount == 0 || average == null) {
-      return Text('Još nema recenzija.', style: theme.textTheme.bodyMedium);
+      return Text(tr.noReviewsYet, style: theme.textTheme.bodyMedium);
     }
 
     final maxCount = summary.ratingCounts.fold<int>(0, (a, b) => a > b ? a : b);
@@ -246,7 +239,7 @@ class _SummaryView extends StatelessWidget {
                 style: theme.textTheme.displaySmall?.copyWith(fontWeight: FontWeight.w700)),
             StarRating(rating: average),
             const SizedBox(height: 4),
-            Text('${summary.reviewCount} ${_reviewsLabel(summary.reviewCount)}', style: theme.textTheme.bodySmall),
+            Text(tr.reviewsCount(summary.reviewCount), style: theme.textTheme.bodySmall),
           ],
         ),
         const SizedBox(width: 20),

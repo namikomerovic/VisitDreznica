@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:visitdreznica_core/visitdreznica_core.dart';
 
 TileLayer osmTileLayer() => TileLayer(
       urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -14,9 +15,9 @@ Future<void> openDirections(BuildContext context, double latitude, double longit
   try {
     final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
     if (!opened) {
-      messenger.showSnackBar(const SnackBar(content: Text('Aplikaciju za mape nije moguće otvoriti.')));
+      messenger.showSnackBar(SnackBar(content: Text(tr.mapsAppError)));
     }
   } catch (_) {
-    messenger.showSnackBar(const SnackBar(content: Text('Aplikaciju za mape nije moguće otvoriti.')));
+    messenger.showSnackBar(SnackBar(content: Text(tr.mapsAppError)));
   }
 }
