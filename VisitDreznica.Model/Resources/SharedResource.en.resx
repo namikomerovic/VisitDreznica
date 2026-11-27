@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Adresa može imati najviše 200 znakova." xml:space="preserve">
+    <value>Address can have at most 200 characters.</value>
+  </data>
+  <data name="Aktivnost s nazivom '{0}' već postoji." xml:space="preserve">
+    <value>An activity named '{0}' already exists.</value>
+  </data>
+  <data name="Aktivnost trenutno nije dostupna za rezervaciju." xml:space="preserve">
+    <value>The activity is currently not available for booking.</value>
+  </data>
+  <data name="Boravak može trajati najviše {0} noćenja." xml:space="preserve">
+    <value>A stay can last at most {0} nights.</value>
+  </data>
+  <data name="Broj gostiju mora biti između 1 i 10." xml:space="preserve">
+    <value>The number of guests must be between 1 and 10.</value>
+  </data>
+  <data name="Broj komada mora biti između 1 i 20." xml:space="preserve">
+    <value>The number of pieces must be between 1 and 20.</value>
+  </data>
+  <data name="Broj osoba mora biti između 1 i 50." xml:space="preserve">
+    <value>The number of people must be between 1 and 50.</value>
+  </data>
+  <data name="Cijena po noći mora biti između 1 i 10.000 KM, npr. 90 ili 90,50." xml:space="preserve">
+    <value>The price per night must be between 1 and 10,000 KM, e.g. 90 or 90.50.</value>
+  </data>
+  <data name="Cijena po osobi mora biti između 1 i 1.000 KM, npr. 60." xml:space="preserve">
+    <value>The price per person must be between 1 and 1,000 KM, e.g. 60.</value>
+  </data>
+  <data name="Cijena prvog sata mora biti između 1 i 1.000 KM, npr. 20." xml:space="preserve">
+    <value>The first-hour price must be between 1 and 1,000 KM, e.g. 20.</value>
+  </data>
+  <data name="Cijena svakog sljedećeg sata mora biti između 1 i 1.000 KM, npr. 15." xml:space="preserve">
+    <value>The price of each additional hour must be between 1 and 1,000 KM, e.g. 15.</value>
+  </data>
+  <data name="Cijena svakog sljedećeg sata ne može biti veća od cijene prvog sata." xml:space="preserve">
+    <value>The price of each additional hour cannot be higher than the first-hour price.</value>
+  </data>
+  <data name="Cijena za cijeli dan mora biti između 1 i 1.000 KM, npr. 60." xml:space="preserve">
+    <value>The full-day price must be between 1 and 1,000 KM, e.g. 60.</value>
+  </data>
+  <data name="Cijena za cijeli dan ne može biti manja od cijene prvog sata." xml:space="preserve">
+    <value>The full-day price cannot be lower than the first-hour price.</value>
+  </data>
+  <data name="Datum dolaska je obavezan." xml:space="preserve">
+    <value>Check-in date is required.</value>
+  </data>
+  <data name="Datum dolaska ne može biti u prošlosti." xml:space="preserve">
+    <value>Check-in date cannot be in the past.</value>
+  </data>
+  <data name="Datum i vrijeme objave su obavezni." xml:space="preserve">
+    <value>Publication date and time are required.</value>
+  </data>
+  <data name="Datum odlaska je obavezan." xml:space="preserve">
+    <value>Check-out date is required.</value>
+  </data>
+  <data name="Datum odlaska mora biti nakon datuma dolaska." xml:space="preserve">
+    <value>Check-out date must be after the check-in date.</value>
+  </data>
+  <data name="Dozvoljene su samo slike u JPG ili PNG formatu." xml:space="preserve">
+    <value>Only JPG or PNG images are allowed.</value>
+  </data>
+  <data name="Došlo je do greške na serveru. Pokušajte ponovo kasnije." xml:space="preserve">
+    <value>A server error occurred. Please try again later.</value>
+  </data>
+  <data name="Država s nazivom '{0}' već postoji." xml:space="preserve">
+    <value>A country named '{0}' already exists.</value>
+  </data>
+  <data name="Državu nije moguće obrisati jer za nju postoje gradovi." xml:space="preserve">
+    <value>The country cannot be deleted because it has cities.</value>
+  </data>
+  <data name="E-mail je obavezan." xml:space="preserve">
+    <value>E-mail is required.</value>
+  </data>
+  <data name="E-mail može imati najviše 100 znakova." xml:space="preserve">
+    <value>E-mail can have at most 100 characters.</value>
+  </data>
+  <data name="Gostima kojima se svidjelo „{0}“ često se sviđa i ovo." xml:space="preserve">
+    <value>Guests who liked “{0}” often like this too.</value>
+  </data>
+  <data name="Grad '{0}' već postoji u odabranoj državi." xml:space="preserve">
+    <value>The city '{0}' already exists in the selected country.</value>
+  </data>
+  <data name="Grad nije moguće obrisati jer ga koriste korisnici." xml:space="preserve">
+    <value>The city cannot be deleted because users are assigned to it.</value>
+  </data>
+  <data name="Identifikator plaćanja je obavezan." xml:space="preserve">
+    <value>Payment identifier is required.</value>
+  </data>
+  <data name="Identifikator plaćanja nije ispravan." xml:space="preserve">
+    <value>Payment identifier is not valid.</value>
+  </data>
+  <data name="Ime je obavezno." xml:space="preserve">
+    <value>First name is required.</value>
+  </data>
+  <data name="Ime može imati najviše 50 znakova." xml:space="preserve">
+    <value>First name can have at most 50 characters.</value>
+  </data>
+  <data name="Iz naše ponude." xml:space="preserve">
+    <value>From our offer.</value>
+  </data>
+  <data name="Iznos uplate ne odgovara iznosu rezervacije. Obratite se administratoru." xml:space="preserve">
+    <value>The payment amount does not match the reservation amount. Please contact the administrator.</value>
+  </data>
+  <data name="Jedna ili više odabranih pogodnosti ne postoji." xml:space="preserve">
+    <value>One or more selected amenities do not exist.</value>
+  </data>
+  <data name="Kapacitet mora biti između 1 i 10 osoba." xml:space="preserve">
+    <value>Capacity must be between 1 and 10 people.</value>
+  </data>
+  <data name="Kapacitet mora biti između 1 i 4 osobe po komadu." xml:space="preserve">
+    <value>Capacity must be between 1 and 4 people per piece.</value>
+  </data>
+  <data name="Kapacitet ne može biti manji od broja već rezervisanih mjesta ({0})." xml:space="preserve">
+    <value>Capacity cannot be lower than the number of already booked spots ({0}).</value>
+  </data>
+  <data name="Kapacitet termina mora biti između 1 i 50 osoba." xml:space="preserve">
+    <value>Slot capacity must be between 1 and 50 people.</value>
+  </data>
+  <data name="Kapacitet termina ne može biti veći od maksimuma aktivnosti ({0} osoba)." xml:space="preserve">
+    <value>Slot capacity cannot exceed the activity maximum ({0} people).</value>
+  </data>
+  <data name="Kod nije ispravan ili je istekao. Provjerite e-mail ili zatražite novi kod." xml:space="preserve">
+    <value>The code is invalid or has expired. Check your e-mail or request a new code.</value>
+  </data>
+  <data name="Kod se sastoji od tačno 6 cifara." xml:space="preserve">
+    <value>The code consists of exactly 6 digits.</value>
+  </data>
+  <data name="Komentar može imati najviše 1000 znakova." xml:space="preserve">
+    <value>Comment can have at most 1000 characters.</value>
+  </data>
+  <data name="Komentar može imati najviše 500 znakova." xml:space="preserve">
+    <value>Comment can have at most 500 characters.</value>
+  </data>
+  <data name="Korisnik nije prijavljen." xml:space="preserve">
+    <value>User is not logged in.</value>
+  </data>
+  <data name="Korisnik s ovom e-mail adresom već postoji." xml:space="preserve">
+    <value>A user with this e-mail address already exists.</value>
+  </data>
+  <data name="Korisnički račun je deaktiviran. Obratite se administratoru." xml:space="preserve">
+    <value>The user account is deactivated. Please contact the administrator.</value>
+  </data>
+  <data name="Korisničko ime '{0}' je zauzeto." xml:space="preserve">
+    <value>The username '{0}' is taken.</value>
+  </data>
+  <data name="Korisničko ime je obavezno." xml:space="preserve">
+    <value>Username is required.</value>
+  </data>
+  <data name="Kraj najma je obavezan." xml:space="preserve">
+    <value>Rental end is required.</value>
+  </data>
+  <data name="Kraj najma mora biti nakon početka." xml:space="preserve">
+    <value>Rental end must be after the start.</value>
+  </data>
+  <data name="Krajnji datum ne može biti prije početnog." xml:space="preserve">
+    <value>End date cannot be before the start date.</value>
+  </data>
+  <data name="Lozinka je obavezna." xml:space="preserve">
+    <value>Password is required.</value>
+  </data>
+  <data name="Lozinke se ne podudaraju." xml:space="preserve">
+    <value>Passwords do not match.</value>
+  </data>
+  <data name="Maksimalan broj učesnika mora biti između 1 i 50." xml:space="preserve">
+    <value>Maximum number of participants must be between 1 and 50.</value>
+  </data>
+  <data name="Maksimalan broj učesnika ne može biti manji od {0}, jer postoje budući termini s tim kapacitetom." xml:space="preserve">
+    <value>Maximum number of participants cannot be lower than {0}, because there are upcoming slots with that capacity.</value>
+  </data>
+  <data name="Mjesto okupljanja može imati najviše 200 znakova." xml:space="preserve">
+    <value>Meeting point can have at most 200 characters.</value>
+  </data>
+  <data name="Mjesto s nazivom '{0}' već postoji." xml:space="preserve">
+    <value>A place named '{0}' already exists.</value>
+  </data>
+  <data name="Na čekanju" xml:space="preserve">
+    <value>Pending</value>
+  </data>
+  <data name="Najam može trajati najviše {0} sati." xml:space="preserve">
+    <value>A rental can last at most {0} hours.</value>
+  </data>
+  <data name="Napomena može imati najviše 500 znakova." xml:space="preserve">
+    <value>Note can have at most 500 characters.</value>
+  </data>
+  <data name="Naslov je obavezan." xml:space="preserve">
+    <value>Title is required.</value>
+  </data>
+  <data name="Naslov mora imati između 3 i 150 znakova." xml:space="preserve">
+    <value>Title must have between 3 and 150 characters.</value>
+  </data>
+  <data name="Naziv aktivnosti je obavezan." xml:space="preserve">
+    <value>Activity name is required.</value>
+  </data>
+  <data name="Naziv aktivnosti mora imati između 3 i 150 znakova." xml:space="preserve">
+    <value>Activity name must have between 3 and 150 characters.</value>
+  </data>
+  <data name="Naziv države je obavezan." xml:space="preserve">
+    <value>Country name is required.</value>
+  </data>
+  <data name="Naziv države mora imati između 2 i 100 znakova." xml:space="preserve">
+    <value>Country name must have between 2 and 100 characters.</value>
+  </data>
+  <data name="Naziv grada je obavezan." xml:space="preserve">
+    <value>City name is required.</value>
+  </data>
+  <data name="Naziv grada mora imati između 2 i 100 znakova." xml:space="preserve">
+    <value>City name must have between 2 and 100 characters.</value>
+  </data>
+  <data name="Naziv je obavezan." xml:space="preserve">
+    <value>Name is required.</value>
+  </data>
+  <data name="Naziv mjesta je obavezan." xml:space="preserve">
+    <value>Place name is required.</value>
+  </data>
+  <data name="Naziv mjesta mora imati između 3 i 150 znakova." xml:space="preserve">
+    <value>Place name must have between 3 and 150 characters.</value>
+  </data>
+  <data name="Naziv mora imati između 2 i 100 znakova." xml:space="preserve">
+    <value>Name must have between 2 and 100 characters.</value>
+  </data>
+  <data name="Naziv opreme je obavezan." xml:space="preserve">
+    <value>Equipment name is required.</value>
+  </data>
+  <data name="Naziv opreme mora imati između 3 i 100 znakova." xml:space="preserve">
+    <value>Equipment name must have between 3 and 100 characters.</value>
+  </data>
+  <data name="Naziv sobe je obavezan." xml:space="preserve">
+    <value>Room name is required.</value>
+  </data>
+  <data name="Naziv sobe mora imati između 3 i 100 znakova." xml:space="preserve">
+    <value>Room name must have between 3 and 100 characters.</value>
+  </data>
+  <data name="Ne možete deaktivirati vlastiti račun niti sebi ukloniti ulogu administratora." xml:space="preserve">
+    <value>You cannot deactivate your own account or remove your own administrator role.</value>
+  </data>
+  <data name="Ne možete obrisati vlastiti korisnički račun." xml:space="preserve">
+    <value>You cannot delete your own user account.</value>
+  </data>
+  <data name="Nepoznata vrsta stavke." xml:space="preserve">
+    <value>Unknown item type.</value>
+  </data>
+  <data name="Nova lozinka je obavezna." xml:space="preserve">
+    <value>New password is required.</value>
+  </data>
+  <data name="Nova lozinka mora biti različita od trenutne." xml:space="preserve">
+    <value>The new password must be different from the current one.</value>
+  </data>
+  <data name="Ocjena mora biti između 1 i 5." xml:space="preserve">
+    <value>Rating must be between 1 and 5.</value>
+  </data>
+  <data name="Odaberite aktivnost." xml:space="preserve">
+    <value>Select an activity.</value>
+  </data>
+  <data name="Odaberite barem jednu postojeću ulogu." xml:space="preserve">
+    <value>Select at least one existing role.</value>
+  </data>
+  <data name="Odaberite barem jednu ulogu." xml:space="preserve">
+    <value>Select at least one role.</value>
+  </data>
+  <data name="Odaberite državu." xml:space="preserve">
+    <value>Select a country.</value>
+  </data>
+  <data name="Odaberite grad." xml:space="preserve">
+    <value>Select a city.</value>
+  </data>
+  <data name="Odaberite kategoriju aktivnosti." xml:space="preserve">
+    <value>Select an activity category.</value>
+  </data>
+  <data name="Odaberite krajnji datum." xml:space="preserve">
+    <value>Select an end date.</value>
+  </data>
+  <data name="Odaberite lokaciju na karti (geografska dužina mora biti između -180 i 180)." xml:space="preserve">
+    <value>Select a location on the map (longitude must be between -180 and 180).</value>
+  </data>
+  <data name="Odaberite lokaciju na karti (geografska širina mora biti između -90 i 90)." xml:space="preserve">
+    <value>Select a location on the map (latitude must be between -90 and 90).</value>
+  </data>
+  <data name="Odaberite opremu." xml:space="preserve">
+    <value>Select equipment.</value>
+  </data>
+  <data name="Odaberite početni datum." xml:space="preserve">
+    <value>Select a start date.</value>
+  </data>
+  <data name="Odaberite rezervaciju." xml:space="preserve">
+    <value>Select a reservation.</value>
+  </data>
+  <data name="Odaberite sliku." xml:space="preserve">
+    <value>Select an image.</value>
+  </data>
+  <data name="Odaberite sobu." xml:space="preserve">
+    <value>Select a room.</value>
+  </data>
+  <data name="Odaberite stavku." xml:space="preserve">
+    <value>Select an item.</value>
+  </data>
+  <data name="Odaberite termin." xml:space="preserve">
+    <value>Select a slot.</value>
+  </data>
+  <data name="Odaberite tip mjesta." xml:space="preserve">
+    <value>Select a place type.</value>
+  </data>
+  <data name="Odaberite tip opreme." xml:space="preserve">
+    <value>Select an equipment type.</value>
+  </data>
+  <data name="Odaberite tip sobe." xml:space="preserve">
+    <value>Select a room type.</value>
+  </data>
+  <data name="Odaberite vodiča." xml:space="preserve">
+    <value>Select a guide.</value>
+  </data>
+  <data name="Odabrana aktivnost ne postoji." xml:space="preserve">
+    <value>The selected activity does not exist.</value>
+  </data>
+  <data name="Odabrana država ne postoji." xml:space="preserve">
+    <value>The selected country does not exist.</value>
+  </data>
+  <data name="Odabrana kategorija aktivnosti ne postoji." xml:space="preserve">
+    <value>The selected activity category does not exist.</value>
+  </data>
+  <data name="Odabrana oprema ne postoji ili trenutno nije dostupna." xml:space="preserve">
+    <value>The selected equipment does not exist or is currently unavailable.</value>
+  </data>
+  <data name="Odabrana soba ne postoji ili trenutno nije dostupna." xml:space="preserve">
+    <value>The selected room does not exist or is currently unavailable.</value>
+  </data>
+  <data name="Odabrani grad ne postoji." xml:space="preserve">
+    <value>The selected city does not exist.</value>
+  </data>
+  <data name="Odabrani termin ne postoji." xml:space="preserve">
+    <value>The selected slot does not exist.</value>
+  </data>
+  <data name="Odabrani tip mjesta ne postoji." xml:space="preserve">
+    <value>The selected place type does not exist.</value>
+  </data>
+  <data name="Odabrani tip opreme ne postoji." xml:space="preserve">
+    <value>The selected equipment type does not exist.</value>
+  </data>
+  <data name="Odabrani tip sobe ne postoji." xml:space="preserve">
+    <value>The selected room type does not exist.</value>
+  </data>
+  <data name="Odabrani vodič ne postoji." xml:space="preserve">
+    <value>The selected guide does not exist.</value>
+  </data>
+  <data name="Odabrani vodič u tom periodu već vodi drugi termin." xml:space="preserve">
+    <value>The selected guide is already leading another slot in that period.</value>
+  </data>
+  <data name="Odbijena" xml:space="preserve">
+    <value>Rejected</value>
+  </data>
+  <data name="Odgovara vašim dosadašnjim interesima." xml:space="preserve">
+    <value>Matches your interests so far.</value>
+  </data>
+  <data name="Opis može imati najviše 1000 znakova." xml:space="preserve">
+    <value>Description can have at most 1000 characters.</value>
+  </data>
+  <data name="Opis može imati najviše 2000 znakova." xml:space="preserve">
+    <value>Description can have at most 2000 characters.</value>
+  </data>
+  <data name="Opis može imati najviše 300 znakova." xml:space="preserve">
+    <value>Description can have at most 300 characters.</value>
+  </data>
+  <data name="Oprema s nazivom '{0}' već postoji." xml:space="preserve">
+    <value>Equipment named '{0}' already exists.</value>
+  </data>
+  <data name="Otkazana" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
+  <data name="Ovu akciju može izvršiti samo administrator." xml:space="preserve">
+    <value>Only an administrator can perform this action.</value>
+  </data>
+  <data name="Period izvještaja može biti najviše godinu dana." xml:space="preserve">
+    <value>The report period can be at most one year.</value>
+  </data>
+  <data name="Plaćanje nije završeno. Pokušajte ponovo." xml:space="preserve">
+    <value>The payment was not completed. Please try again.</value>
+  </data>
+  <data name="Pogrešno korisničko ime ili lozinka." xml:space="preserve">
+    <value>Wrong username or password.</value>
+  </data>
+  <data name="Popularno među gostima." xml:space="preserve">
+    <value>Popular among guests.</value>
+  </data>
+  <data name="Potvrda lozinke je obavezna." xml:space="preserve">
+    <value>Password confirmation is required.</value>
+  </data>
+  <data name="Potvrda nove lozinke je obavezna." xml:space="preserve">
+    <value>New password confirmation is required.</value>
+  </data>
+  <data name="Potvrđena" xml:space="preserve">
+    <value>Confirmed</value>
+  </data>
+  <data name="Potvrđenu rezervaciju je moguće otkazati najkasnije 24 sata prije početka." xml:space="preserve">
+    <value>A confirmed reservation can be cancelled no later than 24 hours before it starts.</value>
+  </data>
+  <data name="Površina mora biti između 5 i 200 m²." xml:space="preserve">
+    <value>Area must be between 5 and 200 m².</value>
+  </data>
+  <data name="Početak najma je obavezan." xml:space="preserve">
+    <value>Rental start is required.</value>
+  </data>
+  <data name="Početak najma mora biti u budućnosti." xml:space="preserve">
+    <value>Rental start must be in the future.</value>
+  </data>
+  <data name="Početak termina je obavezan." xml:space="preserve">
+    <value>Slot start is required.</value>
+  </data>
+  <data name="Poštanski broj mora imati 4 do 6 cifara, npr. 88000." xml:space="preserve">
+    <value>Postal code must have 4 to 6 digits, e.g. 88000.</value>
+  </data>
+  <data name="Preporuke se još pripremaju. Pokušajte za nekoliko trenutaka." xml:space="preserve">
+    <value>Recommendations are still being prepared. Try again in a few moments.</value>
+  </data>
+  <data name="Previše pogrešnih pokušaja. Zatražite novi kod." xml:space="preserve">
+    <value>Too many wrong attempts. Request a new code.</value>
+  </data>
+  <data name="Prezime je obavezno." xml:space="preserve">
+    <value>Last name is required.</value>
+  </data>
+  <data name="Prezime može imati najviše 50 znakova." xml:space="preserve">
+    <value>Last name can have at most 50 characters.</value>
+  </data>
+  <data name="Razlog odbijanja je obavezan." xml:space="preserve">
+    <value>A reason for rejection is required.</value>
+  </data>
+  <data name="Razlog otkazivanja je obavezan." xml:space="preserve">
+    <value>A reason for cancellation is required.</value>
+  </data>
+  <data name="Recenziju možete ostaviti tek nakon završene rezervacije." xml:space="preserve">
+    <value>You can leave a review only after a completed reservation.</value>
+  </data>
+  <data name="Rezervacija je već plaćena." xml:space="preserve">
+    <value>The reservation has already been paid.</value>
+  </data>
+  <data name="Rezervacija još nije plaćena i ne može se potvrditi." xml:space="preserve">
+    <value>The reservation has not been paid yet and cannot be confirmed.</value>
+  </data>
+  <data name="Rezervacija se može označiti kao završena tek nakon što usluga završi." xml:space="preserve">
+    <value>A reservation can be marked as completed only after the service has ended.</value>
+  </data>
+  <data name="Rezervaciju s ovim statusom nije moguće platiti." xml:space="preserve">
+    <value>A reservation with this status cannot be paid.</value>
+  </data>
+  <data name="Rezervaciju sa statusom '{0}' nije moguće {1}." xml:space="preserve">
+    <value>A reservation with status '{0}' cannot be {1}.</value>
+  </data>
+  <data name="Sadržaj fajla nije ispravna JPG ili PNG slika." xml:space="preserve">
+    <value>The file content is not a valid JPG or PNG image.</value>
+  </data>
+  <data name="Slika može imati najviše 5 MB." xml:space="preserve">
+    <value>The image can be at most 5 MB.</value>
+  </data>
+  <data name="Soba '{0}' prima najviše {1} osoba." xml:space="preserve">
+    <value>Room '{0}' accommodates at most {1} people.</value>
+  </data>
+  <data name="Soba je zauzeta u odabranom periodu. Odaberite druge datume." xml:space="preserve">
+    <value>The room is booked in the selected period. Choose other dates.</value>
+  </data>
+  <data name="Soba s nazivom '{0}' već postoji." xml:space="preserve">
+    <value>A room named '{0}' already exists.</value>
+  </data>
+  <data name="Stavka s nazivom '{0}' već postoji." xml:space="preserve">
+    <value>An item named '{0}' already exists.</value>
+  </data>
+  <data name="Tekst obavijesti je obavezan." xml:space="preserve">
+    <value>News text is required.</value>
+  </data>
+  <data name="Tekst obavijesti mora imati između 10 i 4000 znakova." xml:space="preserve">
+    <value>News text must have between 10 and 4000 characters.</value>
+  </data>
+  <data name="Termin je popunjen." xml:space="preserve">
+    <value>The slot is full.</value>
+  </data>
+  <data name="Termin je već počeo ili završio i ne može se rezervisati." xml:space="preserve">
+    <value>The slot has already started or ended and cannot be booked.</value>
+  </data>
+  <data name="Termin koji ima rezervacije nije moguće obrisati." xml:space="preserve">
+    <value>A slot with reservations cannot be deleted.</value>
+  </data>
+  <data name="Termin koji ima rezervacije nije moguće pomjeriti." xml:space="preserve">
+    <value>A slot with reservations cannot be moved.</value>
+  </data>
+  <data name="Termin koji je već počeo ili završio ne može se mijenjati." xml:space="preserve">
+    <value>A slot that has already started or ended cannot be changed.</value>
+  </data>
+  <data name="Termin mora biti u budućnosti." xml:space="preserve">
+    <value>The slot must be in the future.</value>
+  </data>
+  <data name="Trajanje mora biti između 30 i 720 minuta (12 sati), npr. 180." xml:space="preserve">
+    <value>Duration must be between 30 and 720 minutes (12 hours), e.g. 180.</value>
+  </data>
+  <data name="Tražena obavijest ne postoji." xml:space="preserve">
+    <value>The requested notification does not exist.</value>
+  </data>
+  <data name="Tražena recenzija ne postoji." xml:space="preserve">
+    <value>The requested review does not exist.</value>
+  </data>
+  <data name="Tražena rezervacija ne postoji." xml:space="preserve">
+    <value>The requested reservation does not exist.</value>
+  </data>
+  <data name="Tražena slika ne postoji." xml:space="preserve">
+    <value>The requested image does not exist.</value>
+  </data>
+  <data name="Tražena stavka ne postoji." xml:space="preserve">
+    <value>The requested item does not exist.</value>
+  </data>
+  <data name="Traženi zapis ({0}) ne postoji." xml:space="preserve">
+    <value>The requested record ({0}) does not exist.</value>
+  </data>
+  <data name="Traženi zapis ne postoji." xml:space="preserve">
+    <value>The requested record does not exist.</value>
+  </data>
+  <data name="Traženo plaćanje ne postoji." xml:space="preserve">
+    <value>The requested payment does not exist.</value>
+  </data>
+  <data name="Trenutna lozinka nije ispravna." xml:space="preserve">
+    <value>The current password is not correct.</value>
+  </data>
+  <data name="U odabranom periodu slobodno je samo {0} komada opreme '{1}'." xml:space="preserve">
+    <value>Only {0} pieces of '{1}' are available in the selected period.</value>
+  </data>
+  <data name="Ukupan broj komada mora biti između 1 i 100." xml:space="preserve">
+    <value>Total quantity must be between 1 and 100.</value>
+  </data>
+  <data name="Unesite ispravnu e-mail adresu, npr. ime@domena.ba." xml:space="preserve">
+    <value>Enter a valid e-mail address, e.g. name@domain.com.</value>
+  </data>
+  <data name="Unesite ispravnu e-mail adresu, npr. ime@primjer.com." xml:space="preserve">
+    <value>Enter a valid e-mail address, e.g. name@example.com.</value>
+  </data>
+  <data name="Unesite kod iz e-maila." xml:space="preserve">
+    <value>Enter the code from the e-mail.</value>
+  </data>
+  <data name="Unesite trenutnu lozinku." xml:space="preserve">
+    <value>Enter your current password.</value>
+  </data>
+  <data name="Već imate aktivnu rezervaciju za ovaj termin." xml:space="preserve">
+    <value>You already have an active reservation for this slot.</value>
+  </data>
+  <data name="Već ste ocijenili ovu stavku. Možete izmijeniti postojeću recenziju." xml:space="preserve">
+    <value>You have already rated this item. You can edit your existing review.</value>
+  </data>
+  <data name="Vrijeme za plaćanje ove rezervacije je isteklo. Napravite novu rezervaciju." xml:space="preserve">
+    <value>The time to pay for this reservation has expired. Make a new reservation.</value>
+  </data>
+  <data name="Za ovaj termin je slobodno još samo {0} mjesta." xml:space="preserve">
+    <value>Only {0} spots are left for this slot.</value>
+  </data>
+  <data name="Zapis nije moguće obrisati jer ga koriste drugi podaci." xml:space="preserve">
+    <value>The record cannot be deleted because other data uses it.</value>
+  </data>
+  <data name="Završena" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <data name="aktivnost" xml:space="preserve">
+    <value>activity</value>
+  </data>
+  <data name="država" xml:space="preserve">
+    <value>country</value>
+  </data>
+  <data name="grad" xml:space="preserve">
+    <value>city</value>
+  </data>
+  <data name="korisnik" xml:space="preserve">
+    <value>user</value>
+  </data>
+  <data name="mjesto" xml:space="preserve">
+    <value>place</value>
+  </data>
+  <data name="obavijest" xml:space="preserve">
+    <value>news item</value>
+  </data>
+  <data name="odbiti" xml:space="preserve">
+    <value>rejected</value>
+  </data>
+  <data name="oprema" xml:space="preserve">
+    <value>equipment</value>
+  </data>
+  <data name="otkazati" xml:space="preserve">
+    <value>cancelled</value>
+  </data>
+  <data name="označiti kao završenu" xml:space="preserve">
+    <value>marked as completed</value>
+  </data>
+  <data name="potvrditi" xml:space="preserve">
+    <value>confirmed</value>
+  </data>
+  <data name="recenzija" xml:space="preserve">
+    <value>review</value>
+  </data>
+  <data name="rezervacija" xml:space="preserve">
+    <value>reservation</value>
+  </data>
+  <data name="soba" xml:space="preserve">
+    <value>room</value>
+  </data>
+  <data name="stavka šifarnika" xml:space="preserve">
+    <value>code list item</value>
+  </data>
+  <data name="termin" xml:space="preserve">
+    <value>slot</value>
+  </data>
+  <data name="vodič" xml:space="preserve">
+    <value>guide</value>
+  </data>
+</root>

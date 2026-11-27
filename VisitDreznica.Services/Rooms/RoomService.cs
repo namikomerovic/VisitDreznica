@@ -93,7 +93,7 @@ public class RoomService(VisitDreznicaDbContext dbContext, IMapper mapper, ICurr
 
         if (await DbContext.Rooms.AnyAsync(x => x.Name == trimmedName && x.Id != excludeId))
         {
-            throw new BusinessException($"Soba s nazivom '{trimmedName}' već postoji.");
+            throw new BusinessException("Soba s nazivom '{0}' već postoji.", trimmedName);
         }
 
         if (!await DbContext.RoomTypes.AnyAsync(x => x.Id == request.RoomTypeId))

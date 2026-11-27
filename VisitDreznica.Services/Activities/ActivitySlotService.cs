@@ -83,7 +83,7 @@ public class ActivitySlotService(VisitDreznicaDbContext dbContext, IMapper mappe
 
     if (request.Capacity < bookedCount)
     {
-        throw new BusinessException($"Kapacitet ne može biti manji od broja već rezervisanih mjesta ({bookedCount}).");
+        throw new BusinessException("Kapacitet ne može biti manji od broja već rezervisanih mjesta ({0}).", bookedCount);
     }
 }
 
@@ -125,7 +125,7 @@ protected override async Task BeforeDeleteAsync(ActivitySlot entity)
 
         if (slot.Capacity > activity.MaxParticipants)
         {
-            throw new BusinessException($"Kapacitet termina ne može biti veći od maksimuma aktivnosti ({activity.MaxParticipants} osoba).");
+            throw new BusinessException("Kapacitet termina ne može biti veći od maksimuma aktivnosti ({0} osoba).", activity.MaxParticipants);
         }
 
         var guideIsBusy = await DbContext.ActivitySlots.AnyAsync(x =>

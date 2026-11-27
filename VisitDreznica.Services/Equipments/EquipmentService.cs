@@ -77,7 +77,7 @@ public class EquipmentService(VisitDreznicaDbContext dbContext, IMapper mapper, 
 
         if (await DbContext.Equipment.AnyAsync(x => x.Name == trimmedName && x.Id != excludeId))
         {
-            throw new BusinessException($"Oprema s nazivom '{trimmedName}' već postoji.");
+            throw new BusinessException("Oprema s nazivom '{0}' već postoji.", trimmedName);
         }
 
         if (!await DbContext.EquipmentTypes.AnyAsync(x => x.Id == request.EquipmentTypeId))

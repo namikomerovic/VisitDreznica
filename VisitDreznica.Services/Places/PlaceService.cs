@@ -69,7 +69,7 @@ public class PlaceService(VisitDreznicaDbContext dbContext, IMapper mapper, ICur
 
         if (await DbContext.Places.AnyAsync(x => x.Name == trimmedName && x.Id != excludeId))
         {
-            throw new BusinessException($"Mjesto s nazivom '{trimmedName}' već postoji.");
+            throw new BusinessException("Mjesto s nazivom '{0}' već postoji.", trimmedName);
         }
 
         if (!await DbContext.PlaceTypes.AnyAsync(x => x.Id == request.PlaceTypeId))

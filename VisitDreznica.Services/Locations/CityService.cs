@@ -57,7 +57,7 @@ public class CityService(VisitDreznicaDbContext dbContext, IMapper mapper)
 
         if (await DbContext.Cities.AnyAsync(x => x.CountryId == request.CountryId && x.Name == trimmedName && x.Id != excludeId))
         {
-            throw new BusinessException($"Grad '{trimmedName}' već postoji u odabranoj državi.");
+            throw new BusinessException("Grad '{0}' već postoji u odabranoj državi.", trimmedName);
         }
     }
 }

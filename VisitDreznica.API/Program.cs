@@ -4,12 +4,15 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 using System.Security.Claims;
 using System.Text;
 using VisitDreznica.API.Configuration;
 using VisitDreznica.API.ErrorHandling;
 using VisitDreznica.API.Security;
 using VisitDreznica.Model.Constants;
+using VisitDreznica.Model.Resources;
 using VisitDreznica.Services.Activities;
 using VisitDreznica.Services.Auth;
 using VisitDreznica.Services.Database;
@@ -141,12 +144,24 @@ builder.Services.AddScoped<ICountryService, CountryService>();
 builder.Services.AddScoped<ICityService, CityService>();
 
 // ---------- API ----------
-builder.Services.AddControllers();
+// Jezik poruka (greške, validacija) prema zaglavlju Accept-Language: bs (zadano) ili en.
+builder.Services.AddLocalization();
+builder.Services.AddControllers()
+    .AddDataAnnotationsLocalization(options =>
+        options.DataAnnotationLocalizerProvider = (_, factory) => factory.Create(typeof(SharedResource)));
 builder.Services.AddOpenApi(options => options.AddDocumentTransformer<BearerSecuritySchemeTransformer>());
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 var app = builder.Build();
+
+// Mijenja se samo jezik poruka (UI culture); formati brojeva i datuma na serveru ostaju isti.
+app.UseRequestLocalization(options =>
+{
+    options.DefaultRequestCulture = new RequestCulture(CultureInfo.CurrentCulture, new CultureInfo("bs"));
+    options.SupportedCultures = [CultureInfo.CurrentCulture];
+    options.SupportedUICultures = [new CultureInfo("bs"), new CultureInfo("en")];
+});
 
 app.UseExceptionHandler();
 

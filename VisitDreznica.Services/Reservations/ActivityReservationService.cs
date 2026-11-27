@@ -63,9 +63,9 @@ public class ActivityReservationService(VisitDreznicaDbContext dbContext, ICurre
 
         if (request.ParticipantCount > availableSpots)
         {
-            throw new BusinessException(availableSpots > 0
-                ? $"Za ovaj termin je slobodno još samo {availableSpots} mjesta."
-                : "Termin je popunjen.");
+            throw availableSpots > 0
+                ? new BusinessException("Za ovaj termin je slobodno još samo {0} mjesta.", availableSpots)
+                : new BusinessException("Termin je popunjen.");
         }
 
         var now = DateTime.UtcNow;

@@ -47,7 +47,7 @@ public virtual async Task<TResponse> GetByIdAsync(int id)
 {
     return await Project(DbContext.Set<TEntity>().AsNoTracking().Where(x => x.Id == id))
                .FirstOrDefaultAsync()
-           ?? throw new NotFoundException($"Traženi zapis ({EntityDisplayName}) ne postoji.");
+           ?? throw new NotFoundException("Traženi zapis ({0}) ne postoji.", EntityDisplayName);
 }
 
 

@@ -99,7 +99,7 @@ public class RoomReservationService(
 
         if (nights > MaxNights)
         {
-            throw new BusinessException($"Boravak može trajati najviše {MaxNights} noćenja.");
+            throw new BusinessException("Boravak može trajati najviše {0} noćenja.", MaxNights);
         }
 
         var room = await dbContext.Rooms.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.RoomId && x.IsActive)
@@ -107,7 +107,7 @@ public class RoomReservationService(
 
         if (request.GuestCount > room.Capacity)
         {
-            throw new BusinessException($"Soba '{room.Name}' prima najviše {room.Capacity} osoba.");
+            throw new BusinessException("Soba '{0}' prima najviše {1} osoba.", room.Name, room.Capacity);
         }
 
         var startTime = ToCheckInTime(checkIn);

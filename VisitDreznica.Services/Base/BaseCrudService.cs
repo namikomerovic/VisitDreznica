@@ -59,7 +59,7 @@ public abstract class BaseCrudService<TEntity, TResponse, TSearch, TInsert, TUpd
 
     protected async Task<TEntity> FindEntityAsync(int id) =>
         await DbContext.Set<TEntity>().FirstOrDefaultAsync(x => x.Id == id)
-        ?? throw new NotFoundException($"Traženi zapis ({EntityDisplayName}) ne postoji.");
+        ?? throw new NotFoundException("Traženi zapis ({0}) ne postoji.", EntityDisplayName);
 
     protected virtual Task BeforeInsertAsync(TInsert request) => Task.CompletedTask;
     protected virtual Task BeforeUpdateAsync(TEntity entity, TUpdate request) => Task.CompletedTask;

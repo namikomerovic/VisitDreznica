@@ -42,7 +42,7 @@ public class LookupService<TEntity>(VisitDreznicaDbContext dbContext, IMapper ma
 
         if (await DbContext.Set<TEntity>().AnyAsync(x => x.Name == trimmedName && x.Id != excludeId))
         {
-            throw new BusinessException($"Stavka s nazivom '{trimmedName}' već postoji.");
+            throw new BusinessException("Stavka s nazivom '{0}' već postoji.", trimmedName);
         }
     }
 }

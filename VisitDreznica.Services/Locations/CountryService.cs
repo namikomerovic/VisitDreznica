@@ -49,7 +49,7 @@ public class CountryService(VisitDreznicaDbContext dbContext, IMapper mapper)
 
         if (await DbContext.Countries.AnyAsync(x => x.Name == trimmedName && x.Id != excludeId))
         {
-            throw new BusinessException($"Država s nazivom '{trimmedName}' već postoji.");
+            throw new BusinessException("Država s nazivom '{0}' već postoji.", trimmedName);
         }
     }
 }

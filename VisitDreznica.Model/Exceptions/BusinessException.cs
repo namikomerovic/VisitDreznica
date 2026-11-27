@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace VisitDreznica.Model.Exceptions;
 
-namespace VisitDreznica.Model.Exceptions;
-
-public class BusinessException : Exception
+public class BusinessException : LocalizableException
 {
-    public BusinessException(string message) : base(message) { }
-    public BusinessException(string message, Exception innerException) : base(message, innerException) { }
+    public BusinessException(string template, params object?[] arguments) : base(template, arguments) { }
+
+    public BusinessException(string template, Exception innerException) : base(template, [], innerException) { }
 }

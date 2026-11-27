@@ -67,7 +67,7 @@ public class ActivityService(VisitDreznicaDbContext dbContext, IMapper mapper, I
 
         if (await DbContext.Activities.AnyAsync(x => x.Name == trimmedName && x.Id != excludeId))
         {
-            throw new BusinessException($"Aktivnost s nazivom '{trimmedName}' već postoji.");
+            throw new BusinessException("Aktivnost s nazivom '{0}' već postoji.", trimmedName);
         }
 
         if (!await DbContext.ActivityCategories.AnyAsync(x => x.Id == request.ActivityCategoryId))
@@ -84,7 +84,7 @@ public class ActivityService(VisitDreznicaDbContext dbContext, IMapper mapper, I
             if (largestSlot > request.MaxParticipants)
             {
                 throw new BusinessException(
-                    $"Maksimalan broj učesnika ne može biti manji od {largestSlot}, jer postoje budući termini s tim kapacitetom.");
+                    "Maksimalan broj učesnika ne može biti manji od {0}, jer postoje budući termini s tim kapacitetom.", largestSlot);
             }
         }
     }

@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using Microsoft.ML;
 using VisitDreznica.Model.Enums;
 using VisitDreznica.Model.Exceptions;
+using VisitDreznica.Model.Resources;
 using VisitDreznica.Model.Responses;
 using VisitDreznica.Services.Database;
 using VisitDreznica.Services.Database.Entities;
@@ -12,7 +14,8 @@ namespace VisitDreznica.Services.Recommendations;
 public class RecommendationService(
     VisitDreznicaDbContext dbContext,
     ICurrentUser currentUser,
-    IRecommenderModelStore store) : IRecommendationService
+    IRecommenderModelStore store,
+    IStringLocalizer<SharedResource> localizer) : IRecommendationService
 {
     private const int MaxTake = 20;
     private const int PopularityPrior = 3;
@@ -75,7 +78,7 @@ public class RecommendationService(
             .ToList();
     }
 
-    private static List<RecommendationResponse> Popular(RecommenderSnapshot snapshot, List<CatalogItem> candidates, int take)
+    private List<RecommendationResponse> Popular(RecommenderSnapshot snapshot, List<CatalogItem> candidates, int take)
     {
         var mean = snapshot.GlobalMean > 0 ? snapshot.GlobalMean : 3.5;
 
@@ -93,11 +96,11 @@ public class RecommendationService(
             .ThenByDescending(x => x.Count)
             .Take(take)
             .Select(x => ToResponse(x.Item, x.Score,
-                x.Count > 0 ? "Popularno među gostima." : "Iz naše ponude.", false))
+                x.Count > 0 ? localizer["Popularno među gostima."] : localizer["Iz naše ponude."], false))
             .ToList();
     }
 
-    private static string ExplainPersonal(
+    private string ExplainPersonal(
         RecommenderSnapshot snapshot,
         Dictionary<string, float> userItems,
         Dictionary<string, CatalogItem> catalog,
@@ -105,7 +108,7 @@ public class RecommendationService(
     {
         if (!snapshot.ItemUsers.TryGetValue(recommended.Key, out var recommendedUsers))
         {
-            return "Odgovara vašim dosadašnjim interesima.";
+            return localizer["Odgovara vašim dosadašnjim interesima."];
         }
 
         var best = userItems
@@ -117,8 +120,8 @@ public class RecommendationService(
             .FirstOrDefault();
 
         return best.Key is not null && best.Similarity >= MinSimilarity
-            ? $"Gostima kojima se svidjelo „{catalog[best.Key].Name}“ često se sviđa i ovo."
-            : "Odgovara vašim dosadašnjim interesima.";
+            ? localizer["Gostima kojima se svidjelo „{0}“ često se sviđa i ovo.", catalog[best.Key].Name]
+            : localizer["Odgovara vašim dosadašnjim interesima."];
     }
 
     private static double Cosine(Dictionary<int, float> a, Dictionary<int, float> b)

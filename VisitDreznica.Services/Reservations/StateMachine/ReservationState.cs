@@ -17,7 +17,7 @@ public abstract class ReservationState
     public virtual void Complete(Reservation reservation, TransitionContext context) => throw NotAllowed("označiti kao završenu");
 
     protected BusinessException NotAllowed(string action) =>
-        new($"Rezervaciju sa statusom '{DisplayName}' nije moguće {action}.");
+        new("Rezervaciju sa statusom '{0}' nije moguće {1}.", DisplayName, action);
 
     protected static void RequireAdmin(TransitionContext context)
     {

@@ -48,7 +48,7 @@ public class AuthService(
 
         if (await dbContext.Users.AnyAsync(x => x.Username == username))
         {
-            throw new BusinessException($"Korisničko ime '{username}' je zauzeto.");
+            throw new BusinessException("Korisničko ime '{0}' je zauzeto.", username);
         }
 
         if (await dbContext.Users.AnyAsync(x => x.Email == email))

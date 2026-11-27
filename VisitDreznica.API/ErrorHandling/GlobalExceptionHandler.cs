@@ -1,19 +1,26 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.Extensions.Localization;
 using VisitDreznica.Model.Exceptions;
+using VisitDreznica.Model.Resources;
 
 namespace VisitDreznica.API.ErrorHandling;
 
-public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger, IProblemDetailsService problemDetailsService)
+public class GlobalExceptionHandler(
+    ILogger<GlobalExceptionHandler> logger,
+    IProblemDetailsService problemDetailsService,
+    IStringLocalizer<SharedResource> localizer)
     : IExceptionHandler
 {
+    private const string ServerErrorMessage = "Došlo je do greške na serveru. Pokušajte ponovo kasnije.";
+
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
-        var (statusCode, message) = exception switch
+        var statusCode = exception switch
         {
-            NotFoundException => (StatusCodes.Status404NotFound, exception.Message),
-            BusinessException => (StatusCodes.Status400BadRequest, exception.Message),
-            UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, exception.Message),
-            _ => (StatusCodes.Status500InternalServerError, "Došlo je do greške na serveru. Pokušajte ponovo kasnije.")
+            NotFoundException => StatusCodes.Status404NotFound,
+            BusinessException => StatusCodes.Status400BadRequest,
+            UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
+            _ => StatusCodes.Status500InternalServerError
         };
 
         if (statusCode == StatusCodes.Status500InternalServerError)
@@ -32,7 +39,28 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger, IPro
         return await problemDetailsService.TryWriteAsync(new ProblemDetailsContext
         {
             HttpContext = httpContext,
-            ProblemDetails = { Status = statusCode, Title = message }
+            ProblemDetails = { Status = statusCode, Title = Localize(exception, statusCode) }
         });
+    }
+
+    /// <summary>Poruka na jeziku zahtjeva (Accept-Language); bez prijevoda ostaje bosanska.</summary>
+    private string Localize(Exception exception, int statusCode)
+    {
+        if (statusCode == StatusCodes.Status500InternalServerError)
+        {
+            return localizer[ServerErrorMessage];
+        }
+
+        if (exception is LocalizableException localizable)
+        {
+            // Tekstualni argumenti (npr. naziv vrste zapisa ili status) prevode se ako za njih postoji prijevod.
+            var arguments = localizable.Arguments
+                .Select(x => x is string text ? (object)localizer[text].Value : x)
+                .ToArray();
+
+            return localizer[localizable.Template, arguments];
+        }
+
+        return localizer[exception.Message];
     }
 }

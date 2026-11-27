@@ -182,7 +182,7 @@ public class UserService(
 
         if (await DbContext.Users.AnyAsync(x => x.Username == trimmedUsername && x.Id != excludeId))
         {
-            throw new BusinessException($"Korisničko ime '{trimmedUsername}' je zauzeto.");
+            throw new BusinessException("Korisničko ime '{0}' je zauzeto.", trimmedUsername);
         }
 
         if (await DbContext.Users.AnyAsync(x => x.Email == trimmedEmail && x.Id != excludeId))

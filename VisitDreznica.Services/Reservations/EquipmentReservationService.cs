@@ -30,7 +30,7 @@ public class EquipmentReservationService(VisitDreznicaDbContext dbContext, ICurr
         if (!quote.IsAvailable)
         {
             throw new BusinessException(
-                $"U odabranom periodu slobodno je samo {quote.AvailableQuantity} komada opreme '{equipment.Name}'.");
+                "U odabranom periodu slobodno je samo {0} komada opreme '{1}'.", quote.AvailableQuantity, equipment.Name);
         }
 
         var now = DateTime.UtcNow;
@@ -76,7 +76,7 @@ public class EquipmentReservationService(VisitDreznicaDbContext dbContext, ICurr
 
         if (duration > TimeSpan.FromHours(MaxRentalHours))
         {
-            throw new BusinessException($"Najam može trajati najviše {MaxRentalHours} sati.");
+            throw new BusinessException("Najam može trajati najviše {0} sati.", MaxRentalHours);
         }
 
         var equipment = await dbContext.Equipment.AsNoTracking().FirstOrDefaultAsync(x => x.Id == request.EquipmentId && x.IsActive)
