@@ -526,7 +526,7 @@ class L10nBs extends L10n {
   }
 
   @override
-  String get homeTitle => 'Udahni Drežnicu.';
+  String get homeTitle => 'Otkrijte Drežnicu.';
 
   @override
   String get homeLocation => 'Drežnica, Bosna i Hercegovina';

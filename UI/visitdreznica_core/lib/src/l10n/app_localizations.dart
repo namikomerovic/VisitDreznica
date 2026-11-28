@@ -1054,7 +1054,7 @@ abstract class L10n {
   /// No description provided for @homeTitle.
   ///
   /// In bs, this message translates to:
-  /// **'Udahni Drežnicu.'**
+  /// **'Otkrijte Drežnicu.'**
   String get homeTitle;
 
   /// No description provided for @homeLocation.
