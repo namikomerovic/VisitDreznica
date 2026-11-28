@@ -149,8 +149,9 @@ class PagedTableState<T> extends State<PagedTable<T>> {
             if (column.hideBelow == null || constraints.maxWidth >= column.hideBelow!) column,
         ];
 
-        // Na uskom prozoru tabela zadrži razumnu širinu i skroluje se vodoravno.
-        final minWidth = columns.fold<double>(0, (sum, c) => sum + (c.width ?? 140.0 * c.flex)) + 20;
+        // Na vrlo uskom prozoru tabela zadrži čitljivu širinu (oko 110 px po fleksibilnoj koloni)
+        // i skroluje se vodoravno; inače kolone normalno popune dostupnu širinu.
+        final minWidth = columns.fold<double>(0, (sum, c) => sum + (c.width ?? 110.0) + _cellGap) + 20;
         final table = Column(
           children: [
             SizedBox(height: 3, child: _loading ? const LinearProgressIndicator() : null),
