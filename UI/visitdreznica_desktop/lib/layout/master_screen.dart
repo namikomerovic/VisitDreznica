@@ -168,7 +168,7 @@ class _Sidebar extends StatelessWidget {
         child: Column(
           children: [
             SizedBox(
-              height: 72,
+              height: 64,
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: collapsed ? 0 : 18),
                 child: Row(
@@ -191,7 +191,7 @@ class _Sidebar extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 4),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.symmetric(vertical: 4),
@@ -248,7 +248,7 @@ class _SidebarTile extends StatelessWidget {
     final color = selected ? Colors.white : Colors.white70;
 
     final tile = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 1),
       child: Material(
         color: selected ? Colors.white.withValues(alpha: 0.12) : Colors.transparent,
         borderRadius: BorderRadius.circular(12),
@@ -257,7 +257,7 @@ class _SidebarTile extends StatelessWidget {
           hoverColor: Colors.white.withValues(alpha: 0.06),
           onTap: onTap,
           child: SizedBox(
-            height: 46,
+            height: 40,
             child: Row(
               children: [
                 Container(
