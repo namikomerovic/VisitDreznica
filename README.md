@@ -17,8 +17,6 @@ Gosti rezervišu i plaćaju kroz mobilnu aplikaciju, a administrator sve vodi iz
 ![ML.NET](https://img.shields.io/badge/ML.NET-preporuke-1F3D2E)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
 
-<sub>Seminarski rad iz predmeta Razvoj softvera II · Fakultet informacijskih tehnologija, Univerzitet „Džemal Bijedić" u Mostaru</sub>
-
 <br/>
 
 <img src="docs/screenshots/hero.jpg" alt="Desktop i mobilna aplikacija" width="100%" />
@@ -170,10 +168,8 @@ flowchart LR
 
 ### 1. Konfiguracija (`.env`)
 
-Sve tajne i postavke (baza, RabbitMQ, JWT, Stripe, SMTP) nalaze se u fajlu `.env` u korijenu repozitorija. Taj fajl nije u repozitoriju.
-Za predaju je `.env` zapakovan u **`.env-tajne.zip`** zaštićen šifrom, a šifra je dostavljena uz predaju.
-
-Raspakuj ga u korijen repozitorija, tako da `.env` stoji pored `docker-compose.yml`.
+Sve tajne i postavke (baza, RabbitMQ, JWT, Stripe, SMTP) čitaju se iz fajla `.env`, koji se iz sigurnosnih razloga ne nalazi u repozitoriju.
+Fajl se dobija odvojeno (kao `.env-tajne.zip` zaštićen šifrom) i raspakuje u korijen repozitorija, tako da `.env` stoji pored `docker-compose.yml`.
 
 ### 2. Backend (Docker)
 
@@ -297,7 +293,7 @@ VisitDreznica/
 
 ## Napomene
 
-- **Fotografije:** fotografije u aplikaciji i početnim podacima preuzete su s javno dostupnih izvora i koriste se isključivo u nekomercijalne, edukativne svrhe (seminarski rad). Sva prava pripadaju njihovim autorima.
+- **Fotografije:** fotografije u aplikaciji i početnim podacima preuzete su s javno dostupnih izvora i koriste se isključivo u nekomercijalne, edukativne svrhe. Sva prava pripadaju njihovim autorima.
 - **Mape:** © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors.
 - **Fontovi:** [DM Sans](https://fonts.google.com/specimen/DM+Sans) i [Fraunces](https://fonts.google.com/specimen/Fraunces), oba pod licencom SIL Open Font License 1.1 (licence se nalaze uz fontove u `UI/visitdreznica_core/assets/fonts`).
 - **Jezik:** aplikacije, poruke grešaka i objašnjenja preporuka prate izabrani jezik (bosanski/engleski). Sadržaj koji unosi administrator (nazivi, opisi, novosti), e-mailovi, obavijesti i PDF izvještaji su na bosanskom.
@@ -306,7 +302,6 @@ VisitDreznica/
 
 <div align="center">
 
-**Namik Omerović** · IB230007<br/>
-Fakultet informacijskih tehnologija, Univerzitet „Džemal Bijedić" u Mostaru · 2026.
+Napravio **Namik Omerović** · 2026.
 
 </div>
