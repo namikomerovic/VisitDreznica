@@ -8,7 +8,7 @@ Dokumentacija sistema preporuke implementiranog prema zahtjevu iz komentara na p
 ## 1. Cilj
 
 Gostu se na početnom ekranu mobilne aplikacije prikazuju personalizovane preporuke iz cjelokupne ponude:
-sobe, oprema (kajaci), organizovane aktivnosti i mjesta (plaže, priroda, znamenitosti).
+sobe, oprema (kajaci, SUP daske, bicikli), organizovane aktivnosti i mjesta (kupališta, priroda, znamenitosti).
 Uz svaku preporuku prikazuje se i **objašnjenje** zašto je preporučena.
 
 Sistem ne preporučuje stavke koje je gost već ocijenio, stavio u favorite ili za koje je
@@ -103,7 +103,7 @@ Model je bio **lošiji od pogađanja prosjeka**. Mjerenje na samo 20 testnih ocj
 
 Uvedena je standardna dopuna (Koren, Netflix Prize): ocjena se rastavlja na
 `μ + b_gost + b_stavka + p_u·q_i`, gdje MF uči samo ostatak koji prosjeci ne objašnjavaju.
-Parametri su birani 5-strukom unakrsnom validacijom (svih 145 interakcija jednom u testu).
+Parametri su birani 5-strukom unakrsnom validacijom (svih 145 interakcija tadašnjeg, manjeg skupa podataka jednom u testu).
 
 | | RMSE |
 |---|---|
@@ -155,8 +155,8 @@ Isprobano je 6 kombinacija; izabrana je ona s najvećim HitRate@3:
 |---|---|---|
 | 4 | 0.025 | 0.01 |
 | 4 | 0.1 | 0.01 |
-| 8 | 0.025 | 0.01 |
-| **8** | **0.1** | **0.01** ← izabrano |
+| **8** | **0.025** | **0.01** ← izabrano |
+| 8 | 0.1 | 0.01 |
 | 8 | 0.1 | 0.1 |
 | 16 | 0.1 | 0.01 |
 
@@ -164,17 +164,27 @@ Ostali parametri: 50 iteracija, `C = 0.00001`, jedna nit (`NumberOfThreads = 1`)
 
 ### Rezultati
 
-Skup podataka: 145 interakcija, od toga 96 izbora, 21 gost, 16 stavki; evaluirano 95 sakrivenih izbora.
+Skup podataka (svježa instalacija, seed): 204 interakcije, od toga 154 izbora, 20 gostiju, 24 stavke
+(5 soba, 4 vrste opreme, 4 aktivnosti, 11 mjesta); evaluirano 154 sakrivena izbora.
 
 | Pristup | HitRate@3 |
 |---|---|
-| Slučajno | 0.252 |
-| Popularnost | 0.389 |
-| **One-class Matrix Factorization** | **0.579** |
+| Slučajno | 0.170 |
+| Popularnost | 0.130 |
+| **One-class Matrix Factorization** | **0.370** |
 
-Model pogađa stvarno izabranu stavku u **58 %** slučajeva, što je
-**≈ 49 % bolje od preporuke po popularnosti** i **≈ 2.3× bolje od slučajnog izbora**.
+Model pogađa stvarno izabranu stavku u **37 %** slučajeva, što je
+**≈ 2.8× bolje od preporuke po popularnosti** i **≈ 2.2× bolje od slučajnog izbora**.
 Time je pokazano da model stvarno **personalizuje**, a ne samo preporučuje ono što je općenito popularno.
+
+Popularnost je ovdje čak nešto slabija od slučajnog izbora. Razlog je to što gosti pripadaju
+grupama s vrlo različitim ukusima (avanturisti, porodice, ljubitelji historije…): ono što je
+najpopularnije u cjelini često nije ono što bira konkretan gost, a gost je najpopularnije stavke
+često već izabrao, pa se one ne mogu ni preporučiti. Upravo tu personalizovan model pravi razliku.
+
+U odnosu na raniju, manju verziju kataloga (16 stavki, HitRate@3 = 0.579) apsolutni rezultat je niži
+jer model sad bira 3 stavke između znatno više kandidata (24 stavke); i slučajan pogodak je zato pao
+sa 0.252 na 0.170. Prednost modela nad oba poredbena pristupa je zadržana.
 
 Trenutne vrijednosti uvijek su dostupne administratoru preko `GET /Recommendations/model`
 i ispisuju se u logu pri svakom treniranju.
@@ -191,6 +201,8 @@ Uz svaku personalizovanu preporuku računa se objašnjenje:
 3. Ako je najveća sličnost ≥ 0.1, objašnjenje glasi:
    *„Gostima kojima se svidjelo „Vožnja splavom kanjonom Neretve" često se sviđa i ovo."*
    U suprotnom: *„Odgovara vašim dosadašnjim interesima."*
+
+Objašnjenja se vraćaju na jeziku aplikacije (bosanski ili engleski, prema zaglavlju `Accept-Language`).
 
 Kod: `RecommendationService.ExplainPersonal`.
 
@@ -261,10 +273,10 @@ Seed (`DbSeeder.Interactions.cs`) generiše 20 gostiju u četiri persone s razli
 
 | Persona | Primjer gosta | Voli |
 |---|---|---|
-| Avanturisti | `lejla.kovac` | splavarenje, kajak, kanjon, vrelo |
-| Odmor uz rijeku | `sara.maric` | sobe s pogledom, plaže, kajak dvosjed |
-| Priroda i historija | `tarik.begic` | pješačke ture, historijska tura, znamenitosti |
-| Porodice | `emina.mehic` | porodične sobe, plaže, kajak dvosjed |
+| Avanturisti | `lejla.kovac` | splavarenje, kajak, bicikl, kanjon, vrelo |
+| Odmor uz rijeku | `sara.maric` | sobe s pogledom, kupališta, SUP daska |
+| Priroda i historija | `tarik.begic` | pješačke ture, historijska tura, znamenitosti (bunkeri, natpis Mastana Bubanjića) |
+| Porodice | `emina.mehic` | porodična soba, kupališta, kajak dvosjed |
 
 Svaki gost ima završene rezervacije s plaćanjem i historijom statusa, recenzije (samo za korišteno),
 favorite i preglede, s namjernim „šumom" u ocjenama. Generator koristi fiksni seed (`2026`),
